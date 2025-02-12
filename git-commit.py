@@ -234,9 +234,7 @@ def push_to_github() -> None:
     for sub_dir in sub_dirs:
         cwd = str(Path(base_dir) / sub_dir)
         os.chdir(cwd)
-    
-        print(cwd)
-        
+            
         #Checks for changes...
         if check_for_changes(cwd):
             
@@ -251,8 +249,6 @@ def push_to_github() -> None:
         
         else:
             continue
-
-    print("End of list")
 
 if __name__ == "__main__":
     push_to_github()
