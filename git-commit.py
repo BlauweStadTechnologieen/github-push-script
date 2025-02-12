@@ -8,6 +8,7 @@ import uuid
 import requests as r
 import json as j
 from pathlib import Path
+import time
 
 # Path to your local Git repository
 commit_message  = "Automated commit from Python script"
@@ -228,27 +229,31 @@ def push_to_github() -> None:
     
     base_dir = "C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/390295C323775C4285AE93D9818F5103/MQL4"
     base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
-    base_dir = {"Scripts", "Experts", "Include", "Images"}
+    sub_dirs = {"Scripts", "Experts", "Include", "Images"}
     sub_dirs = {"dollsoles","workspaces","apps","apps"} ##Remove on production
 
-    for sub_dir in sub_dirs:
-        cwd = str(Path(base_dir) / sub_dir)
-        os.chdir(cwd)
-            
-        #Checks for changes...
-        if check_for_changes(cwd):
-            
-            #Stages changes.
-            run_command(["git", "add", "."], cwd)
+    while True:
+    
+        for sub_dir in sub_dirs:
+            cwd = str(Path(base_dir) / sub_dir)
+            os.chdir(cwd)
+                
+            #Checks for changes...
+            if check_for_changes(cwd):
+                
+                #Stages changes.
+                run_command(["git", "add", "."], cwd)
 
-            #Commits the staged changed, saving them.
-            run_command(["git", "commit", "-m", commit_message], cwd)
+                #Commits the staged changed, saving them.
+                run_command(["git", "commit", "-m", commit_message], cwd)
 
-            # Pushed them to the repo
-            run_command(["git", "push", "origin", "main"], cwd)
-        
-        else:
-            continue
+                #Pushed them to the repo
+                run_command(["git", "push", "origin", "main"], cwd)
+            
+            #else:
+                #continue
+
+        time.sleep(1800)
 
 if __name__ == "__main__":
     push_to_github()
