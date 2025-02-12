@@ -10,9 +10,6 @@ import json as j
 from pathlib import Path
 import time
 
-# Path to your local Git repository
-commit_message  = "Automated commit from Python script"
-
 smtp_server     = "smtp-relay.brevo.com"
 smtp_port       = 587
 username_email  = "448c41002@smtp-brevo.com"
@@ -238,6 +235,8 @@ def push_to_github() -> None:
             cwd = str(Path(base_dir) / sub_dir)
             os.chdir(cwd)
                 
+            commit_message = f"GitHub Push: {sub_dir}"
+            
             #Checks for changes...
             if check_for_changes(cwd):
                 
