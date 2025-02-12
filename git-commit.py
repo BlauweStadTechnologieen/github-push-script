@@ -7,11 +7,10 @@ from functools import wraps
 import uuid
 import requests as r
 import json as j
+from pathlib import Path
 
 # Path to your local Git repository
-repo_directory  = r"C:\Users\toddg\OneDrive\test\testingrepo"  
 commit_message  = "Automated commit from Python script"
-cwd             = repo_directory
 
 smtp_server     = "smtp-relay.brevo.com"
 smtp_port       = 587
@@ -196,7 +195,7 @@ def run_command(command:str, cwd:str = None, assign_log_number:str = None) -> st
         return result.stdout
 
 @assign_log_number    
-def check_for_changes(assign_log_number:str = None) -> bool:
+def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
     """Checks for both staged and unstaged changes in your local repo.
     """
     
@@ -227,20 +226,33 @@ def check_for_changes(assign_log_number:str = None) -> bool:
 def push_to_github() -> None:
     """Adds, commits and pushes all files to the Git repo. Each 'run_command' will be individually checked, and will log an incident when any return an error."""
     
-    # Navigate to the local Git repository
-    os.chdir(repo_directory)
+    base_dir = "C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/390295C323775C4285AE93D9818F5103/MQL4"
+    base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
+    base_dir = {"Scripts", "Experts", "Include", "Images"}
+    sub_dirs = {"dollsoles","workspaces","apps","apps"} ##Remove on production
+
+    for sub_dir in sub_dirs:
+        cwd = str(Path(base_dir) / sub_dir)
+        os.chdir(cwd)
     
-    #Checks for changes...
-    if check_for_changes():
+        print(cwd)
         
-        #Stages changes.
-        run_command(["git", "add", "."], cwd)
+        #Checks for changes...
+        if check_for_changes(cwd):
+            
+            #Stages changes.
+            run_command(["git", "add", "."], cwd)
 
-        #Commits the staged changed, saving them.
-        run_command(["git", "commit", "-m", commit_message], cwd)
+            #Commits the staged changed, saving them.
+            run_command(["git", "commit", "-m", commit_message], cwd)
 
-        # Pushed them to the repo
-        run_command(["git", "push", "origin", "main"], cwd)
+            # Pushed them to the repo
+            run_command(["git", "push", "origin", "main"], cwd)
+        
+        else:
+            continue
+
+    print("End of list")
 
 if __name__ == "__main__":
     push_to_github()
