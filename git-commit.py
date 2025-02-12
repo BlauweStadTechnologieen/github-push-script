@@ -250,8 +250,8 @@ def push_to_github() -> None:
                 #Pushed them to the repo
                 run_command(["git", "push", "origin", "main"], cwd)
             
-            #else:
-                #continue
+            else:
+                continue
 
         time.sleep(1800)
 
