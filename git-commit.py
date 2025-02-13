@@ -101,10 +101,8 @@ def create_freshdesk_ticket(logging_incident_number:str, exception_or_error_mess
             
             ticket_info = response.json
             ticket_id   = ticket_info.get("id")
-            due_by      = ticket_info.get("due_by")
 
-            if ticket_id:
-                custom_message = f"A support ticket under the reference {ticket_id} has been created. You can view your outstanding support tickets by logging into your Freshdesk account under your login email {receiver_email}. This will be due by {due_by}."
+            print(ticket_id)
 
         elif response.status_code == 429:
             custom_message = f"API request limit exceeded: {response.status_code}"
@@ -201,7 +199,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
     
     try:
         result = run_command(["git", "status", "--short"], cwd)
-        
+         
         if result.strip():
             print("Making Changes to Repo....")
             return True
@@ -221,6 +219,36 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
 
     return
 
+def is_valid_directory(cwd:str) -> bool:
+    if os.path.isdir(cwd):
+        os.chdir(cwd)
+        return True
+    else:
+        custom_message = f"{cwd} is not a valid directory"
+        send_message(custom_message,sender_name,receiver_name,"1","Invalid directory")
+        return False
+
+#@assign_log_number
+def is_git_repo(cwd:str) -> bool:
+    # Run 'git status' in the specified directory
+    result = subprocess.run(['git', 'status'], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    
+    # Get the return code
+    return_code = result.returncode
+    
+    # Return the result based on the return code
+    if return_code == 0:
+        print(f"{cwd} is a valid directory")
+        return True 
+    elif return_code == 128:
+        custom_message = f"{return_code} | {cwd} is not a .git repository. Run 'git init' in the command line to initialise the repository"
+        print(custom_message)
+        #send_message(custom_message, sender_name, receiver_name, assign_log_number, f"Error {return_code} | Invalud .got repository")
+        return False    
+    else:
+        print("Unexpected error")
+        return False
+    
 def push_to_github() -> None:
     """Adds, commits and pushes all files to the Git repo. Each 'run_command' will be individually checked, and will log an incident when any return an error."""
     
@@ -233,24 +261,25 @@ def push_to_github() -> None:
     
         for sub_dir in sub_dirs:
             cwd = str(Path(base_dir) / sub_dir)
-            os.chdir(cwd)
+            if is_valid_directory(cwd):
                 
-            commit_message = f"GitHub Push: {sub_dir}"
-            
-            #Checks for changes...
-            if check_for_changes(cwd):
+                commit_message = f"GitHub Push: {sub_dir}"
                 
-                #Stages changes.
-                run_command(["git", "add", "."], cwd)
+                if is_git_repo(cwd):
+                    
+                    if check_for_changes(cwd):
+                        
+                        #Stages changes.
+                        run_command(["git", "add", "."], cwd)
 
-                #Commits the staged changed, saving them.
-                run_command(["git", "commit", "-m", commit_message], cwd)
+                        #Commits the staged changed, saving them.
+                        run_command(["git", "commit", "-m", commit_message], cwd)
 
-                #Pushed them to the repo
-                run_command(["git", "push", "origin", "main"], cwd)
-            
-            else:
-                continue
+                        #Pushed them to the repo
+                        run_command(["git", "push", "origin", "main"], cwd)
+                    
+                    else:
+                        continue
 
         time.sleep(1800)
 
