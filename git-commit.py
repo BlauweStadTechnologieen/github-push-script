@@ -222,10 +222,12 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
 def is_valid_directory(cwd:str) -> bool:
     if os.path.isdir(cwd):
         os.chdir(cwd)
+        print(f"{cwd} | This is a valid directory")
         return True
     else:
         custom_message = f"{cwd} is not a valid directory"
-        send_message(custom_message,sender_name,receiver_name,"1","Invalid directory")
+        print(custom_message)
+        #send_message(custom_message,sender_name,receiver_name,"1","Invalid directory")
         return False
 
 #@assign_log_number
@@ -238,15 +240,15 @@ def is_git_repo(cwd:str) -> bool:
     
     # Return the result based on the return code
     if return_code == 0:
-        print(f"{cwd} is a valid directory")
+        print(f"{cwd} is a git repo")
         return True 
     elif return_code == 128:
-        custom_message = f"{return_code} | {cwd} is not a .git repository. Run 'git init' in the command line to initialise the repository"
+        custom_message = f"{return_code} | {cwd} is not a .git repository. Run 'git init' in the command line to initialise a repository here."
         print(custom_message)
-        #send_message(custom_message, sender_name, receiver_name, assign_log_number, f"Error {return_code} | Invalud .got repository")
+        send_message(custom_message, sender_name, receiver_name, assign_log_number, f"Error {return_code} | Invalid .git repository")
         return False    
     else:
-        print("Unexpected error")
+        print(f"{return_code} | {result.stderr}")
         return False
     
 def push_to_github() -> None:
@@ -255,15 +257,17 @@ def push_to_github() -> None:
     base_dir = "C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/390295C323775C4285AE93D9818F5103/MQL4"
     base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
     sub_dirs = {"Scripts", "Experts", "Include", "Images"}
-    sub_dirs = {"dollsoles","workspaces","apps","apps"} ##Remove on production
+    sub_dirs = {"dollsoles","workspaces","apps","apps","nonexistentdirectory"} ##Remove on production
 
     while True:
     
         for sub_dir in sub_dirs:
+            
             cwd = str(Path(base_dir) / sub_dir)
+            
             if is_valid_directory(cwd):
                 
-                commit_message = f"GitHub Push: {sub_dir}"
+                commit_message = f"GitHub Push: {sub_dir.capitalize()}"
                 
                 if is_git_repo(cwd):
                     
