@@ -115,7 +115,7 @@ def create_freshdesk_ticket(logging_incident_number:str, exception_or_error_mess
 
     return ticket_id
 
-def send_message(custom_message:str, sender_name:str, receiver_name:str, incident_ref:str, custom_subject:str = None) -> None | str:
+def send_message(custom_message:str, sender_name:str, receiver_name:str, incident_ref:str) -> None | str:
     """Sends a message which collects an incident number from the 'assign_log_number' decorator & passes it to the 'message_body' function."""
     msg             = MIMEMultipart()
     msg['Subject']  = "Github Push Incident"
@@ -219,18 +219,19 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
 
     return
 
+@assign_log_number 
 def is_valid_directory(cwd:str) -> bool:
     if os.path.isdir(cwd):
         os.chdir(cwd)
         print(f"{cwd} | This is a valid directory")
         return True
     else:
-        custom_message = f"{cwd} is not a valid directory"
+        custom_message = f"{cwd} is not a valid directory. Please check you have specified an existing directory & that this contains a .git folder."
         print(custom_message)
-        #send_message(custom_message,sender_name,receiver_name,"1","Invalid directory")
+        send_message(custom_message, sender_name, receiver_name, assign_log_number)
         return False
 
-#@assign_log_number
+@assign_log_number
 def is_git_repo(cwd:str) -> bool:
     # Run 'git status' in the specified directory
     result = subprocess.run(['git', 'status'], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -243,9 +244,9 @@ def is_git_repo(cwd:str) -> bool:
         print(f"{cwd} is a git repo")
         return True 
     elif return_code == 128:
-        custom_message = f"{return_code} | {cwd} is not a .git repository. Run 'git init' in the command line to initialise a repository here."
+        custom_message = f"{return_code} | {cwd} is not a .git repository. Run 'git init' in the command line to initialise a repository here. For more help, visit https://github.com/git-guides/git-init"
         print(custom_message)
-        send_message(custom_message, sender_name, receiver_name, assign_log_number, f"Error {return_code} | Invalid .git repository")
+        send_message(custom_message, sender_name, receiver_name, assign_log_number)
         return False    
     else:
         print(f"{return_code} | {result.stderr}")
@@ -281,6 +282,8 @@ def push_to_github() -> None:
 
                         #Pushed them to the repo
                         run_command(["git", "push", "origin", "main"], cwd)
+
+                        print(f"Changes to directory {cwd} have been made")
                     
                     else:
                         continue
