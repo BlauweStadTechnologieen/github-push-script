@@ -256,9 +256,9 @@ def push_to_github() -> None:
     """Adds, commits and pushes all files to the Git repo. Each 'run_command' will be individually checked, and will log an incident when any return an error."""
     
     base_dir = "C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/390295C323775C4285AE93D9818F5103/MQL4"
-    ##base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
+    #base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
     sub_dirs = {"Scripts", "Experts", "Include", "Images"}
-    ##sub_dirs = {"dollsoles","workspaces","apps","apps","nonexistentdirectory"} ##Remove on production
+    #sub_dirs = {"dollsoles","workspaces","apps","apps","nonexistentdirectory"} ##Remove on production
 
     while True:
     
