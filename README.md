@@ -11,13 +11,17 @@ Download the latest verion of `Git` frm https://git-scm.com/downloads/win
 You can download the latest version of the MT4 terminal, which will by default come with the MetaEditor4 application.
 
 ## Setup
+
 Nagivate to the correct location where you would like your script to be located, and run the following command:
 ```
 git clone git@github.com:BlauweStadTechnologieen/github-push-script.git
 ```
-#### Creating a variables environment.
-You can also create a variables environment, referred to as `.env`, short for "environment variables". 
-
+You can then ensure that you have the latest verion by running the following command:
+```
+git pull
+```
+#### Creating a variables environment (Optional).
+You can optionally create a variables environment, referred to as `.env`, short for "environment variables". 
 Create a file by running the following command:
 ```
 mkdir .env
@@ -27,7 +31,6 @@ You will then need to install the `python-dotenv` module in the folling fashion:
 pip install python-dotenv
 ```
 [-] This should be included in the `requirements.txt` file.
-
 #### Use Case:
 Creating a `.env` file which will be used to contain sensitive data:
 ```
@@ -58,7 +61,12 @@ Then activate it by running the following command:
 ```
 .venv\Scripts\activate
 ```
-## Installing the dependancies
+#### Ensuring you have the latest updates.
+Navigate to the correct directory and run the following command to confirm that you have the latest packages installed:
+```
+git pull
+```
+#### Installing the dependancies
 Your script will have a list of dependancies which it will need to operate smoothly. 
 
 Run the following command:
@@ -66,20 +74,18 @@ Run the following command:
 pip install -r requirements.txt
 ```
 #### Testing Git Commit script
-Navigate to the correct directory and run the following command:
-```
-git pull
-```
-This will just ensure that you have the latest upgrade of the script. 
-
 Aftwerwards, run the following command:
 ```
 git-commit.py
 ```
 You should see a log of directories with which have been committed to the remote repository. If you have any errors, you will receive a GUID reference number, as well as a helpdesk ticket where you can add any further information if you see fit.
 
-#### Creating a .BAT file
+#### The .BAT file
+You should see a file named `git-commit.BAT`.
+
 The `.BAT`file will activate the `.venv` when triggered by the Windows Task Scheduler application, it will then run the script, before deactivating the virtual environment once the script has finished running.
+
+This will be the file with which you will point the Windows Task Scheduler towards. 
 
 ```
 #git-commit.BAT
@@ -94,4 +100,5 @@ python C:\path\to\your\git-commit.py
 REM Deactivate the virtual environment
 deactivate
 ```
-
+## Maintenance
+This script will be updated regularly inline with our release schedule. To ensure that you have the latest version, regularly run the `git pull` command. Also, you may check the release logs as well.
