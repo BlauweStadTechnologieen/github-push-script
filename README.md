@@ -22,7 +22,7 @@ git init
 #### Selecting rhe directories | Pulling from your Remote Directory
 Alternatively, you can simply run the `git clone <github-remote-repo-address>`. This will automatically initialize the local git repo. 
 
-## Creating a virtual environment
+#### Creating a virtual environment
 Creating a virtual environment will separate the package versions you will use for your script and will prevent clasing of other using which may be using differeing versions of the same packages.
 
 If you want to create a virtual environment, this is known usually referred to as `.venv`. 
@@ -35,21 +35,21 @@ Then activate it by running the following command:
 ```
 .venv\Scripts\activate
 ```
-### Installing the dependancies
+## Installing the dependancies
 Your script will have a list of dependancies which it will need to operate smoothly. 
 
 Run the following command:
 ```
 pip install -r requirements.txt
 ```
-## Creating a variables environment
+#### Creating a variables environment
 You can also create a variables environment, referred to as `.env`, short for "environment variables". You can do this by running the following command:
 ```
 pip install python-dotenv
 ```
 [-] This should be included in the `requirements.txt` file.
 
-## Use Case:
+#### Use Case:
 Creating a `.env` file which will be used to contain sensitive data:
 ```
 #.env
@@ -71,7 +71,7 @@ import os
 load_dotenv()  # Loads variables from .env
 api_key = os.getenv("API_KEY")
 ```
-## Testing Git Commit script
+#### Testing Git Commit script
 
 Navigate to the correct directory and run the following command:
 ```
