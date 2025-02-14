@@ -52,7 +52,18 @@ api_key = os.getenv("API_KEY")
 ```
 
 ## Testing Git Commit script
-Navigate to the correct directory and append `git-commit.py`
+
+
+Navigate to the correct directory and run the following command:
+```
+git pull
+```
+This will ensure you have the latest upgrade of the script. 
+Once you have completed this, run the following command:
+```
+git-commit.py
+```
+You should see a log of directories with which have been committed to the remote repository. If you have any errors, you will receive a GUID reference number, as well as a helpdesk ticket where you can add any further information if you see fit.
 
 #### Creating a .BAT file
 Creating a `.BAT`file to activate the `.venv`  and running the script. Create a `.BAT` file in the following fashion:
