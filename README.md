@@ -50,3 +50,7 @@ import os
 load_dotenv()  # Loads variables from .env
 api_key = os.getenv("API_KEY")
 ```
+
+## Testing Git Commit script
+Navigate to the correct directory and append `git-commit.py`
+
