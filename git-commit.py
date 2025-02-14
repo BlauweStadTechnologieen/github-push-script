@@ -220,7 +220,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
     return
 
 @assign_log_number 
-def is_valid_directory(cwd:str) -> bool:
+def is_valid_directory(cwd:str, assign_log_number:str = None) -> bool:
     if os.path.isdir(cwd):
         os.chdir(cwd)
         print(f"{cwd} | This is a valid directory")
@@ -232,7 +232,7 @@ def is_valid_directory(cwd:str) -> bool:
         return False
 
 @assign_log_number
-def is_git_repo(cwd:str) -> bool:
+def is_git_repo(cwd:str, assign_log_number:str = None) -> bool:
     # Run 'git status' in the specified directory
     result = subprocess.run(['git', 'status'], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
