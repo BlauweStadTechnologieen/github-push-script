@@ -54,3 +54,18 @@ api_key = os.getenv("API_KEY")
 ## Testing Git Commit script
 Navigate to the correct directory and append `git-commit.py`
 
+#### Creating a .BAT file
+Creating a `.BAT`file to activate the `.venv`  and running the script. Create a `.BAT` file in the following fashion:
+
+```
+@echo off
+REM Activate the virtual environment
+call C:\path\to\your\virtualenv\Scripts\activate.bat
+
+REM Run the Python script
+python C:\path\to\your\script.py
+
+REM Deactivate the virtual environment
+deactivate
+```
+
