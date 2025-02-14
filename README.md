@@ -2,7 +2,7 @@
 
 #### Python
 Download the latest verision of `Python`from https://www.python.org/.
-Once downloaded you can confirm that Python, as well as the version, is installed on your system by running the command `py --version`. If you already have a version of Python installed in your system and you're simply upgrading this, you can run `py -x-xx --version` so your system points to the correct version of Python.
+Once downloaded you can confirm that Python, as well as the version, is installed on your system by running the command `py --version`. If you already have a version of Python installed in your system and you're simply upgrading this, you can run `py -x.xx --version` so your system points to the correct version of Python.
 
 #### Git Bash
 Download the latest verion of `Git` frm https://git-scm.com/downloads/win
