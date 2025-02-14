@@ -24,6 +24,29 @@ Simply run the following command: `py -m venv .venv`.
 
 The, activate it by running the following command: `.venv\Scripts\activate`
 
-
 ## Creating a variables environment
-You can also create a variables environment, referred to as `.env`. You can do this by running the following command: `py` 
+You can also create a variables environment, referred to as `.env`. You can do this by running the following command: `pip install python-dotenv
+` 
+
+## Example:
+Creating a .env file which will contain sensitive data:
+```
+#.env
+API_KEY=your_api_key
+DATABASE_URL=your_database_url
+DEBUG=True
+```
+Install the `dotenv` module in the following fashion:
+```
+pip install python-dotenv
+```
+You can then create a script `script.py` and import the `dotenv` module.
+```
+#script.py
+
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Loads variables from .env
+api_key = os.getenv("API_KEY")
+```
