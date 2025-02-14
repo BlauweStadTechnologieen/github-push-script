@@ -15,7 +15,7 @@ Nagivate to the correct location where you would like your script to be located,
 ```
 git clone git@github.com:BlauweStadTechnologieen/github-push-script.git
 ```
-#### Creating a variables environment
+#### Creating a variables environment.
 You can also create a variables environment, referred to as `.env`, short for "environment variables". 
 
 Create a file by running the following command:
@@ -39,14 +39,13 @@ DEBUG=True
 You can then include the following into your `git-commit.py` script
 ```
 #git-commit.py
-
 from dotenv import load_dotenv
 import os
 
 load_dotenv()  # Loads variables from .env
 api_key = os.getenv("API_KEY")
-
-#### Creating a virtual environment
+````
+#### Creating a Virtual Environment (.VENV):
 Creating a virtual environment will separate the package versions you will use for your script and will prevent any clashing of other scripts or projects which may be using differeing versions of the same packages.
 
 If you want to create a virtual environment, this is known usually referred to as `.venv`. 
