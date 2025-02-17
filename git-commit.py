@@ -253,7 +253,7 @@ def push_to_github() -> None:
     
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     #base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
-    sub_dirs = {"Scripts", "Experts", "Include", "Images"}
+    sub_dirs = {"Scripts", "Experts", "Include", "Images", "Logs"}
     #sub_dirs = {"dollsoles","workspaces","apps","apps","nonexistentdirectory"} ##Remove on production
 
     while True:
