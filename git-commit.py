@@ -22,6 +22,8 @@ sender_email    = "notifications@bluecitycapital.com"
 receiver_email  = "todd.gilbey@synergex-systems.com" 
 tech_department = "hello@bluecitycapital.com"
 
+directory_code  = "390295C323775C4285AE93D9818F5103"
+
 # Logs Workspace Information
 LOGS_WORKSPACE_ID           =   "e30d973a-e8ad-4c66-8c0b-59f86e781b6d"
 LOGS_WORKSPACE_KEY          =   "MjbHEQvhnBnxmf7btH20hVPXi8Db+i6+4V4fMbq9DL5pswnyvka6q9V64G3PEmRdJoQeUW0GmGOV81d4I+Xhcw=="   
@@ -189,6 +191,7 @@ def run_command(command:str, cwd:str = None, assign_log_number:str = None) -> st
         return custom_message
     else:
         return result.stdout
+    
 
 @assign_log_number    
 def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
@@ -224,38 +227,31 @@ def is_valid_directory(cwd:str, assign_log_number:str = None) -> bool:
     if os.path.isdir(cwd):
         os.chdir(cwd)
         print(f"{cwd} | This is a valid directory")
-        return True
+        if is_git_repo(cwd, assign_log_number):
+            return True
+        else:
+            return False
     else:
         custom_message = f"{cwd} is not a valid directory. Please check you have specified an existing directory & that this contains a .git folder."
         print(custom_message)
         send_message(custom_message, sender_name, receiver_name, assign_log_number)
         return False
 
-@assign_log_number
-def is_git_repo(cwd:str, assign_log_number:str = None) -> bool:
-    # Run 'git status' in the specified directory
-    result = subprocess.run(['git', 'status'], cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    
-    # Get the return code
-    return_code = result.returncode
-    
-    # Return the result based on the return code
-    if return_code == 0:
-        print(f"{cwd} is a git repo")
-        return True 
-    elif return_code == 128:
-        custom_message = f"{return_code} | {cwd} is not a .git repository. Run 'git init' in the command line to initialise a repository here. For more help, visit https://github.com/git-guides/git-init"
-        print(custom_message)
-        send_message(custom_message, sender_name, receiver_name, assign_log_number)
-        return False    
+def is_git_repo(cwd, log_incident) -> bool:
+    git_path = os.path.join(cwd, '.git')
+    if os.path.isdir(git_path):
+        print(f"✅ The directory '{cwd}' is a Git repository.")
+        return True
     else:
-        print(f"{return_code} | {result.stderr}")
+        custom_message = f"{cwd} is not a Git Repository. Run 'git init' from the command shell "
+        print(custom_message)
+        send_message(custom_message,sender_name, receiver_name, log_incident)
         return False
     
 def push_to_github() -> None:
     """Adds, commits and pushes all files to the Git repo. Each 'run_command' will be individually checked, and will log an incident when any return an error."""
     
-    base_dir = "C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/390295C323775C4285AE93D9818F5103/MQL4"
+    base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     #base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
     sub_dirs = {"Scripts", "Experts", "Include", "Images"}
     #sub_dirs = {"dollsoles","workspaces","apps","apps","nonexistentdirectory"} ##Remove on production
@@ -267,26 +263,24 @@ def push_to_github() -> None:
             cwd = str(Path(base_dir) / sub_dir)
             
             if is_valid_directory(cwd):
-                
+                                
                 commit_message = f"GitHub Push: {sub_dir.capitalize()}"
+                    
+                if check_for_changes(cwd):
+                    
+                    #Stages changes.
+                    run_command(["git", "add", "."], cwd)
+
+                    #Commits the staged changed, saving them.
+                    run_command(["git", "commit", "-m", commit_message], cwd)
+
+                    #Pushed them to the repo
+                    run_command(["git", "push", "origin", "main"], cwd)
+
+                    print(f"Changes to directory {cwd} have been made")
                 
-                if is_git_repo(cwd):
-                    
-                    if check_for_changes(cwd):
-                        
-                        #Stages changes.
-                        run_command(["git", "add", "."], cwd)
-
-                        #Commits the staged changed, saving them.
-                        run_command(["git", "commit", "-m", commit_message], cwd)
-
-                        #Pushed them to the repo
-                        run_command(["git", "push", "origin", "main"], cwd)
-
-                        print(f"Changes to directory {cwd} have been made")
-                    
-                    else:
-                        continue
+                else:
+                    continue
 
         time.sleep(1800)
 
