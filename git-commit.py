@@ -275,7 +275,7 @@ def push_to_github() -> None:
                     run_command(["git", "commit", "-m", commit_message], cwd)
 
                     #Pushed them to the repo
-                    run_command(["git", "push", "origin", "master"], cwd)
+                    run_command(["git", "push"], cwd)
 
                     print(f"Changes to directory {cwd} have been made")
                 
