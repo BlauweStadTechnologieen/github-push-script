@@ -240,7 +240,7 @@ def is_valid_directory(cwd:str, assign_log_number:str = None) -> bool:
 def is_git_repo(cwd, log_incident) -> bool:
     git_path = os.path.join(cwd, '.git')
     if os.path.isdir(git_path):
-        print(f"✅ The directory '{cwd}' is a Git repository.")
+        print(f"The directory '{cwd}' is a Git repository.")
         return True
     else:
         custom_message = f"{cwd} is not a Git Repository. Run 'git init' from the command shell "
@@ -253,7 +253,7 @@ def push_to_github() -> None:
     
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     #base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
-    sub_dirs = {"Scripts", "Experts", "Include", "Images", "Logs"}
+    sub_dirs = {"Scripts", "Experts", "Include", "Images"}
     #sub_dirs = {"dollsoles","workspaces","apps","apps","nonexistentdirectory"} ##Remove on production
 
     while True:
