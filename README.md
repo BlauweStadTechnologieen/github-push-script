@@ -81,16 +81,17 @@ git-commit.py
 You should see a log of directories with which have been committed to the remote repository. If you have any errors, you will receive a GUID reference number, as well as a helpdesk ticket where you can add any further information if you see fit.
 
 #### The .BAT file
-You should see a file named `git-commit.BAT`.
+You should see a file named:
+`git-push-command.BAT`
 
 The `.BAT`file will activate the `.venv` when triggered by the Windows Task Scheduler application, it will then run the script, before deactivating the virtual environment once the script has finished running.
 
 This will be the file with which you will point the Windows Task Scheduler towards. 
 
 ```
-#git-commit.BAT
-
+#git-push-command.BAT
 @echo off
+
 REM Activate the virtual environment
 call C:\path\to\your\virtualenv\Scripts\activate.bat
 
@@ -99,6 +100,11 @@ python C:\path\to\your\git-commit.py
 
 REM Deactivate the virtual environment
 deactivate
+```
+Then you will navidate to the correct directory, and run the following command:
+
+```
+git-push-command.bat
 ```
 ## Maintenance
 This script will be updated regularly inline with our release schedule. To ensure that you have the latest version, regularly run the `git pull` command. Also, you may check the release logs as well.
