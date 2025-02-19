@@ -45,4 +45,5 @@ def monitor_commits():
         time.sleep(600)
 
 # Run the monitor function
-monitor_commits()
+if __name__ == "__main__":
+    monitor_commits()
