@@ -31,6 +31,8 @@ def get_latest_commit():
 # Function to monitor GitHub for new commits and send email
 def monitor_commits():
     
+    print("This is a testing print")
+    
     last_commit_sha = None
     
     while True:
@@ -40,6 +42,7 @@ def monitor_commits():
             last_commit_sha = current_commit_sha
             send_email.send_message(current_commit_sha)
             print(current_commit_sha)
+        
         
         # Check for new commits every 10 minutes
         time.sleep(600)
