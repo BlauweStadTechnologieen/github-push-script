@@ -9,6 +9,7 @@ import requests as r
 import json as j
 from pathlib import Path
 import time
+from commit_notify import monitor_commits, get_latest_commit
 
 smtp_server     = "smtp-relay.brevo.com"
 smtp_port       = 587
@@ -278,6 +279,8 @@ def push_to_github() -> None:
                     run_command(["git", "push"], cwd)
 
                     print(f"Changes to directory {cwd} have been made")
+
+                    monitor_commits()
                 
                 else:
                     continue
