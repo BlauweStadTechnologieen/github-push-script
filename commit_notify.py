@@ -16,7 +16,7 @@ def get_latest_commit():
     
     for repo in repos:
                 
-        url = GITHUB_API_URL.format(owner=OWNER, repo=repo)
+        url = GITHUB_API_URL.format(owner=OWNER, repo=repos)
         print(url)
         
         response = requests.get(url, headers = headers)
