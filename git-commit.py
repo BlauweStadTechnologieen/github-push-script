@@ -218,7 +218,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
         custom_message = f"General Exception {e}"
 
     if custom_message:
-        send_message(custom_message, sender_name, receiver_name, assign_log_number)
+        #send_message(custom_message, sender_name, receiver_name, assign_log_number)
         print(custom_message)
 
     return
@@ -255,7 +255,7 @@ def push_to_github() -> None:
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     #base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
     sub_dirs = {"Scripts", "Experts", "Include", "Images", "Files"}
-    #sub_dirs = {"dollsoles","workspaces","apps","apps","nonexistentdirectory"} ##Remove on production
+    #sub_dirs = {"dollsoles","workspaces","apps","apps"} ##Remove on production
 
     while True:
     
