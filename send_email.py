@@ -17,7 +17,7 @@ sender_email    = "notifications@bluecitycapital.com"
 receiver_email  = "todd.gilbey@synergex-systems.com" 
 tech_department = "hello@bluecitycapital.com"
 
-def send_message(commit_sha:str = None, repository_name:str = None, api_url:str = None):
+def send_message(commit_sha:str = None, repository_name:str = None, api_url:str = None, github_url:str = None):
     
     resource_data_table = f"""
         <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse; text-align: left;">
@@ -33,19 +33,22 @@ def send_message(commit_sha:str = None, repository_name:str = None, api_url:str 
                 <th>API URL:</th>
                 <td>{api_url}</td>
             </tr>
+            <tr>
+                <th>GitHub URL:</th>
+                <td>{github_url}</td>
+            </tr>
         </table>
     """
     
     message_body = f"""
     Dear {receiver_name}<br>
-    We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.<br>
-    You have a new commit, with a commit SHA of {commit_sha[:7]} for the repo name {repository_name}, check it out on The Hub of The Git!<br>
+    We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.
+    You have a new commit, with a commit SHA of {commit_sha[:7]} for the repo name {repository_name}, check it out on The Hub of The Git!
     ========================
     {resource_data_table}
-    ========================<br>
-    Yours sincerly<br>
+    ========================
+    Yours sincerely
     {sender_name}
-    <br><br>
     """
     
     msg             = MIMEMultipart()
