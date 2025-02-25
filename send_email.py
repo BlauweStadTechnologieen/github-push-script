@@ -11,7 +11,7 @@ RECIPIENT_EMAIL = "todd.gilbey@synergex-systems.com"
 SMTP_PORT       = 587
 
 receiver_name   = "Synergex Systems"
-sender_name     =  "Blue City Capital Technologies Inc"
+sender_name     =  "Git Commit Notification"
 
 sender_email    = "notifications@bluecitycapital.com"
 receiver_email  = "todd.gilbey@synergex-systems.com" 
@@ -31,7 +31,7 @@ def send_message(commit_sha:str = None, repository_name:str = None, api_url:str 
             </tr>
             <tr>
                 <th>API URL:</th>
-                <td>{api_url}</td>
+                <td>{api_url}*</td>
             </tr>
             <tr>
                 <th>GitHub URL:</th>
@@ -43,16 +43,19 @@ def send_message(commit_sha:str = None, repository_name:str = None, api_url:str 
     message_body = f"""
     Dear {receiver_name}<br>
     We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.
-    You have a new commit, with a commit SHA of {commit_sha[:7]} for the repo name {repository_name}, check it out on The Hub of The Git!
-    ========================
+    You have a new commit, with a commit SHA (Secure Hash Algorithm) of #{commit_sha[:7]} for the repo name {repository_name}<br>
+    Check it out on The Hub of The Git!
+    ========================<br><br>
     {resource_data_table}
     ========================
+    * You must be logged into the GitHub Repository in order to see the list of commits within the API call. 
     Yours sincerely
-    {sender_name}
+    <b>{sender_name}</b>
+    Engineering Team
     """
     
     msg             = MIMEMultipart()
-    msg['Subject']  = "Git Commit Notification | You have a new commit."
+    msg['Subject']  = f"Commit {commit_sha[:7]}"
     msg['From']     = f'"{sender_name}" <{sender_email}>'
     msg['To']       = receiver_email
     body            = message_body
