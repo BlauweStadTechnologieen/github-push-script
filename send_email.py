@@ -59,7 +59,7 @@ def send_message(commit_sha:str = None, repository_name:str = None, api_url:str 
     msg['From']     = f'"{sender_name}" <{sender_email}>'
     msg['To']       = receiver_email
     body            = message_body
-    msg.attach(MIMEText(body, "plain"))
+    msg.attach(MIMEText(body, "html"))
     
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
