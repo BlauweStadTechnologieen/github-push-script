@@ -1,38 +1,49 @@
 import requests
 import time
-import send_email
+import send_email, respository_list
 
 # GitHub repository info
 OWNER           = "blauwestadtechnologieen"
 GITHUB_TOKEN    = "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"
 GITHUB_API_URL = "https://api.github.com/repos/{owner}/{repo}/commits"
 
+if not GITHUB_TOKEN:
+    raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
+
 # Function to get the latest commit hash from GitHub
 def get_latest_commit():
     
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    
-    repos   = ["Experts", "Include", "Scripts", "Files"]
+    repos   = respository_list.repository_list()
+
+    latest_commit = None
     
     for repo in repos:
-                
-        url = GITHUB_API_URL.format(owner=OWNER, repo=repos)
-        print(url)
-        
-        response = requests.get(url, headers = headers)
 
-    if response.status_code == 200:
-        commits = response.json()
-        return commits[0]['sha']
-    else:
-        print(f"Error fetching commits.{response.status_code}")
-        return None
+        try:
+            url = GITHUB_API_URL.format(owner=OWNER,repo=repo)
+            print(url)
+            response = requests.get(url,headers = headers)
+            response.raise_for_status()
+            print(f"Successfully fetched data for {repo}") 
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed for {repo}: {e}")
+            continue
+
+        if response.status_code == 200:
+            commits = response.json()
+            print(f"Latest commit SHA for {repo}: {commits[0]['sha']}")
+            latest_commit = commits[0]['sha']
+        else:
+            print(f"Error fetching commits for {repo}: {response.status_code}")
+            print(f"Error details: {response.text}")
+
+    print(f"Latest commit across all repos: {latest_commit}") 
+    return latest_commit
 
 # Function to monitor GitHub for new commits and send email
 def monitor_commits():
-    
-    print("This is a testing print")
-    
+        
     last_commit_sha = None
     
     while True:
@@ -41,8 +52,9 @@ def monitor_commits():
         if current_commit_sha != last_commit_sha:
             last_commit_sha = current_commit_sha
             send_email.send_message(current_commit_sha)
-            print(current_commit_sha)
-        
+            print(f"The current commit sha is {current_commit_sha}")
+        else:
+            print("No new commits yet...")
         
         # Check for new commits every 10 minutes
         time.sleep(600)
