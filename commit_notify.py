@@ -21,7 +21,7 @@ def get_latest_commit():
     for repo in repos:
 
         try:
-            url = GITHUB_API_URL.format(owner=OWNER,repo=repo)
+            url = GITHUB_API_URL.format(owner=OWNER, repo=repo)
             print(url)
             response = requests.get(url,headers = headers)
             response.raise_for_status()
@@ -34,6 +34,7 @@ def get_latest_commit():
             commits = response.json()
             print(f"Latest commit SHA for {repo}: {commits[0]['sha']}")
             latest_commit = commits[0]['sha']
+            send_email.send_message(latest_commit, repo, url)
         else:
             print(f"Error fetching commits for {repo}: {response.status_code}")
             print(f"Error details: {response.text}")
@@ -47,12 +48,11 @@ def monitor_commits():
     last_commit_sha = None
     
     while True:
+        
         current_commit_sha = get_latest_commit()
         
         if current_commit_sha != last_commit_sha:
             last_commit_sha = current_commit_sha
-            send_email.send_message(current_commit_sha)
-            print(f"The current commit sha is {current_commit_sha}")
         else:
             print("No new commits yet...")
         
