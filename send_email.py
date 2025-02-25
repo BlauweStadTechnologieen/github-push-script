@@ -17,15 +17,16 @@ sender_email    = "notifications@bluecitycapital.com"
 receiver_email  = "todd.gilbey@synergex-systems.com" 
 tech_department = "hello@bluecitycapital.com"
 
-def send_message(commit_sha):
+def send_message(commit_sha:str = None, repository_name:str = None):
     """Sends a message which collects an incident number from the 'assign_log_number' decorator & passes it to the 'message_body' function."""
     
     message_body = f"""
     Dear {receiver_name}<br>
-    We are writing to you because you have a new commit that has just been uploded onto your GitHub repository.><br><br>
-    You have a new commit, with a commit SHA of {commit_sha[:7]}, check it out on The Hub of The Git!<br>
-    ========================<br>
-    {commit_sha[:7]}
+    We are writing to you because you have a new commit that has just been uploded onto your GitHub repository.<br>
+    You have a new commit, with a commit SHA of {commit_sha[:7]} for the repo name {repository_name}, check it out on The Hub of The Git!<br>
+    ========================
+    Commit SHA# {commit_sha[:7]}
+    Rspository name {repository_name}
     ========================<br>
     Yours sincerly<br>
     {sender_name}
