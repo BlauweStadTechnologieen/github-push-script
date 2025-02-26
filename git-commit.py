@@ -11,10 +11,10 @@ from pathlib import Path
 import time
 from commit_notify import monitor_commits, get_latest_commit
 
-smtp_server     = "smtp-relay.brevo.com"
-smtp_port       = 587
-username_email  = "448c41002@smtp-brevo.com"
-smtp_password   = "hSg19RUfw6QIcV7b"
+SMTP_SERVER     = "smtp-relay.brevo.com"
+SMTP_PORT       = 587
+SMTP_USER       = "448c41002@smtp-brevo.com"
+SMTP_PASSWORD   = "hSg19RUfw6QIcV7b"
 
 receiver_name   = "Synergex Systems"
 sender_name     =  "Blue City Capital Technologies Inc"
@@ -122,9 +122,9 @@ def send_message(custom_message:str, sender_name:str, receiver_name:str, inciden
     msg.attach(body)
     
     try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls()
-            server.login(username_email, smtp_password)
+            server.login(SMTP_USER, SMTP_PASSWORD)
             server.sendmail(sender_email, receiver_email, msg.as_string())
     except Exception as e:
         print(f"{e} {incident_ref}.")
