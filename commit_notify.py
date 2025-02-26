@@ -11,13 +11,13 @@ if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
 # Function to get the latest commit hash from GitHub
-def get_latest_commit():
+def get_latest_commit() -> str:
     
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
     repos   = respository_list.repository_list()
 
-    latest_commit = None
-    latest_commit_data = []
+    latest_commit       = None
+    latest_commit_data  = []
     
     for repo in repos:
 
