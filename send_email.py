@@ -2,22 +2,25 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-smtp_server     = "smtp-relay.brevo.com"
-smtp_port       = 587
-USERNAME_EMAIL  = "448c41002@smtp-brevo.com"
-
-SENDER_PASSWORD = "hSg19RUfw6QIcV7b"
-RECIPIENT_EMAIL = "todd.gilbey@synergex-systems.com"
-SMTP_PORT       = 587
-
-receiver_name   = "Synergex Systems"
-sender_name     =  "Blue City Capital Technologies, Inc"
-
-sender_email    = "notifications@bluecitycapital.com"
-receiver_email  = "todd.gilbey@synergex-systems.com" 
-tech_department = "hello@bluecitycapital.com"
-
+DOMAIN          =   "bluecitycapital.com"
 GITHUB_URL      =   "https://github.com/{hub_owner}"
+
+#SMTP Server Information
+SMTP_SERVER     =   "smtp-relay.brevo.com"
+SMTP_EMAIL      =   "448c41002@smtp-brevo.com"
+SMTP_PASSWORD   =   "hSg19RUfw6QIcV7b"
+SMTP_PORT       =   587
+
+#Recipient Information
+receiver_name   =   "Synergex Systems"
+receiver_email  =   "todd.gilbey@synergex-systems.com"
+
+#Sender Information
+sender_name     =   "Blue City Capital Technologies, Inc"
+sender_email    =   f"notifications@{DOMAIN}"
+
+#Support Information
+tech_department =   "hello@{DOMAIN}"
 
 def send_message(latest_commit_data:dict, github_owner:str) -> None:
     
@@ -50,7 +53,6 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
     Check it out by visiting your GitHib at {github_url}<br><br>
     {resource_data_table}
     ========================================================================<br><br>
-
     * You must be logged into the GitHub Repository in order to see the list of commits within the API call. <br><br>
     Yours sincerely<br>
     <b>{sender_name}</b><br>
@@ -65,9 +67,9 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
     msg.attach(MIMEText(body, "html"))
     
     try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.starttls()
-            server.login(USERNAME_EMAIL, SENDER_PASSWORD)
+            server.login(SMTP_EMAIL, SMTP_PASSWORD)
             server.sendmail(sender_email, receiver_email, msg.as_string())
     except Exception as e:
         print(f"Error sending email: {e}")
