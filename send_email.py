@@ -2,25 +2,26 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-DOMAIN          =   "@bluecitycapital.com"
-GITHUB_URL      =   "https://github.com/{hub_owner}"
+DOMAIN              =   "@bluecitycapital.com"
+GITHUB_URL          =   "https://github.com/{owner}"
 
 #SMTP Server Information
-SMTP_SERVER     =   "smtp-relay.brevo.com"
-SMTP_EMAIL      =   "448c41002@smtp-brevo.com"
-SMTP_PASSWORD   =   "hSg19RUfw6QIcV7b"
-SMTP_PORT       =   587
+SMTP_SERVER         =   "smtp-relay.brevo.com"
+SMTP_EMAIL          =   "448c41002@smtp-brevo.com"
+SMTP_PASSWORD       =   "hSg19RUfw6QIcV7b"
+SMTP_PORT           =   587
 
 #Recipient Information
-receiver_name   =   "Synergex Systems"
-receiver_email  =   "todd.gilbey@synergex-systems.com"
+receiver_name       =   "Synergex Systems"
+receiver_email      =   "todd.gilbey@synergex-systems.com"
 
 #Sender Information
-sender_name     =   "Blue City Capital Technologies, Inc"
-sender_email    =   f"notifications{DOMAIN}"
+sender_name         =   "Blue City Capital Technologies, Inc"
+sender_email        =   f"notifications{DOMAIN}"
+sender_department   =   "Engineering"
 
 #Support Information
-tech_department =   f"hello{DOMAIN}"
+tech_department     =   f"{sender_department.lower()}{DOMAIN}"
 
 def send_message(latest_commit_data:dict, github_owner:str) -> None:
     
@@ -48,15 +49,14 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
     
     message_body = f"""
         Dear {receiver_name}<br><br>
-        We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.
-        You have a new commit.<br><br>
-        Check it out by visiting your GitHib at {github_url}<br><br>
+        We are writing to you because you have a new commit uploaded to your GitHub repository.
+        Check it out by visiting your GitHub account at {github_url}<br><br>
         {resource_data_table}
         ========================================================================<br><br>
         * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
         Yours sincerely<br>
         <b>{sender_name}</b><br>
-        Engineering Team<br>
+        {sender_department} Team<br>
         {tech_department}<br><br>
     """
     
