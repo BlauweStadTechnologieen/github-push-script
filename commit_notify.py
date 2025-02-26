@@ -3,9 +3,10 @@ import time
 import send_email, respository_list
 
 # GitHub repository info
-OWNER           = "blauwestadtechnologieen"
+OWNER           = "Blauwestadtechnologieen"
 GITHUB_TOKEN    = "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"
-GITHUB_API_URL = "https://api.github.com/repos/{owner}/{repo}/commits"
+GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
+GITHUB_API      = f"https://github.com/BlauweStadTechnologieen/github-push-script.git"
 
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
@@ -49,7 +50,7 @@ def get_latest_commit():
             print(f"Error details: {response.text}")
 
     if latest_commit_data:
-        send_email.send_message(latest_commit_data)
+        send_email.send_message(latest_commit_data, OWNER)
     
     print(f"Latest commit across all repos: {latest_commit}") 
     return latest_commit
