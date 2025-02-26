@@ -2,7 +2,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-DOMAIN          =   "bluecitycapital.com"
+DOMAIN          =   "@bluecitycapital.com"
 GITHUB_URL      =   "https://github.com/{hub_owner}"
 
 #SMTP Server Information
@@ -17,10 +17,10 @@ receiver_email  =   "todd.gilbey@synergex-systems.com"
 
 #Sender Information
 sender_name     =   "Blue City Capital Technologies, Inc"
-sender_email    =   f"notifications@{DOMAIN}"
+sender_email    =   f"notifications{DOMAIN}"
 
 #Support Information
-tech_department =   "hello@{DOMAIN}"
+tech_department =   f"hello{DOMAIN}"
 
 def send_message(latest_commit_data:dict, github_owner:str) -> None:
     
@@ -47,16 +47,17 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
         """
     
     message_body = f"""
-    Dear {receiver_name}<br><br>
-    We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.
-    You have a new commit.<br><br>
-    Check it out by visiting your GitHib at {github_url}<br><br>
-    {resource_data_table}
-    ========================================================================<br><br>
-    * You must be logged into the GitHub Repository in order to see the list of commits within the API call. <br><br>
-    Yours sincerely<br>
-    <b>{sender_name}</b><br>
-    Engineering Team<br><br>
+        Dear {receiver_name}<br><br>
+        We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.
+        You have a new commit.<br><br>
+        Check it out by visiting your GitHib at {github_url}<br><br>
+        {resource_data_table}
+        ========================================================================<br><br>
+        * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
+        Yours sincerely<br>
+        <b>{sender_name}</b><br>
+        Engineering Team<br>
+        {tech_department}<br><br>
     """
     
     msg             = MIMEMultipart()
