@@ -43,12 +43,6 @@ def assign_log_number(func) -> str:
             raise e
     return wrapper
 
-def set_debug_mode(debug:bool) -> None:
-    if debug:
-        print("Debug is on like donkey-kong!") 
-    else:
-        print("Debug mode is off like donkey-kong...what...what doesn't sound right! Ah well, le desbut is off.")
-
 def create_freshdesk_ticket(logging_incident_number:str, exception_or_error_message:str, group_id:int = 201000039106, responder_id:int = 201002411183, subject:str = "Github is a true Git sometimes!") -> None:
     """
     Creates a Freshdesk ticket on behalf of the end user. This will be sent straight to the users inbox, where the user can add further information if they need to/
