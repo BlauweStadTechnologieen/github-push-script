@@ -17,45 +17,44 @@ sender_email    = "notifications@bluecitycapital.com"
 receiver_email  = "todd.gilbey@synergex-systems.com" 
 tech_department = "hello@bluecitycapital.com"
 
-def send_message(commit_sha:str = None, repository_name:str = None, api_url:str = None, github_url:str = None):
+def send_message(latest_commit_data:dict, github_owner:str) -> None:
     
-    resource_data_table = f"""
-        <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse; text-align: left;">
-            <tr>
-                <th>Secure Hash Algorithm:</th>
-                <td>{commit_sha}</td>
-            </tr>
-            <tr>
-                <th>Repository Name:</th>
-                <td>{repository_name}</td>
-            </tr>
-            <tr>
-                <th>API URL:</th>
-                <td>{api_url}*</td>
-            </tr>
-            <tr>
-                <th>GitHub URL:</th>
-                <td>{github_url}</td>
-            </tr>
-        </table>
-    """
+    resource_data_table = ""
+    for data in latest_commit_data:
+            resource_data_table += f"""
+            ========================================================================<br>
+            <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse; text-align: left;">
+                <tr>
+                    <th>Secure Hash Algorithm (SHA):</th>
+                    <td>{data["sha"][:7]}</td>
+                </tr>
+                <tr>
+                    <th>Repository Name:</th>
+                    <td>{data['repo']}</td>
+                </tr>
+                <tr>
+                    <th>API URL:</th>
+                    <td>{data['url']}</td>
+                </tr>
+            </table>
+        """
     
     message_body = f"""
-    Dear {receiver_name}<br>
+    Dear {receiver_name}<br><br>
     We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.
-    You have a new commit, with a commit SHA (Secure Hash Algorithm) of #{commit_sha[:7]} for the repo name {repository_name}<br>
-    Check it out on The Hub of The Git!
-    ========================<br><br>
+    You have a new commit.<br><br>
+    Check it out by visiting your GitHib at https://github.com/{github_owner}<br><br>
     {resource_data_table}
-    ========================
-    * You must be logged into the GitHub Repository in order to see the list of commits within the API call. 
-    Yours sincerely
-    <b>{sender_name}</b>
-    Engineering Team
+    ========================================================================<br><br>
+
+    * You must be logged into the GitHub Repository in order to see the list of commits within the API call. <br><br>
+    Yours sincerely<br>
+    <b>Blue City Capital Technologies, Inc</b><br>
+    Engineering Team<br><br>
     """
     
     msg             = MIMEMultipart()
-    msg['Subject']  = f"Commit {commit_sha[:7]}"
+    msg['Subject']  = f"New Commit Notificstion"
     msg['From']     = f'"{sender_name}" <{sender_email}>'
     msg['To']       = receiver_email
     body            = message_body
