@@ -17,6 +17,7 @@ def get_latest_commit():
     repos   = respository_list.repository_list()
 
     latest_commit = None
+    latest_commit_data = []
     
     for repo in repos:
 
@@ -34,11 +35,22 @@ def get_latest_commit():
             commits = response.json()
             print(f"Latest commit SHA for {repo}: {commits[0]['sha']}")
             latest_commit = commits[0]['sha']
-            send_email.send_message(latest_commit, repo, url)
+            
+            commit_information = {
+                "repo"  : repo,
+                "sha"   : latest_commit,
+                "url"   : url   
+            }
+
+            latest_commit_data.append(commit_information)
+            
         else:
             print(f"Error fetching commits for {repo}: {response.status_code}")
             print(f"Error details: {response.text}")
 
+    if latest_commit_data:
+        send_email.send_message(latest_commit_data)
+    
     print(f"Latest commit across all repos: {latest_commit}") 
     return latest_commit
 
