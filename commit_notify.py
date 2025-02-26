@@ -6,7 +6,6 @@ import send_email, respository_list
 OWNER           = "Blauwestadtechnologieen"
 GITHUB_TOKEN    = "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"
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
-GITHUB_API      = f"https://github.com/BlauweStadTechnologieen/github-push-script.git"
 
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
