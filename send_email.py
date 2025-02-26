@@ -11,13 +11,17 @@ RECIPIENT_EMAIL = "todd.gilbey@synergex-systems.com"
 SMTP_PORT       = 587
 
 receiver_name   = "Synergex Systems"
-sender_name     =  "Git Commit Notification"
+sender_name     =  "Blue City Capital Technologies, Inc"
 
 sender_email    = "notifications@bluecitycapital.com"
 receiver_email  = "todd.gilbey@synergex-systems.com" 
 tech_department = "hello@bluecitycapital.com"
 
+GITHUB_URL      =   "https://github.com/{hub_owner}"
+
 def send_message(latest_commit_data:dict, github_owner:str) -> None:
+    
+    github_url = GITHUB_URL.format(owner=github_owner)
     
     resource_data_table = ""
     for data in latest_commit_data:
@@ -43,13 +47,13 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
     Dear {receiver_name}<br><br>
     We are writing to you because you have a new commit that has just been uploaded into your GitHub repository.
     You have a new commit.<br><br>
-    Check it out by visiting your GitHib at https://github.com/{github_owner}<br><br>
+    Check it out by visiting your GitHib at {github_url}<br><br>
     {resource_data_table}
     ========================================================================<br><br>
 
     * You must be logged into the GitHub Repository in order to see the list of commits within the API call. <br><br>
     Yours sincerely<br>
-    <b>Blue City Capital Technologies, Inc</b><br>
+    <b>{sender_name}</b><br>
     Engineering Team<br><br>
     """
     
