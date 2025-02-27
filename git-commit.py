@@ -286,7 +286,7 @@ def push_to_github() -> None:
 
                         print(f"Changes to directory {cwd} have been made")
 
-                        #monitor_commits()
+                        monitor_commits()
 
         time.sleep(1800)
 
