@@ -267,10 +267,14 @@ def push_to_github() -> None:
             cwd = str(Path(base_dir) / sub_dir)
             
             if is_valid_directory(cwd):
+
+                print("Directory valid")
                                 
                 commit_message = f"GitHub Push: {sub_dir.capitalize()}"
                     
                 if check_for_changes(cwd):
+
+                    print("changes detected")
                     
                     #Stages changes.
                     run_command(["git", "add", "."], cwd)
@@ -284,8 +288,6 @@ def push_to_github() -> None:
                         run_command(["git", "push"], cwd)
 
                         print(f"Changes to directory {cwd} have been made")
-
-                        time.sleep(60)
 
                         monitor_commits()
                 
