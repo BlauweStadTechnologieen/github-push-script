@@ -58,13 +58,15 @@ def get_latest_commit() -> str:
 def monitor_commits():
         
     last_commit_sha = None
+
+    print("You should only see this once")
     
     while True:
         
         current_commit_sha = get_latest_commit()
         
         if current_commit_sha != last_commit_sha:
-            last_commit_sha = current_commit_sha
+            current_commit_sha = last_commit_sha
         else:
             print("No new commits yet...")
         

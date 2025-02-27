@@ -197,7 +197,9 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
     
     try:
         result = run_command(["git", "status", "--short"], cwd)
-         
+
+        print(f"Git Status Output: {result}") 
+
         if result.strip():
             print("Making Changes to Repo....")
             return True
@@ -267,14 +269,16 @@ def push_to_github() -> None:
                     run_command(["git", "add", "."], cwd)
 
                     #Commits the staged changed, saving them.
-                    run_command(["git", "commit", "-m", commit_message], cwd)
+                    commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
-                    #Pushed them to the repo
-                    run_command(["git", "push"], cwd)
+                    if "nothing to commit" not in commit_result:
+                    
+                        #Pushed them to the repo
+                        run_command(["git", "push"], cwd)
 
-                    print(f"Changes to directory {cwd} have been made")
+                        print(f"Changes to directory {cwd} have been made")
 
-                    monitor_commits()
+                        monitor_commits()
                 
                 else:
                     continue
