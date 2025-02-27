@@ -286,7 +286,7 @@ def push_to_github() -> None:
 
                         monitor_commits()
 
-        time.sleep(1800)
+        time.sleep(900)
 
 if __name__ == "__main__":
     push_to_github()
