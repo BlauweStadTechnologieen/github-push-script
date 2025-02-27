@@ -201,7 +201,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
         result = run_command(["git", "status", "--short"], cwd).strip()
 
         if result.strip():
-            print(f"Trackerd Files Git Status Output: {result}") 
+            print(f"Tracked Files Git Status Output: {result}") 
             return True
         
         # If nothing was detected, check for untracked files.
@@ -263,26 +263,26 @@ def push_to_github() -> None:
             
             cwd = str(Path(base_dir) / sub_dir)
             
-            if is_valid_directory(cwd):
-                                
-                commit_message = f"GitHub Push: {sub_dir.capitalize()}"
-                    
-            if check_for_changes(cwd):
+            if not is_valid_directory(cwd):
+                continue
+                                                    
+            if not check_for_changes(cwd):
+                continue
+
+            commit_message = f"GitHub Push: {sub_dir.capitalize()}"
                 
-                #Stages changes.
-                run_command(["git", "add", "."], cwd)
+            run_command(["git", "add", "."], cwd)
 
-                #Commits the staged changed, saving them.
-                commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
+            commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
-                if "nothing to commit, working tree clean" not in commit_result:
-                
-                    #Pushed them to the repo
-                    run_command(["git", "push"], cwd)
+            if "nothing to commit, working tree clean" in commit_result:
+                continue
+            
+            run_command(["git", "push"], cwd)
 
-                    print(f"Changes to directory {cwd} have been made")
+            print(f"Making changes to {cwd}...")
 
-                    monitor_commits()
+            monitor_commits()
 
         time.sleep(900)
 
