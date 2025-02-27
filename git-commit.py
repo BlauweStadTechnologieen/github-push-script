@@ -267,22 +267,22 @@ def push_to_github() -> None:
                                 
                 commit_message = f"GitHub Push: {sub_dir.capitalize()}"
                     
-                if check_for_changes(cwd):
-                    
-                    #Stages changes.
-                    run_command(["git", "add", "."], cwd)
+            if check_for_changes(cwd):
+                
+                #Stages changes.
+                run_command(["git", "add", "."], cwd)
 
-                    #Commits the staged changed, saving them.
-                    commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
+                #Commits the staged changed, saving them.
+                commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
-                    if "nothing to commit, working tree clean" not in commit_result:
-                    
-                        #Pushed them to the repo
-                        run_command(["git", "push"], cwd)
+                if "nothing to commit, working tree clean" not in commit_result:
+                
+                    #Pushed them to the repo
+                    run_command(["git", "push"], cwd)
 
-                        print(f"Changes to directory {cwd} have been made")
+                    print(f"Changes to directory {cwd} have been made")
 
-                        monitor_commits()
+                    monitor_commits()
 
         time.sleep(900)
 
