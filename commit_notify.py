@@ -65,7 +65,6 @@ def monitor_commits():
         current_commit_sha = last_commit_sha
     else:
         print("No new commits yet...")
+
+    return
         
-# Run the monitor function
-if __name__ == "__main__":
-    monitor_commits()
