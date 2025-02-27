@@ -220,7 +220,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
         custom_message = f"General Exception {e}"
 
     if custom_message:
-        #send_message(custom_message, sender_name, receiver_name, assign_log_number)
+        send_message(custom_message, sender_name, receiver_name, assign_log_number)
         print(custom_message)
 
     return False
@@ -229,7 +229,6 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
 def is_valid_directory(cwd:str, assign_log_number:str = None) -> bool:
     if os.path.isdir(cwd):
         os.chdir(cwd)
-        print(f"{cwd} | This is a valid directory")
         if is_git_repo(cwd, assign_log_number):
             return True
         else:
@@ -243,7 +242,6 @@ def is_valid_directory(cwd:str, assign_log_number:str = None) -> bool:
 def is_git_repo(cwd, log_incident) -> bool:
     git_path = os.path.join(cwd, '.git')
     if os.path.isdir(git_path):
-        print(f"The directory '{cwd}' is a Git repository.")
         return True
     else:
         custom_message = f"{cwd} is not a Git Repository. Run 'git init' from the command shell "
