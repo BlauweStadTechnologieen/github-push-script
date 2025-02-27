@@ -199,16 +199,15 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
     
     try:
         result = run_command(["git", "status", "--short"], cwd).strip()
-        print(f"Git Status Output: {result}") 
 
         if result.strip():
-            print("Making Changes to Repo....")
+            print(f"Trackerd Files Git Status Output: {result}") 
             return True
         
         # If nothing was detected, check for untracked files.
         untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd).strip()
         if untracked_files.strip():
-            print("Untracked files detected.")
+            print(f"Untracked Files Git Status Output: {result}") 
             return True
         
         print("There were no changes to the working tree detected.")
