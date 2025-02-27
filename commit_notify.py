@@ -58,8 +58,6 @@ def get_latest_commit() -> str:
 def monitor_commits():
         
     last_commit_sha = None
-
-    print("You should only see this once")
     
     while True:
         
