@@ -185,6 +185,7 @@ def run_command(command:str, cwd:str = None, assign_log_number:str = None) -> st
         send_message(custom_message, sender_name, receiver_name, assign_log_number)
         return custom_message
     else:
+        print(f"Command Output: {result.stdout}") 
         return result.stdout
     
 
@@ -271,7 +272,7 @@ def push_to_github() -> None:
                     #Commits the staged changed, saving them.
                     commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
-                    if "nothing to commit" not in commit_result:
+                    if "nothing to commit, working tree clean" not in commit_result:
                     
                         #Pushed them to the repo
                         run_command(["git", "push"], cwd)
