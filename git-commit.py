@@ -205,6 +205,12 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
             print("Making Changes to Repo....")
             return True
         
+        # If nothing was detected, check for untracked files.
+        untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd)
+        if untracked_files.strip():
+            print("Untracked files detected.")
+            return True
+        
         print("There were no changes to the working tree detected.")
         return False
     
