@@ -223,7 +223,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
         #send_message(custom_message, sender_name, receiver_name, assign_log_number)
         print(custom_message)
 
-    return
+    return False
 
 @assign_log_number 
 def is_valid_directory(cwd:str, assign_log_number:str = None) -> bool:
@@ -257,7 +257,7 @@ def push_to_github() -> None:
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     #base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
     sub_dirs = {"Scripts", "Experts", "Include", "Images", "Files"}
-    #sub_dirs = {"dollsoles","workspaces","apps","apps"} ##Remove on production
+    #sub_dirs = {"Pictures"} ##Remove on production
 
     while True:
     
@@ -266,8 +266,6 @@ def push_to_github() -> None:
             cwd = str(Path(base_dir) / sub_dir)
             
             if is_valid_directory(cwd):
-
-                print("Directory valid")
                                 
                 commit_message = f"GitHub Push: {sub_dir.capitalize()}"
                     
@@ -288,10 +286,7 @@ def push_to_github() -> None:
 
                         print(f"Changes to directory {cwd} have been made")
 
-                        monitor_commits()
-                
-                else:
-                    continue
+                        #monitor_commits()
 
         time.sleep(1800)
 
