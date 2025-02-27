@@ -193,12 +193,12 @@ def run_command(command:str, cwd:str = None, assign_log_number:str = None) -> st
 def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
     """Checks for both staged and unstaged changes in your local repo.
     """
-    
+    print("checking for changes....")
+
     custom_message = None
     
     try:
-        result = run_command(["git", "status", "--short"], cwd)
-
+        result = run_command(["git", "status", "--short"], cwd).strip()
         print(f"Git Status Output: {result}") 
 
         if result.strip():
@@ -206,7 +206,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
             return True
         
         # If nothing was detected, check for untracked files.
-        untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd)
+        untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd).strip()
         if untracked_files.strip():
             print("Untracked files detected.")
             return True
@@ -274,7 +274,7 @@ def push_to_github() -> None:
                     
                 if check_for_changes(cwd):
 
-                    print("changes detected")
+                    print(f"changes detected in {sub_dir}")
                     
                     #Stages changes.
                     run_command(["git", "add", "."], cwd)
