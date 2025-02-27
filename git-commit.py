@@ -270,8 +270,6 @@ def push_to_github() -> None:
                 commit_message = f"GitHub Push: {sub_dir.capitalize()}"
                     
                 if check_for_changes(cwd):
-
-                    print(f"changes detected in {sub_dir}")
                     
                     #Stages changes.
                     run_command(["git", "add", "."], cwd)

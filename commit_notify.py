@@ -58,19 +58,14 @@ def get_latest_commit() -> str:
 def monitor_commits():
         
     last_commit_sha = None
+            
+    current_commit_sha = get_latest_commit()
     
-    while True:
+    if current_commit_sha != last_commit_sha:
+        current_commit_sha = last_commit_sha
+    else:
+        print("No new commits yet...")
         
-        current_commit_sha = get_latest_commit()
-        
-        if current_commit_sha != last_commit_sha:
-            current_commit_sha = last_commit_sha
-        else:
-            print("No new commits yet...")
-        
-        # Check for new commits every 10 minutes
-        time.sleep(600)
-
 # Run the monitor function
 if __name__ == "__main__":
     monitor_commits()
