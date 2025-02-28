@@ -51,7 +51,7 @@ def get_latest_commit() -> str:
             print(f"Error details: {response.text}")
 
     if latest_commit_data:
-        send_email.send_message(latest_commit_data, OWNER)
+        send_email.send_message(latest_commit_data[-1], OWNER)
     
     print(f"Latest commit across all repos: {latest_commit}") 
     return latest_commit
