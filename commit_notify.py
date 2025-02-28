@@ -27,7 +27,7 @@ def get_latest_commit() -> str:
             url = GITHUB_API_URL.format(owner=OWNER, repo=repo)
             print(url)
             response = requests.get(url,headers = headers)
-            response.raise_for_status()
+            print(response)
             print(f"Successfully fetched data for {repo}") 
         except requests.exceptions.RequestException as e:
             print(f"Request failed for {repo}: {e}")
@@ -59,12 +59,12 @@ def get_latest_commit() -> str:
 # Function to monitor GitHub for new commits and send email
 def monitor_commits():
         
-    last_commit_sha = None
-            
+    global last_commit_sha
     current_commit_sha = get_latest_commit()
     
     if current_commit_sha != last_commit_sha:
-        current_commit_sha = last_commit_sha
+        last_commit_sha = current_commit_sha
+        print(f"New commit detected: {current_commit_sha}")
     else:
         print("No new commits yet...")
 
