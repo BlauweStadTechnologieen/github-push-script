@@ -14,7 +14,9 @@ if not GITHUB_TOKEN:
 def get_latest_commit() -> str:
     
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    repos   = respository_list.repository_list()
+    
+    #Production Remote Repository List
+    repos   = respository_list.remote_repositories()
 
     latest_commit       = None
     latest_commit_data  = []
@@ -68,3 +70,5 @@ def monitor_commits():
 
     return
         
+if __name__ == "__main__":
+    monitor_commits()
