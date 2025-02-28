@@ -10,6 +10,7 @@ import json as j
 from pathlib import Path
 import time
 from commit_notify import monitor_commits, get_latest_commit
+import respository_list
 
 SMTP_SERVER     = "smtp-relay.brevo.com"
 SMTP_PORT       = 587
@@ -229,6 +230,7 @@ def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
 def is_valid_directory(cwd:str, assign_log_number:str = None) -> bool:
     if os.path.isdir(cwd):
         os.chdir(cwd)
+        print(cwd)
         if is_git_repo(cwd, assign_log_number):
             return True
         else:
@@ -250,12 +252,17 @@ def is_git_repo(cwd, log_incident) -> bool:
         return False
     
 def push_to_github() -> None:
-    """Adds, commits and pushes all files to the Git repo. Each 'run_command' will be individually checked, and will log an incident when any return an error."""
+    """Adds, commits and pushes all files to the Git repo.
+    Each 'run_command' will be individually checked, 
+    and will log an incident when any return an error."""
     
+    #Test Directory List
+    base_dir = "C:/Users/toddg/Onedrive"
+    sub_dirs = respository_list.repository_list_test()
+    
+    #Production Directory List
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
-    #base_dir = "C:/Users/toddg/Onedrive" ##Remove on Production
-    sub_dirs = {"Scripts", "Experts", "Include", "Images", "Files"}
-    #sub_dirs = {"Pictures"} ##Remove on production
+    sub_dirs = respository_list.repository_list()
 
     while True:
     
@@ -268,10 +275,10 @@ def push_to_github() -> None:
                                                     
             if not check_for_changes(cwd):
                 continue
-
-            commit_message = f"GitHub Push: {sub_dir.capitalize()}"
                 
             run_command(["git", "add", "."], cwd)
+
+            commit_message = f"GitHub Push: {sub_dir.capitalize()}"
 
             commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
