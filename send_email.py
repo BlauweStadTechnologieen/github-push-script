@@ -61,7 +61,7 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
     """
     
     msg             = MIMEMultipart()
-    msg['Subject']  = f"New Commit Notificstion"
+    msg['Subject']  = f"New Commit Notification"
     msg['From']     = f'"{sender_name}" <{sender_email}>'
     msg['To']       = receiver_email
     body            = message_body
