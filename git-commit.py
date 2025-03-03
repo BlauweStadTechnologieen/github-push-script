@@ -259,7 +259,6 @@ def push_to_github() -> None:
     #Test Directory List
     base_dir = "C:/Users/toddg/Onedrive"
     sub_dirs = respository_list.repository_list_test()
-    
     #Production Directory List
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     sub_dirs = respository_list.repository_list()
