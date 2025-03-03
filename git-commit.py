@@ -9,7 +9,7 @@ import requests as r
 import json as j
 from pathlib import Path
 import time
-from commit_notify import monitor_commits, get_latest_commit
+from commit_notify import get_latest_commit
 import respository_list
 
 SMTP_SERVER     = "smtp-relay.brevo.com"
@@ -289,7 +289,7 @@ def push_to_github() -> None:
 
             print(f"Making changes to {cwd}...")
 
-            monitor_commits()
+            get_latest_commit() 
 
         time.sleep(900)
 
