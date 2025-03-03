@@ -1,5 +1,4 @@
 import requests
-import time
 import send_email, respository_list
 
 # GitHub repository info
@@ -31,9 +30,8 @@ def get_latest_commit() -> str:
 
         if response.status_code == 200:
             commits = response.json()
-            print(f"Latest commit SHA for {repo}: {commits[0]['sha']}")
             latest_commit_sha = commits[0]["sha"]
-            
+            print(f"Latest commit SHA for {repo}: {latest_commit_sha}")
             
             if repo not in previous_commit_shas or latest_commit_sha != previous_commit_shas[repo]:
                 previous_commit_shas[repo] = latest_commit_sha
