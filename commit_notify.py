@@ -10,22 +10,19 @@ GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
+last_commit_shas = {}
+
 # Function to get the latest commit hash from GitHub
 def get_latest_commit() -> str:
     
-    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    
-    #Production Remote Repository List
-    repos   = respository_list.remote_repositories()
-
-    latest_commit       = None
-    latest_commit_data  = []
+    headers         = {"Authorization": f"token {GITHUB_TOKEN}"}
+    repos           = respository_list.remote_repositories()
+    changed_repos   = []
     
     for repo in repos:
 
         try:
             url = GITHUB_API_URL.format(owner=OWNER, repo=repo)
-            print(url)
             response = requests.get(url,headers = headers)
             print(response)
             print(f"Successfully fetched data for {repo}") 
@@ -36,25 +33,26 @@ def get_latest_commit() -> str:
         if response.status_code == 200:
             commits = response.json()
             print(f"Latest commit SHA for {repo}: {commits[0]['sha']}")
-            latest_commit = commits[0]['sha']
+            latest_commit_sha = commits[0]["sha"]
             
-            commit_information = {
-                "repo"  : repo,
-                "sha"   : latest_commit,
-                "url"   : url   
-            }
-
-            latest_commit_data.append(commit_information)
+            
+            if repo not in last_commit_shas or last_commit_sha != last_commit_shas[repo]:
+                last_commit_shas[repo] = latest_commit_sha
+            
+                changed_repos.append({
+                    "repo"  : repo,
+                    "sha"   : latest_commit_sha,
+                    "url"   : url   
+                })
             
         else:
             print(f"Error fetching commits for {repo}: {response.status_code}")
             print(f"Error details: {response.text}")
 
-    if latest_commit_data:
-        send_email.send_message(latest_commit_data[-1], OWNER)
+    if changed_repos:
+        send_email.send_message(changed_repos, OWNER)
     
-    print(f"Latest commit across all repos: {latest_commit}") 
-    return latest_commit
+    return changed_repos
 
 # Function to monitor GitHub for new commits and send email
 def monitor_commits():
