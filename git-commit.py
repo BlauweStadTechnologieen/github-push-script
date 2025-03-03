@@ -262,35 +262,32 @@ def push_to_github() -> None:
     #Production Directory List
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     sub_dirs = respository_list.repository_list()
-
-    while True:
     
-        for sub_dir in sub_dirs:
+    for sub_dir in sub_dirs:
+        
+        cwd = str(Path(base_dir) / sub_dir)
+        
+        if not is_valid_directory(cwd):
+            continue
+                                                
+        if not check_for_changes(cwd):
+            continue
             
-            cwd = str(Path(base_dir) / sub_dir)
-            
-            if not is_valid_directory(cwd):
-                continue
-                                                    
-            if not check_for_changes(cwd):
-                continue
-                
-            run_command(["git", "add", "."], cwd)
+        run_command(["git", "add", "."], cwd)
 
-            commit_message = f"GitHub Push: {sub_dir.capitalize()}"
+        commit_message = f"GitHub Push: {sub_dir.capitalize()}"
 
-            commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
+        commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
-            if "nothing to commit, working tree clean" in commit_result:
-                continue
-            
-            run_command(["git", "push"], cwd)
+        if "nothing to commit, working tree clean" in commit_result:
+            continue
+        
+        run_command(["git", "push"], cwd)
 
-            print(f"Making changes to {cwd}...")
+        print(f"Making changes to {cwd}...")
 
-            get_latest_commit() 
+        get_latest_commit() 
 
-        time.sleep(900)
 
 if __name__ == "__main__":
     push_to_github()
