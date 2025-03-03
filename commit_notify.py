@@ -47,8 +47,8 @@ def get_latest_commit() -> str:
             print(f"Error fetching commits for {repo}: {response.status_code}")
             print(f"Error details: {response.text}")
 
-        if changed_repos:
-            send_email.send_message(changed_repos, OWNER)
+    if changed_repos:
+        send_email.send_message(changed_repos, OWNER)
     
     return changed_repos
 
