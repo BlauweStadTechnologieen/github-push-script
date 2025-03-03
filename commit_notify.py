@@ -10,14 +10,13 @@ GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
-previous_commit_shas = {}
-
 # Function to get the latest commit hash from GitHub
 def get_latest_commit() -> str:
     
-    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-    repos   = respository_list.remote_repositories()
-    changed_repos = []
+    previous_commit_shas    = {}
+    changed_repos           = []
+    headers                 = {"Authorization": f"token {GITHUB_TOKEN}"}
+    repos                   = respository_list.remote_repositories()
     
     for repo in repos:
 
@@ -54,19 +53,5 @@ def get_latest_commit() -> str:
     
     return changed_repos
 
-# Function to monitor GitHub for new commits and send email
-def monitor_commits():
-        
-    global last_commit_sha
-    current_commit_sha = get_latest_commit()
-    
-    if current_commit_sha != last_commit_sha:
-        last_commit_sha = current_commit_sha
-        print(f"New commit detected: {current_commit_sha}")
-    else:
-        print("No new commits yet...")
-
-    return
-        
 if __name__ == "__main__":
-    monitor_commits()
+   get_latest_commit()
