@@ -12,6 +12,7 @@ if not GITHUB_TOKEN:
 # Function to get the latest commit hash from GitHub
 def get_latest_commit() -> str:
     
+    global latest_commit_sha
     previous_commit_shas    = {}
     changed_repos           = []
     headers                 = {"Authorization": f"token {GITHUB_TOKEN}"}
