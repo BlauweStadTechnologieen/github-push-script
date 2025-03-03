@@ -1,4 +1,4 @@
-@echo
+@echo off
 
 REM Activate the virtual environment
 call "C:\Users\SynergexSystems\Documents\utilities\github-push-script\.venv\Scripts\activate.bat"
