@@ -10,14 +10,14 @@ GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
-last_commit_shas = {}
+previous_commit_shas = {}
 
 # Function to get the latest commit hash from GitHub
 def get_latest_commit() -> str:
     
-    headers         = {"Authorization": f"token {GITHUB_TOKEN}"}
-    repos           = respository_list.remote_repositories()
-    changed_repos   = []
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+    repos   = respository_list.remote_repositories()
+    changed_repos = []
     
     for repo in repos:
 
@@ -36,8 +36,8 @@ def get_latest_commit() -> str:
             latest_commit_sha = commits[0]["sha"]
             
             
-            if repo not in last_commit_shas or last_commit_sha != last_commit_shas[repo]:
-                last_commit_shas[repo] = latest_commit_sha
+            if repo not in previous_commit_shas or latest_commit_sha != previous_commit_shas[repo]:
+                previous_commit_shas[repo] = latest_commit_sha
             
                 changed_repos.append({
                     "repo"  : repo,
