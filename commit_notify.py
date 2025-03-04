@@ -26,6 +26,7 @@ def get_latest_commit() -> str:
             print(response)
         except requests.exceptions.RequestException as e:
             print(f"Request failed for {repo}: {e}")
+            
             continue
 
         if response.status_code == 200:
@@ -37,10 +38,14 @@ def get_latest_commit() -> str:
                 "sha"   : latest_commit_sha,
                 "url"   : url   
             })
+
+            continue
             
         else:
             print(f"Error fetching commits for {repo}: {response.status_code}")
             print(f"Error details: {response.text}")
+
+            continue
 
     if changed_repos:
         send_email.send_message(changed_repos, OWNER)
