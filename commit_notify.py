@@ -9,11 +9,13 @@ GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
+previous_commit_shas    = {}
+
 # Function to get the latest commit hash from GitHub
 def get_latest_commit() -> str:
     
     global latest_commit_sha
-    previous_commit_shas    = {}
+    
     changed_repos           = []
     headers                 = {"Authorization": f"token {GITHUB_TOKEN}"}
     repos                   = respository_list.remote_repositories()
