@@ -262,6 +262,8 @@ def push_to_github() -> None:
     #Production Directory List
     base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
     sub_dirs = respository_list.repository_list()
+
+    changed_dirs = []
     
     for sub_dir in sub_dirs:
         
@@ -272,6 +274,9 @@ def push_to_github() -> None:
                                                 
         if not check_for_changes(cwd):
             continue
+
+        changed_dirs.append(sub_dir)
+        print(changed_dirs)
             
         run_command(["git", "add", "."], cwd)
 
@@ -286,7 +291,10 @@ def push_to_github() -> None:
 
         print(f"Making changes to {cwd}...")
 
+    if changed_dirs:
         get_latest_commit() 
+
+    print(changed_dirs)
 
 
 if __name__ == "__main__":
