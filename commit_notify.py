@@ -11,9 +11,7 @@ if not GITHUB_TOKEN:
 
 # Function to get the latest commit hash from GitHub
 def get_latest_commit() -> str:
-    
-    global latest_commit_sha
-    
+        
     repo_list   = []
     headers     = {"Authorization": f"token {GITHUB_TOKEN}"}
     repos       = respository_list.remote_repositories()
@@ -42,8 +40,6 @@ def get_latest_commit() -> str:
                 "date"  : latest_commit_date,
                 "id"    : latest_commit_id   
             })
-
-            continue
             
         else:
             print(f"Error fetching commits for {repo}: {response.status_code}")
