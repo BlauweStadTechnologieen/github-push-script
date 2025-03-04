@@ -275,9 +275,9 @@ def push_to_github() -> None:
         if not check_for_changes(cwd):
             continue
 
-        changed_dirs.append(sub_dir)
+        changed_dirs.append(cwd)
         print(changed_dirs)
-            
+        
         run_command(["git", "add", "."], cwd)
 
         commit_message = f"GitHub Push: {sub_dir.capitalize()}"
@@ -288,8 +288,6 @@ def push_to_github() -> None:
             continue
         
         run_command(["git", "push"], cwd)
-
-        print(f"Making changes to {cwd}...")
 
     if changed_dirs:
         get_latest_commit() 
