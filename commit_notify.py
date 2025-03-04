@@ -14,9 +14,9 @@ def get_latest_commit() -> str:
     
     global latest_commit_sha
     
-    changed_repos           = []
-    headers                 = {"Authorization": f"token {GITHUB_TOKEN}"}
-    repos                   = respository_list.remote_repositories()
+    repo_list   = []
+    headers     = {"Authorization": f"token {GITHUB_TOKEN}"}
+    repos       = respository_list.remote_repositories()
     
     for repo in repos:
 
@@ -35,12 +35,12 @@ def get_latest_commit() -> str:
             latest_commit_date = commits[0]["commit"]["author"]["date"]
             latest_commit_id = commits[0]["author"]["id"]
             
-            changed_repos.append({
+            repo_list.append({
                 "repo"  : repo,
                 "sha"   : latest_commit_sha,
                 "url"   : url,
                 "date"  : latest_commit_date,
-                "id"    : latest_commit_id    
+                "id"    : latest_commit_id   
             })
 
             continue
@@ -51,10 +51,10 @@ def get_latest_commit() -> str:
 
             continue
 
-    if changed_repos:
-        send_email.send_message(changed_repos, OWNER)
+    if repo_list:
+        send_email.send_message(repo_list, OWNER)
     
-    return changed_repos
+    return repo_list
 
 if __name__ == "__main__":
    get_latest_commit()
