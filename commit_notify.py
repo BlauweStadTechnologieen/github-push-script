@@ -32,11 +32,18 @@ def get_latest_commit() -> str:
         if response.status_code == 200:
             commits = response.json()
             latest_commit_sha = commits[0]["sha"]
+            latest_commit_date = commits[0]["commit"]["author"]["date"]
+            latest_commit_id = commits[0]["author"]["id"]
+
+            print(latest_commit_date)
+            print(latest_commit_id)
             
             changed_repos.append({
                 "repo"  : repo,
                 "sha"   : latest_commit_sha,
-                "url"   : url   
+                "url"   : url,
+                "date"  : latest_commit_date,
+                "id"    : latest_commit_id    
             })
 
             continue
@@ -47,8 +54,8 @@ def get_latest_commit() -> str:
 
             continue
 
-    if changed_repos:
-        send_email.send_message(changed_repos, OWNER)
+    #if changed_repos:
+    #    send_email.send_message(changed_repos, OWNER)
     
     return changed_repos
 

@@ -44,6 +44,14 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
                     <th>API URL:</th>
                     <td>{data['url']}</td>
                 </tr>
+                <tr>
+                    <th>Commit Date:</th>
+                    <td>{data['date']}</td>
+                </tr>
+                <tr>
+                    <th>Author ID:</th>
+                    <td>{data['id']}</td>
+                </tr>
             </table>
         """
     
