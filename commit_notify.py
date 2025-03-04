@@ -34,9 +34,6 @@ def get_latest_commit() -> str:
             latest_commit_sha = commits[0]["sha"]
             latest_commit_date = commits[0]["commit"]["author"]["date"]
             latest_commit_id = commits[0]["author"]["id"]
-
-            print(latest_commit_date)
-            print(latest_commit_id)
             
             changed_repos.append({
                 "repo"  : repo,
@@ -54,8 +51,8 @@ def get_latest_commit() -> str:
 
             continue
 
-    #if changed_repos:
-    #    send_email.send_message(changed_repos, OWNER)
+    if changed_repos:
+        send_email.send_message(changed_repos, OWNER)
     
     return changed_repos
 
