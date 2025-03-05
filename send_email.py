@@ -23,7 +23,7 @@ sender_department   =   "Engineering"
 #Support Information
 tech_department     =   f"{sender_department.lower()}{DOMAIN}"
 
-def send_message(latest_commit_data:dict, github_owner:str) -> None:
+def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:str) -> None:
     
     github_url = GITHUB_URL.format(owner=github_owner)
     
@@ -61,6 +61,7 @@ def send_message(latest_commit_data:dict, github_owner:str) -> None:
         Check it out by visiting your GitHub account at {github_url}<br><br>
         {resource_data_table}
         ========================================================================<br><br>
+        The local directories which have been changed since the last commit are {changed_repo_list}
         * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
         Yours sincerely<br>
         <b>{sender_name}</b><br>
