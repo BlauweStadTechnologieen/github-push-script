@@ -1,5 +1,5 @@
 import requests
-import send_email, respository_list
+import send_email, respository_list, freshdesk_ticket
 
 # GitHub repository info
 OWNER           = "Blauwestadtechnologieen"
@@ -23,7 +23,10 @@ def get_latest_commit(changed_local_repos:list) -> str:
             response = requests.get(url,headers = headers)
             print(response)
         except requests.exceptions.RequestException as e:
-            print(f"Request failed for {repo}: {e}")
+            custom_message = f"Request failed for {repo}: {e}"
+            custom_subject = f"Repo retrieval failure"
+            freshdesk_ticket.create_freshdesk_ticket(custom_message, custom_subject)
+            print(custom_message)
             
             continue
 
@@ -44,6 +47,7 @@ def get_latest_commit(changed_local_repos:list) -> str:
         else:
             print(f"Error fetching commits for {repo}: {response.status_code}")
             print(f"Error details: {response.text}")
+            freshdesk_ticket.create_freshdesk_ticket(response.text,response.status)
 
             continue
 
