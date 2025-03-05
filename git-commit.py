@@ -296,7 +296,7 @@ def push_to_github() -> None:
         print(changed_dirs)
         
         time.sleep(10)
-        get_latest_commit() 
+        get_latest_commit(changed_dirs) 
         
 if __name__ == "__main__":
     push_to_github()
