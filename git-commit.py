@@ -275,8 +275,9 @@ def push_to_github() -> None:
         if not check_for_changes(cwd):
             continue
 
-        #DEBUG Message
         changed_dirs.append(cwd)
+
+        #DEBUG Message
         print(changed_dirs)
         
         run_command(["git", "add", "."], cwd)
@@ -291,9 +292,11 @@ def push_to_github() -> None:
         run_command(["git", "push"], cwd)
 
     if changed_dirs:
+        
+        print(changed_dirs)
+        
+        time.sleep(10)
         get_latest_commit() 
-
-    print(changed_dirs)
-
+        
 if __name__ == "__main__":
     push_to_github()
