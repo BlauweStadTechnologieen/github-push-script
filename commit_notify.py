@@ -10,9 +10,9 @@ if not GITHUB_TOKEN:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
 # Function to get the latest commit hash from GitHub
-def get_latest_commit() -> str:
+def get_latest_commit(changed_local_repos:list) -> str:
         
-    repo_list   = []
+    remote_repo_list   = []
     headers     = {"Authorization": f"token {GITHUB_TOKEN}"}
     repos       = respository_list.remote_repositories()
     
@@ -33,7 +33,7 @@ def get_latest_commit() -> str:
             latest_commit_date = commits[0]["commit"]["author"]["date"]
             latest_commit_id = commits[0]["author"]["id"]
             
-            repo_list.append({
+            remote_repo_list.append({
                 "repo"  : repo,
                 "sha"   : latest_commit_sha,
                 "url"   : url,
@@ -47,10 +47,10 @@ def get_latest_commit() -> str:
 
             continue
 
-    if repo_list:
-        send_email.send_message(repo_list, OWNER)
+    if remote_repo_list:
+        send_email.send_message(remote_repo_list, changed_local_repos, OWNER)
     
-    return repo_list
+    return remote_repo_list
 
 if __name__ == "__main__":
    get_latest_commit()
