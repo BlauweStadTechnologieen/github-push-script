@@ -23,7 +23,7 @@ sender_department   =   "Engineering"
 #Support Information
 tech_department     =   f"{sender_department.lower()}{DOMAIN}"
 
-def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:str) -> None:
+def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:str, incident_ref:str = None, mime_type:str = "html") -> None:
     
     github_url = GITHUB_URL.format(owner=github_owner)
     
@@ -61,7 +61,7 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
         Check it out by visiting your GitHub account at {github_url}<br><br>
         {resource_data_table}
         ========================================================================<br><br>
-        The local directories which have been changed since the last commit are {changed_repo_list}
+        The local directories which have been changed since the last commit are {changed_repo_list}<br><br>
         * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
         Yours sincerely<br>
         <b>{sender_name}</b><br>
@@ -74,7 +74,7 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
     msg['From']     = f'"{sender_name}" <{sender_email}>'
     msg['To']       = receiver_email
     body            = message_body
-    msg.attach(MIMEText(body, "html"))
+    msg.attach(MIMEText(body, mime_type))
     
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
