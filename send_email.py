@@ -13,7 +13,7 @@ SMTP_PORT           =   587
 
 #Recipient Information
 receiver_name       =   "Synergex Systems"
-receiver_email      =   "todd.gilbey@synergex-systems.com"
+receiver_email      =   "comms@synergex-systems.com"
 
 #Sender Information
 sender_name         =   "Blue City Capital Technologies, Inc"
@@ -70,7 +70,7 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
     """
     
     msg             = MIMEMultipart()
-    msg['Subject']  = f"New Commit Notification"
+    msg['Subject']  = f"Github Commit Report"
     msg['From']     = f'"{sender_name}" <{sender_email}>'
     msg['To']       = receiver_email
     body            = message_body
