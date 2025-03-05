@@ -133,7 +133,7 @@ def send_message(custom_message:str, sender_name:str, receiver_name:str, inciden
     
 def email_body(custom_message:str, sender_name:str, receiver_name:str, incident_ref:str) -> str:
     
-    was_ticket_generated    = create_freshdesk_ticket(incident_ref,custom_message)
+    was_ticket_generated    = create_freshdesk_ticket(incident_ref, custom_message)
     ticket_id               = was_ticket_generated if was_ticket_generated is not None else "No support ticket available."
     
     ticket_return_message = (
@@ -188,7 +188,6 @@ def run_command(command:str, cwd:str = None, assign_log_number:str = None) -> st
         print(f"Command Output: {result.stdout}") 
         return result.stdout
     
-
 @assign_log_number    
 def check_for_changes(cwd:str, assign_log_number:str = None) -> bool:
     """Checks for both staged and unstaged changes in your local repo.
