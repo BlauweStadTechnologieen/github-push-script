@@ -1,6 +1,7 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import freshdesk_ticket
 
 RECEIVER_DOMAIN     =   "@synergex-systems.com"
 SENDER_DOMAIN       =   "@bluecitycapital.us"
@@ -17,7 +18,9 @@ receiver_email      =   f"comms{RECEIVER_DOMAIN}"
 sender_name         =   "Blue City Capital Technologies, Inc"
 sender_email        =   f"notifications{SENDER_DOMAIN}"
 
-def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> None:
+def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
+    
+    custom_subject = "SMTP Authentication Error"
     
     msg             = MIMEMultipart()
     msg['Subject']  = subject
@@ -31,5 +34,11 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> None:
             server.starttls()
             server.login(SMTP_EMAIL, SMTP_PASSWORD)
             server.sendmail(sender_email, receiver_email, msg.as_string())
+            return True
     except Exception as e:
-        print(f"Error sending email: {e}")
+        custom_message = f"Error sending email: {e}"
+        print(custom_message)
+        freshdesk_ticket.create_freshdesk_ticket(custom_message, custom_subject)
+        return False
+
+    return False
