@@ -1,21 +1,27 @@
 import json as j
 import requests as r
-import email_auth
+import email_auth, send_email
 
 def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_id:int = 201000039106, responder_id:int = 201002411183) -> int:
     """
-    Creates a Freshdesk ticket on behalf of the end user. This will be sent straight to the users inbox, where the user can add further information if they need to/
-    
-    This function must be called within a function which utulizes the assign_log_number decorator.
+    When an exception or error occurs during the execution of a function within this package, this will lodge a support toclet with Freshdesk. 
+    A notification that a ticket has been created will be sent to the users email. When this function is called, it will return the ticket id.
 
-    This function will only be called when an exception is thrown. The exception message will be passed to the 'exception' parameter.
+    You will need to manually pass the exception_or_error_message and the subject parameters prior to calling the function. 
+
+    The group_id and the responder_id parameters have been set to defaults, however, you may override these if necessary. 
     """
     
     FRESHDESK_DOMAIN    = "bluecitycapitaltechnologies"
     API_KEY             = "RTBtMGlwfVik2cuaj1"
     API_URL             = f'https://{FRESHDESK_DOMAIN}.freshdesk.com/api/v2/tickets/'
 
-    description = f"This support ticket has been automatically generated because of the following error or exception message {exception_or_error_message}."
+    description = f"""
+    Dear {email_auth.receiver_name}<br>
+    A support ticket has been automatically generated because of the following error or exception message:<br><br>
+    {exception_or_error_message}<br><br>
+    ===================================================
+    """
 
     ticket_data = {
         "subject"     : subject,
@@ -58,8 +64,6 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
             ticket_info = response.json
             ticket_id   = ticket_info.get("id")
 
-            print(ticket_id)
-
         elif response.status_code == 429:
             custom_message = f"API request limit exceeded: {response.status_code}"
         
@@ -68,5 +72,6 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
 
     if custom_message:
         print(custom_message)
+        send_email.freshdesk_inop_notification(custom_message)
 
     return ticket_id
