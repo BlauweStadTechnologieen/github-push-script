@@ -6,7 +6,7 @@ def company_signoff() -> None:
     return f"""
     Yours sincerely<br>
     <b>{messaging_comms.sender_name}</b><br>
-    {messaging_comms.sender_department} Team<br>
+    The {messaging_comms.sender_department} Team<br>
     {messaging_comms.tech_department}<br><br>
     """
 
@@ -49,7 +49,7 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
     We are writing to you because you have a new commit uploaded to your GitHub repository.
     Check it out by visiting your GitHub account at {github_url}<br><br>
     {resource_data_table}
-    ========================================================================<br><br>
+    ========================================================================<br>
     The local directories which have been changed since the last commit are {changed_repo_list}<br><br>
     * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
     {company_signoff()}
