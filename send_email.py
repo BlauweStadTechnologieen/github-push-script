@@ -1,5 +1,5 @@
 import messaging_comms
-from email_auth import smtp_auth
+import email_auth
 import uuid
 
 def company_signoff() -> None:
@@ -54,7 +54,7 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
     * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
     {company_signoff()}
     """
-    smtp_auth(message_body, custom_subject)
+    email_auth.smtp_auth(message_body, custom_subject)
 
     return
 
@@ -83,6 +83,8 @@ def freshdesk_inop_notification(custom_message:str) -> None:
         ========================================================================<br><br>
         {company_signoff()}
     """
-    smtp_auth(freshdesk_inop_text_body, custom_subject)
+
+    print(freshdesk_inop_text_body)
+    email_auth.smtp_auth(freshdesk_inop_text_body, custom_subject)
 
     return
