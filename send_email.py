@@ -42,7 +42,7 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
                     <td>{data['id']}</td>
                 </tr>
             </table>
-        """    
+            """    
             
     message_body = f"""
     Dear {messaging_comms.receiver_name}<br><br>
