@@ -1,16 +1,9 @@
 import os
 import subprocess
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from functools import wraps
-import uuid
-import requests as r
-import json as j
 from pathlib import Path
 from commit_notify import get_latest_commit
 import respository_list
-import freshdesk_ticket
+from freshdesk_ticket import create_freshdesk_ticket
 
 directory_code  = "390295C323775C4285AE93D9818F5103"
 
@@ -32,7 +25,6 @@ DATA_COLLECTION_ENDPOINT    =   f"https://vmstatusdce-o0w0.{LOGS_API_ENDPOINT_RE
 #            raise e
 #    return wrapper
 
-
 def run_command(command:str, cwd:str = None) -> str:
     """Run a command in the terminal and capture the output. An email will be sent in the event of an error, stating the nature of the error. No message will be printed if there are no errors."""
     result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
@@ -42,7 +34,7 @@ def run_command(command:str, cwd:str = None) -> str:
     
     if result.returncode != 0:
         custom_message =  result.stderr.strip() if result.stderr else "Unknown error occured - check repo directory as a possible solution"
-        freshdesk_ticket.create_freshdesk_ticket(custom_message, custom_subject)
+        create_freshdesk_ticket(custom_message, custom_subject)
         return custom_message
     else:
         print(f"Command Output: {result.stdout}") 
@@ -79,7 +71,7 @@ def check_for_changes(cwd:str) -> bool:
         custom_message = f"General Exception {e}"
 
     if custom_message:
-        freshdesk_ticket.create_freshdesk_ticket(custom_message, custom_subject)
+        create_freshdesk_ticket(custom_message, custom_subject)
         print(custom_message)
 
     return False
@@ -98,20 +90,20 @@ def is_valid_directory(cwd:str) -> bool:
     else:
         custom_message = f"{cwd} is not a valid directory. Please check you have specified an existing directory & that this contains a .git folder."
         print(custom_subject, custom_message)
-        freshdesk_ticket.create_freshdesk_ticket(custom_message,custom_subject)
+        create_freshdesk_ticket(custom_message,custom_subject)
         return False
 
-def is_git_repo(cwd, log_incident) -> bool:
+def is_git_repo(cwd) -> bool:
     
-    git_path        = os.path.join(cwd, '.git')
-    custom_subject  = "Invalid Git Repo in the local directory"
+    git_path        =   os.path.join(cwd, '.git')
+    custom_subject  =   "Invalid Git Repo in the local directory"
     
     if os.path.isdir(git_path):
         return True
     else:
-        custom_message = f"{cwd} is not a Git Repository. Run 'git init' from the command shell "
+        custom_message = f"{cwd} is not a Git Repository. Navigate do {cwd}, then run 'git init' from the command shell "
         print(custom_message, custom_subject)
-        freshdesk_ticket.create_freshdesk_ticket(custom_message, custom_subject)
+        create_freshdesk_ticket(custom_message, custom_subject)
         return False
     
 def push_to_github() -> None:
@@ -152,7 +144,7 @@ def push_to_github() -> None:
         run_command(["git", "push"], cwd)
 
     if changed_dirs:
-        get_latest_commit(changed_dirs) 
+        get_latest_commit(changed_dirs)  
         
 if __name__ == "__main__":
     push_to_github()
