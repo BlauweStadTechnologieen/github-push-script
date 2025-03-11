@@ -64,12 +64,12 @@ def generate_incident_uuid() -> str:
 def freshdesk_inop_notification(custom_message:str) -> None:
       
     incident_uuid   =   generate_incident_uuid()
-    custom_subject  =   "CRM Inoperable Notification"
+    custom_subject  =   "(CRMIN) CRM Inoperable Notification"
     
     freshdesk_inop_text_body = f"""
         Dear {messaging_comms.receiver_name}<br><br>
         We are writing to you because our support ticketing system is inoperable
-        ========================================================================<br><br>
+        ========================================================================<br>
         <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse; text-align: left;">
             <tr>
                 <th>Freshdesk Inoperative Reason:</th>

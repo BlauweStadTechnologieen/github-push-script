@@ -9,7 +9,6 @@ SMTP_SERVER         =   "smtp-relay.brevo.com"
 SMTP_EMAIL          =   "448c41002@smtp-brevo.com"
 SMTP_PASSWORD       =   "hSg19RUfw6QIcV7b"
 SMTP_PORT           =   587
-SMTP_DOMAIN         =   "@bluecitycapital.com"
 
 def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
     
