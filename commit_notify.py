@@ -1,31 +1,30 @@
 import requests
 import send_email, respository_list
 from freshdesk_ticket import create_freshdesk_ticket
+import shared_config
 
 # GitHub repository info
-OWNER           = "Blauwestadtechnologieen"
-GITHUB_TOKEN    = "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"
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 
-if not GITHUB_TOKEN:
+if not shared_config.GITHUB_CONSTANTS["GITHUB_TOKEN"]:
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
 # Function to get the latest commit hash from GitHub
 def get_latest_commit(changed_local_repos:list) -> list:
         
-    remote_repo_list   = []
-    headers     = {"Authorization": f"token {GITHUB_TOKEN}"}
-    repos       = respository_list.remote_repositories()
+    remote_repo_list    = []
+    headers             = {"Authorization": f"token {shared_config.GITHUB_CONSTANTS['GITHUB_TOKEN']}"}
+    repos               = respository_list.remote_repositories()
     
     for repo in repos:
 
         try:
-            url = GITHUB_API_URL.format(owner=OWNER, repo=repo)
-            response = requests.get(url,headers = headers)
+            url = GITHUB_API_URL.format(owner=shared_config.GITHUB_CONSTANTS["OWNER"], repo=repo)
+            response = requests.get(url, headers = headers)
             print(response)
         except requests.exceptions.RequestException as e:
             custom_message = f"Request failed for {repo}: {e}"
-            custom_subject = f"Repo retrieval failure"
+            custom_subject = f"Repository fetch failure."
             create_freshdesk_ticket(custom_message, custom_subject)
             print(custom_message)
             
@@ -53,7 +52,7 @@ def get_latest_commit(changed_local_repos:list) -> list:
             continue
 
     if remote_repo_list:
-        send_email.send_message(remote_repo_list, changed_local_repos, OWNER)
+        send_email.send_message(remote_repo_list, changed_local_repos, shared_config.GITHUB_CONSTANTS["OWNER"])
     
     return remote_repo_list
 
