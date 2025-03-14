@@ -1,6 +1,16 @@
 import json as j
 import requests as r
 import send_email, messaging_comms
+import os
+from dotenv import load_dotenv
+import shared_config
+
+load_dotenv()
+
+FRESHDESK_CREDENTIALS = {
+    "FRESHDESK_DOMAIN" : os.getenv("FRESHDESK_DOMAIN"),
+    "FRESHDESK_API_KEY": os.getenv("FRESHDESK_API_KEY")
+}
 
 def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_id:int = 201000039106, responder_id:int = 201002411183) -> int:
     """
@@ -12,12 +22,11 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     The group_id and the responder_id parameters have been set to defaults, however, you may override these if necessary. 
     """
     
-    FRESHDESK_DOMAIN    = "bluecitycapitaltechnologies"
-    API_KEY             = "RTBtMGlwfVik2cuaj1"
-    API_URL             = f'https://{FRESHDESK_DOMAIN}.freshdesk.com/api/v2/tickets/'
+    #API_KEY             = "RTBtMGlwfVik2cuaj1"
+    API_URL             = f'https://{FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]}.freshdesk.com/api/v2/tickets/'
 
     description = f"""
-    Dear {messaging_comms.receiver_name}<br>
+    Dear {shared_config.MESSAGING_METADATA["REQUESTER_NAME"]}<br>
     A support ticket has been automatically generated because of the following error or exception message:<br><br>
     {exception_or_error_message}<br><br>
     ===================================================
@@ -31,8 +40,8 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         'group_id'    : group_id,
         'responder_id': responder_id,
         'requester'   : {
-            'name'    : messaging_comms.receiver_name,
-            'email'   : messaging_comms.receiver_email 
+            'name'    : shared_config.MESSAGING_METADATA["REQUESTER_NAME"],
+            'email'   : shared_config.MESSAGING_METADATA["REQUESTER_EMAIL"]
         } 
     }
 
@@ -42,7 +51,7 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     try:
         response = r.post(
             API_URL,
-            auth    = (API_KEY, 'X'),
+            auth    = (FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"], 'X'),
             json    = j.dumps(ticket_data),
             timeout = 30,
             headers = {'Content-Type' : 'application/json'}
