@@ -5,6 +5,7 @@ from commit_notify import get_latest_commit
 import respository_list
 from freshdesk_ticket import create_freshdesk_ticket
 import shared_config
+import repositories
 
 #def assign_log_number(func) -> str:
 #    @wraps(func)
@@ -103,11 +104,8 @@ def push_to_github() -> None:
     and will log an incident when any return an error."""
     
     #Test Directory List
-    base_dir = "C:/Users/toddg/Onedrive"
-    sub_dirs = respository_list.repository_list_test()
-    #Production Directory List
     base_dir = shared_config.DIRECTORY_CONSTANTS["BASE_DIR"]
-    sub_dirs = respository_list.repository_list()
+    sub_dirs = repositories.local_repositories()
 
     changed_dirs = []
     

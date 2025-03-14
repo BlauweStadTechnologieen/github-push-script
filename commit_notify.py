@@ -2,6 +2,7 @@ import requests
 import send_email, respository_list
 from freshdesk_ticket import create_freshdesk_ticket
 import shared_config
+import repositories
 
 # GitHub repository info
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
@@ -14,7 +15,7 @@ def get_latest_commit(changed_local_repos:list) -> list:
         
     remote_repo_list    = []
     headers             = {"Authorization": f"token {shared_config.GITHUB_CONSTANTS['GITHUB_TOKEN']}"}
-    repos               = respository_list.remote_repositories()
+    repos               = repositories.remote_repositories()
     
     for repo in repos:
 
