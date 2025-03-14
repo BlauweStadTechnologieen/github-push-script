@@ -1,14 +1,18 @@
 import messaging_comms
 import email_auth
 import uuid
+import os
+import shared_config
 
 def company_signoff() -> None:
     return f"""
     Yours sincerely<br>
-    <b>{messaging_comms.sender_name}</b><br>
-    The {messaging_comms.sender_department} Team<br>
-    {messaging_comms.tech_department}<br><br>
+    <b>{shared_config.MESSAGING_METADATA["SENDER_NAME"]}</b><br>
+    The {shared_config.MESSAGING_METADATA["SENDER_DEPARTMENT"]} Team<br>
+    {shared_config.MESSAGING_METADATA["SENDER_EMAIL"]}<br><br>
     """
+
+github_owner = shared_config.GITHUB_CONSTANTS["OWNER"]
 
 def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:str) -> None:
     
@@ -45,7 +49,7 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
             """    
             
     message_body = f"""
-    Dear {messaging_comms.receiver_name}<br><br>
+    Dear {shared_config.MESSAGING_METADATA["REQUESTER_NAME"]}<br><br>
     We are writing to you because you have a new commit uploaded to your GitHub repository.
     Check it out by visiting your GitHub account at {github_url}<br><br>
     {resource_data_table}
@@ -67,7 +71,7 @@ def freshdesk_inop_notification(custom_message:str) -> None:
     custom_subject  =   "(CRMIN) CRM Inoperable Notification"
     
     freshdesk_inop_text_body = f"""
-        Dear {messaging_comms.receiver_name}<br><br>
+        Dear {shared_config.MESSAGING_METADATA["REQUESTER_NAME"]}<br><br>
         We are writing to you because our support ticketing system is inoperable
         ========================================================================<br>
         <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse; text-align: left;">
