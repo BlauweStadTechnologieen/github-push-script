@@ -73,7 +73,6 @@ def check_for_changes(cwd:str) -> bool:
     if custom_message:
         print(custom_message)
         create_freshdesk_ticket(custom_message, custom_subject)
-        print(custom_message)
 
     return False
 
