@@ -8,6 +8,9 @@ import repositories
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 
 if not shared_config.GITHUB_CONSTANTS["GITHUB_TOKEN"]:
+    token_invalid_subject = "Invalid GitHug Token"
+    token_invalid_message = "Your Github toekn in either invalud or expired. Please contact your administrator."
+    create_freshdesk_ticket(token_invalid_message, token_invalid_subject)
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
 # Function to get the latest commit hash from GitHub
