@@ -1,4 +1,3 @@
-import messaging_comms
 import email_auth
 import uuid
 import os

@@ -1,6 +1,6 @@
 import json as j
 import requests as r
-import send_email, messaging_comms
+import send_email
 import os
 from dotenv import load_dotenv
 import shared_config

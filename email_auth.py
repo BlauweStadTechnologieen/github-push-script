@@ -1,7 +1,6 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import messaging_comms
 import freshdesk_ticket
 import os
 from dotenv import load_dotenv
