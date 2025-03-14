@@ -4,17 +4,8 @@ from pathlib import Path
 from commit_notify import get_latest_commit
 import respository_list
 from freshdesk_ticket import create_freshdesk_ticket
+import shared_config
 
-directory_code  = "390295C323775C4285AE93D9818F5103"
-
-# Logs Workspace Information
-LOGS_WORKSPACE_ID           =   "e30d973a-e8ad-4c66-8c0b-59f86e781b6d"
-LOGS_WORKSPACE_KEY          =   "MjbHEQvhnBnxmf7btH20hVPXi8Db+i6+4V4fMbq9DL5pswnyvka6q9V64G3PEmRdJoQeUW0GmGOV81d4I+Xhcw=="   
-LOGS_API_ENDPOINT_REGION    =   "uksouth"
-
-# Data Collection Endpoint
-DATA_COLLECTION_ENDPOINT    =   f"https://vmstatusdce-o0w0.{LOGS_API_ENDPOINT_REGION}-1.ingest.monitor.azure.com"
-  
 #def assign_log_number(func) -> str:
 #    @wraps(func)
 #    def wrapper(*args, **kwargs):
@@ -115,7 +106,7 @@ def push_to_github() -> None:
     base_dir = "C:/Users/toddg/Onedrive"
     sub_dirs = respository_list.repository_list_test()
     #Production Directory List
-    base_dir = f"C:/Users/SynergexSystems/AppData/Roaming/MetaQuotes/Terminal/{directory_code}/MQL4"
+    base_dir = shared_config.DIRECTORY_CONSTANTS["BASE_DIR"]
     sub_dirs = respository_list.repository_list()
 
     changed_dirs = []
