@@ -4,7 +4,7 @@ from freshdesk_ticket import create_freshdesk_ticket
 
 # GitHub repository info
 OWNER           = "Blauwestadtechnologieen"
-GITHUB_TOKEN    = "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"
+GITHUB_TOKEN    = "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"
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 
 if not GITHUB_TOKEN:
