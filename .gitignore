@@ -1,2 +1,5 @@
 /env
 /.vscode
+/.env
+/env_testing.py
+/repositories.py
