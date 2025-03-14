@@ -48,7 +48,7 @@ def get_latest_commit(changed_local_repos:list) -> list:
         else:
             print(f"Error fetching commits for {repo}: {response.status_code}")
             print(f"Error details: {response.text}")
-            create_freshdesk_ticket(response.text, response.status)
+            create_freshdesk_ticket(response.text, response.status_code)
 
             continue
 
@@ -56,6 +56,3 @@ def get_latest_commit(changed_local_repos:list) -> list:
         send_email.send_message(remote_repo_list, changed_local_repos, shared_config.GITHUB_CONSTANTS["OWNER"])
     
     return remote_repo_list
-
-if __name__ == "__main__":
-   get_latest_commit()
