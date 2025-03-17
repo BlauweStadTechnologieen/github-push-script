@@ -22,7 +22,6 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     The group_id and the responder_id parameters have been set to defaults, however, you may override these if necessary. 
     """
     
-    #API_KEY             = "RTBtMGlwfVik2cuaj1"
     API_URL             = f'https://{FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]}.freshdesk.com/api/v2/tickets/'
 
     description = f"""
@@ -72,12 +71,9 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
             
             ticket_info = response.json
             ticket_id   = ticket_info.get("id")
-
-        elif response.status_code == 429:
-            custom_message = f"API request limit exceeded: {response.status_code}"
-        
+            
         else:
-            custom_message = f"Support Ticket Creation Error. Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
+            custom_message = f"Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
 
     if custom_message:
         print(custom_message)
