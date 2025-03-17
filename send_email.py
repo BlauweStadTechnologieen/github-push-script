@@ -33,10 +33,6 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
                     <td>{data['repo']}</td>
                 </tr>
                 <tr>
-                    <th>API URL:</th>
-                    <td>{data['url']}</td>
-                </tr>
-                <tr>
                     <th>Commit Date:</th>
                     <td>{data['date']}</td>
                 </tr>
