@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+load_dotenv(".env.development")
 
 MESSAGING_METADATA = {
      "SENDER_DOMAIN"        : os.getenv("SENDER_DOMAIN"), 
@@ -18,6 +19,6 @@ GITHUB_CONSTANTS={
 }
 
 DIRECTORY_CONSTANTS = {
-    "DIRECTORY_CODE"        : os.getenv("DIRECTORY_CODE"),
-    "BASE_DIR"              : os.getenv("BASE_DIR")
+    "BASE_DIR"              : os.getenv("BASE_DIR").format(DIRECTORY_CODE=os.getenv("DIRECTORY_CODE")),
+    "DEV_BASE_DIR"          : os.getenv("DEV_BASE_DIR")
 }
