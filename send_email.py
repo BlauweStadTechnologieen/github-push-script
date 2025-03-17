@@ -37,6 +37,10 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
                     <td>{data['date']}</td>
                 </tr>
                 <tr>
+                    <th>Commit message:</th>
+                    <td>{data['msg']}</td>
+                </tr>
+                <tr>
                     <th>Author ID:</th>
                     <td>{data['id']}</td>
                 </tr>

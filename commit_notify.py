@@ -39,13 +39,15 @@ def get_latest_commit(changed_local_repos:list) -> list:
             latest_commit_sha = commits[0]["sha"]
             latest_commit_date = commits[0]["commit"]["author"]["date"]
             latest_commit_id = commits[0]["author"]["id"]
+            latest_commit_msg = commits[0]["commit"]["message"]
             
             remote_repo_list.append({
                 "repo"  : repo,
                 "sha"   : latest_commit_sha,
                 "url"   : url,
                 "date"  : latest_commit_date,
-                "id"    : latest_commit_id   
+                "id"    : latest_commit_id,
+                "msg"   : latest_commit_msg   
             })
             
         else:
