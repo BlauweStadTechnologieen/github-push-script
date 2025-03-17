@@ -1,5 +1,5 @@
 import requests
-import send_email, respository_list
+import send_email
 from freshdesk_ticket import create_freshdesk_ticket
 import shared_config
 import repositories
