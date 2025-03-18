@@ -27,12 +27,14 @@ def get_latest_commit(changed_local_repos:list) -> list:
             response = requests.get(url, headers = headers)
             print(response)
         except requests.exceptions.RequestException as e:
+            print(custom_message)
             custom_message = f"Request failed for {repo}: {e}"
             custom_subject = f"Repository fetch failure."
             create_freshdesk_ticket(custom_message, custom_subject)
-            print(custom_message)
             
             continue
+
+        from datetime import datetime
 
         if response.status_code == 200:
             commits = response.json()
@@ -51,9 +53,10 @@ def get_latest_commit(changed_local_repos:list) -> list:
             })
             
         else:
-            print(f"Error fetching commits for {repo}: {response.status_code}")
-            print(f"Error details: {response.text}")
-            create_freshdesk_ticket(response.text, response.status_code)
+            print(f"Error fetching commits for {repo}: {response.status_code}{response.text}{response.content}")
+            custom_message = f"{response.content}{response.text}{response.status_code}"
+            custom_subject = f"Error {response.status_code}"
+            create_freshdesk_ticket(custom_message, custom_subject)
 
             continue
 
