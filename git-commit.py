@@ -62,8 +62,8 @@ def check_for_changes(cwd:str) -> bool:
         custom_message = f"General Exception {e}"
 
     if custom_message:
-        create_freshdesk_ticket(custom_message, custom_subject)
         print(custom_message)
+        create_freshdesk_ticket(custom_message, custom_subject)
 
     return False
 
@@ -71,18 +71,16 @@ def is_valid_directory(cwd:str) -> bool:
     
     custom_subject = "Invalid local directory"
     
-    if os.path.isdir(cwd):
-        os.chdir(cwd)
-        print(cwd)
-        if is_git_repo(cwd):
-            return True
-        else:
-            return False
-    else:
+    if not os.path.isdir(cwd):
         custom_message = f"{cwd} is not a valid directory. Please check you have specified an existing directory & that this contains a .git folder."
         print(custom_subject, custom_message)
         create_freshdesk_ticket(custom_message,custom_subject)
         return False
+
+    if is_git_repo(cwd):
+        return True
+    
+    False
 
 def is_git_repo(cwd) -> bool:
     
@@ -121,7 +119,7 @@ def push_to_github() -> None:
         
         run_command(["git", "add", "."], cwd)
 
-        commit_message = f"GitHub Push: {sub_dir.capitalize()}"
+        commit_message = f"New Commit: {sub_dir.capitalize()}"
 
         commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
