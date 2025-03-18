@@ -34,8 +34,6 @@ def get_latest_commit(changed_local_repos:list) -> list:
             
             continue
 
-        from datetime import datetime
-
         if response.status_code == 200:
             commits = response.json()
             latest_commit_sha = commits[0]["sha"]
