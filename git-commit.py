@@ -5,6 +5,7 @@ from commit_notify import get_latest_commit
 from freshdesk_ticket import create_freshdesk_ticket
 import settings_mapper
 import repositories
+from check_and_install_requirements_changes import check_and_install_requirements
 
 #def assign_log_number(func) -> str:
 #    @wraps(func)
@@ -36,6 +37,8 @@ def check_for_changes(cwd:str) -> bool:
     """
     print("checking for changes....")
 
+    check_and_install_requirements()
+    
     custom_message = None
     custom_subject = "An error occured when checking for changes in a local directory"
     
