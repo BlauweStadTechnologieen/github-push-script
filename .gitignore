@@ -3,3 +3,4 @@
 /.env
 /env_testing.py
 /repositories.py
+/.env.development
