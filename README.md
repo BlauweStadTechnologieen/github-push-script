@@ -11,7 +11,6 @@ Download the latest verion of `Git` frm https://git-scm.com/downloads/win
 You can download the latest version of the MT4 terminal, which will by default come with the MetaEditor4 application.
 
 ## Setup
-
 Nagivate to the correct location where you would like your script to be located, and run the following command:
 ```
 git clone git@github.com:BlauweStadTechnologieen/github-push-script.git
@@ -20,34 +19,43 @@ You can then ensure that you have the latest verion by running the following com
 ```
 git pull
 ```
-#### Creating a variables environment (Optional).
-You can optionally create a variables environment, referred to as `.env`, short for "environment variables". 
+#### Creating a variables environment.
 Create a file by running the following command:
 ```
-mkdir .env
+echo >> .env >>
 ```
 You will then need to install the `python-dotenv` module in the folling fashion:
 ```
 pip install python-dotenv
 ```
 [-] This should be included in the `requirements.txt` file.
+[-] Run the command `pip install python-dotenv` to install the `dotenv` module.
+[-] Run the command `echo >> .env >>`, before cutting and pasting the following:
+[-] Populate each constant with your own information,
+[-] Save this in the root directory of the project folder
+
 #### Use Case:
-Creating a `.env` file which will be used to contain sensitive data:
+Populate this file with the following information:
 ```
 #.env
-API_KEY=your_api_key
-DATABASE_URL=your_database_url
-DEBUG=True
+OWNER=""
+GITHUB_TOKEN=""
+DIRECTORY_CODE=""
+BASE_DIR=""
+SENDER_DOMAIN=""
+SENDER_NAME=""
+SENDER_DEPARTMENT=""
+REQUESTER_NAME=""
+REQUESTER_EMAIL=""
+SMTP_SERVER=""
+SMTP_EMAIL=""
+SMTP_PASSWORD=""
+SMTP_PORT=
+FRESHDESK_DOMAIN=""
+FRESHDESK_API_KEY=""
 ```
-You can then include the following into your `git-commit.py` script
-```
-#git-commit.py
-from dotenv import load_dotenv
-import os
+It's important that you name thie file `.env` as this used the `dotenv` module, and this will already be included in the .gitignore file.
 
-load_dotenv()  # Loads variables from .env
-api_key = os.getenv("API_KEY")
-````
 #### Creating a Virtual Environment (.VENV):
 Creating a virtual environment will separate the package versions you will use for your script and will prevent any clashing of other scripts or projects which may be using differeing versions of the same packages.
 
@@ -87,7 +95,6 @@ You should see a file named:
 The `.BAT`file will activate the `.venv` when triggered by the Windows Task Scheduler application, it will then run the script, before deactivating the virtual environment once the script has finished running.
 
 This will be the file with which you will point the Windows Task Scheduler towards. 
-
 ```
 #git-push-command.BAT
 @echo off
@@ -108,3 +115,4 @@ git-push-command.bat
 ```
 ## Maintenance
 This script will be updated regularly inline with our release schedule. To ensure that you have the latest version, regularly run the `git pull` command. Also, you may check the release logs as well.
+
