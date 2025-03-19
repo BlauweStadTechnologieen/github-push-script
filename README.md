@@ -1,5 +1,7 @@
 ## Installation Packages
 
+#### Scope
+
 #### Python
 Download the latest verision of `Python`from https://www.python.org/.
 Once downloaded you can confirm that Python, as well as the version, is installed on your system by running the command `py --version`. If you already have a version of Python installed in your system and you're simply upgrading this, you can run `py -x.xx --version` so your system points to the correct version of Python.
@@ -11,37 +13,36 @@ Download the latest verion of `Git` frm https://git-scm.com/downloads/win
 You can download the latest version of the MT4 terminal, which will by default come with the MetaEditor4 application.
 
 ## Setup
-Nagivate to the correct location where you would like your script to be located, and run the following command:
+Nagivate to the file directory location where you would like your script to be places, then run the following command:
 ```
 git clone git@github.com:BlauweStadTechnologieen/github-push-script.git
 ```
-You can then ensure that you have the latest verion by running the following command:
-```
-git pull
-```
-#### Creating a variables environment.
-Create a file by running the following command:
+Assuming you have linked your local machine to our remote repository, the directory should be populated with the relavant files. 
+
+#### Creating a variables environment (.env).
+Environmental variables are variables which are confidential information, such as API tokens, keys, and passwords which are not to be included when we deploy an update into Github. This is why you're required to create a separate `env` file, so that this confidentual information is only available on your local machine and not on Github.  
+
+The `SENDER_DOMAIN` constant must be verified by your SMTP provider. The remaining SMTP settings will be determined by your SMTP provider. These constants start with `SMTP-*`
+
+Please be aware that the `SMTP-EMAIL` and the `SENDER-EMAIL` are not the same. The`SENDER-EMAIL` is constructed by the `SENDER-DEPARTMENT` and the `SENDER_DOMAIN` in the forMat `<SENDER_DEPARTMENT>@<SENDER_DOMAIN>. The `SENDER_DEPARTMENT` can also be a `no-reply` or variations thereof if you have not set up a mailbox or if you do not wish to have your clients reply. 
+
+The `SMTP-EMAIL`, on the other hand, is determined by your SMTP provider. 
+
+Please be aware that the `SENDER_DOMAIN` must be verified by your SMTP provder, or you will not receive any emails and you may receive errors. 
+
+You will also have your API data pertaining to your Freshdesk account, directory information, as well as sender and requester information. 
+
+Whilst being in the root of the directory, create a `.env` file by running the following command:
 ```
 echo. > .env
 ```
-You will then need to install the `python-dotenv` module in the folling fashion:
-```
-pip install python-dotenv
-```
-[-] This should be included in the `requirements.txt` file.
-[-] Run the command `pip install python-dotenv` to install the `dotenv` module.
-[-] Run the command `echo >> .env >>`, before cutting and pasting the following:
-[-] Populate each constant with your own information,
-[-] Save this in the root directory of the project folder
-
-#### Use Case:
 Populate this file with the following information:
 ```
 #.env
 OWNER=""
 GITHUB_TOKEN=""
-DIRECTORY_CODE=""
-BASE_DIR=""
+DIRECTORY_CODE="" 
+BASE_DIR=""#C:/Users/<USER>/AppData/Roaming/MetaQuotes/Terminal/{DIRECTORY_CODE}/MQL4"
 SENDER_DOMAIN=""
 SENDER_NAME=""
 SENDER_DEPARTMENT=""
@@ -65,22 +66,20 @@ Simply run the following command:
 ```
 py -m venv .venv
 ```
-Then activate it by running the following command: 
-```
-.venv\Scripts\activate
-```
+You will not need to activate the virtual environment, as this will be done automaically each time the script runs. The virtual environment is then deactivated when the script completes.
+
 #### Ensuring you have the latest updates.
 Navigate to the correct directory and run the following command to confirm that you have the latest packages installed:
 ```
 git pull
 ```
 #### Installing the dependancies
-Your script will have a list of dependancies which it will need to operate smoothly. 
+Your script will have a list of dependancies which can be found in the `requirements.txt` file. Normally, you would need to install these dependances by running the `pip install -r requirements.txt` command. 
 
-Run the following command:
-```
-pip install -r requirements.txt
-```
+However, we now have a built-in function which does this for you. 
+
+Whenever the script runs, it will check to see if there are any additions to the `requirements.txt file since the last deployment. If there are, it will then install any new dependances listed. 
+
 #### Testing Git Commit script
 Aftwerwards, run the following command:
 ```
