@@ -4,7 +4,7 @@ from email.mime.multipart import MIMEMultipart
 import freshdesk_ticket
 import os
 from dotenv import load_dotenv
-import shared_config
+import settings_mapper
 
 load_dotenv()
 
@@ -19,8 +19,8 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
     
     msg             = MIMEMultipart()
     msg['Subject']  = subject
-    msg['From']     = f'"{shared_config.MESSAGING_METADATA["SENDER_NAME"]}" <{shared_config.MESSAGING_METADATA["SENDER_EMAIL"]}>'
-    msg['To']       = shared_config.MESSAGING_METADATA["REQUESTER_EMAIL"]
+    msg['From']     = f'"{settings_mapper.MESSAGING_METADATA["SENDER_NAME"]}" <{settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"]}>'
+    msg['To']       = settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]
     body            = message_body
     msg.attach(MIMEText(body, mime_text))
 
@@ -32,8 +32,8 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
             server.login(SMTP_CREDENTIALS["SMTP_EMAIL"], 
                          SMTP_CREDENTIALS["SMTP_PASSWORD"]
             )
-            server.sendmail(shared_config.MESSAGING_METADATA["SENDER_EMAIL"],
-                            shared_config.MESSAGING_METADATA["REQUESTER_EMAIL"], 
+            server.sendmail(settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"],
+                            settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"], 
                             msg.as_string()
             )
 

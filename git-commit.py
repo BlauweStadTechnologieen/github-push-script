@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 from commit_notify import get_latest_commit
 from freshdesk_ticket import create_freshdesk_ticket
-import shared_config
+import settings_mapper
 import repositories
 
 #def assign_log_number(func) -> str:
@@ -100,7 +100,7 @@ def push_to_github() -> None:
     Each 'run_command' will be individually checked, 
     and will log an incident when any return an error."""
     
-    base_dir = shared_config.DIRECTORY_CONSTANTS["BASE_DIR"]
+    base_dir = settings_mapper.DIRECTORY_CONSTANTS["BASE_DIR"]
     sub_dirs = repositories.local_repositories()
 
     changed_dirs = []

@@ -3,7 +3,7 @@ import requests as r
 import send_email
 import os
 from dotenv import load_dotenv
-import shared_config
+import settings_mapper
 
 load_dotenv()
 
@@ -25,7 +25,7 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     API_URL = f'https://{FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]}.freshdesk.com/api/v2/tickets/'
 
     description = f"""
-    Dear {shared_config.MESSAGING_METADATA["REQUESTER_NAME"]}<br>
+    Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br>
     A support ticket has been automatically generated because of the following error or exception message:<br><br>
     {exception_or_error_message}<br><br>
     ===================================================
@@ -39,8 +39,8 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         'group_id'    : group_id,
         'responder_id': responder_id,
         'requester'   : {
-            'name'    : shared_config.MESSAGING_METADATA["REQUESTER_NAME"],
-            'email'   : shared_config.MESSAGING_METADATA["REQUESTER_EMAIL"]
+            'name'    : settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"],
+            'email'   : settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]
         } 
     }
 
