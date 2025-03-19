@@ -5,11 +5,6 @@ import shared_config
 import repositories
 
 # GitHub repository info
-<<<<<<< HEAD
-OWNER           = "Blauwestadtechnologieen"
-GITHUB_TOKEN    = "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"
-=======
->>>>>>> origin/moving-env-vars-to-.env
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 
 if not shared_config.GITHUB_CONSTANTS["GITHUB_TOKEN"]:
@@ -56,16 +51,10 @@ def get_latest_commit(changed_local_repos:list) -> list:
             })
             
         else:
-<<<<<<< HEAD
-            print(f"Error fetching commits for {repo}: {response.status_code}")
-            print(f"Error details: {response.text}")
-            create_freshdesk_ticket(response.text, response.status_code)
-=======
             print(f"Error fetching commits for {repo}: {response.status_code}{response.text}{response.content}")
             custom_message = f"{response.content}{response.text}{response.status_code}"
             custom_subject = f"Error {response.status_code}"
             create_freshdesk_ticket(custom_message, custom_subject)
->>>>>>> origin/moving-env-vars-to-.env
 
             continue
 

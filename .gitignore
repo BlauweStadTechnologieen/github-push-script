@@ -1,13 +1,4 @@
-<<<<<<< HEAD
-/env
-/.vscode
-/.env
-/env_testing.py
-/repositories.py
-/.env.development
-=======
 /.vscode
 /.venv
 .env
 .env.development
->>>>>>> origin/moving-env-vars-to-.env
