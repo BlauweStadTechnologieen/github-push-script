@@ -119,7 +119,7 @@ def push_to_github() -> None:
         
         run_command(["git", "add", "."], cwd)
 
-        commit_message = f"New Commit: {sub_dir.capitalize()}"
+        commit_message = f"<b>New Commit: {sub_dir.capitalize()}</b>"
 
         commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
