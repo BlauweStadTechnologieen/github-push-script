@@ -22,7 +22,7 @@ git pull
 #### Creating a variables environment.
 Create a file by running the following command:
 ```
-echo >> .env >>
+echo. > .env
 ```
 You will then need to install the `python-dotenv` module in the folling fashion:
 ```
@@ -97,13 +97,13 @@ The `.BAT`file will activate the `.venv` when triggered by the Windows Task Sche
 This will be the file with which you will point the Windows Task Scheduler towards. 
 ```
 #git-push-command.BAT
-@echo off
+@echo
 
 REM Activate the virtual environment
-call C:\path\to\your\virtualenv\Scripts\activate.bat
+call "C:\Users\SynergexSystems\Documents\utilities\github-push-script\.venv\Scripts\activate.bat"
 
 REM Run the Python script
-python C:\path\to\your\git-commit.py
+python "C:\Users\SynergexSystems\Documents\utilities\github-push-script\git-commit.py"
 
 REM Deactivate the virtual environment
 deactivate
@@ -115,4 +115,17 @@ git-push-command.bat
 ```
 ## Maintenance
 This script will be updated regularly inline with our release schedule. To ensure that you have the latest version, regularly run the `git pull` command. Also, you may check the release logs as well.
+
+## Maintain your .gitignore file
+
+Before commiting any files, please ensure that you add the follwing to the `.gitignore` file in the root directory:
+
+```
+# Ignore all folders
+*/ 
+
+# Don't ignore .mqh and .ex4 files
+!*.mqh
+!*.ex4
+```
 
