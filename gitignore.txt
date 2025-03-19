@@ -1,6 +1,0 @@
-# Ignore all folders
-*/ 
-
-# Don't ignore .mqh and .ex4 files
-!*.mqh
-!*.ex4
