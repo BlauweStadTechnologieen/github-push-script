@@ -3,7 +3,7 @@ import subprocess
 import os
 import freshdesk_ticket
 
-def check_and_install_requirements(requirements_file="requirements.txt", hash_file=".requirements_hash"):
+def check_and_install_requirements(requirements_file="requirements.txt", hash_file=".requirements_hash") -> None:
     """
     Checks for changes in requirements.txt and installs dependencies if changes are detected.
 
