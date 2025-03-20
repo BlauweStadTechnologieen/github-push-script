@@ -78,8 +78,6 @@ Your script will have a list of dependancies which can be found in the `requirem
 
 However, we now have a built-in function which does this for you. 
 
-Whenever the script runs, it will check to see if there are any additions to the `requirements.txt file since the last deployment. If there are, it will then install any new dependances listed. 
-
 #### Testing Git Commit script
 Aftwerwards, run the following command:
 ```
