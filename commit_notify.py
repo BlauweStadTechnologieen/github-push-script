@@ -8,8 +8,8 @@ import repositories
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 
 if not settings_mapper.GITHUB_CONSTANTS["GITHUB_TOKEN"]:
-    token_invalid_subject = "Invalid GitHug Token"
-    token_invalid_message = "Your Github toekn in either invalud or expired. Please contact your administrator."
+    token_invalid_subject = "Invalid GitHub Token"
+    token_invalid_message = "Your Github toekn in either invalid or expired. Please contact your Freshdesk administrator."
     create_freshdesk_ticket(token_invalid_message, token_invalid_subject)
     raise ValueError("GITHUB_TOKEN is not set. Please set the environment variable.")
 
@@ -27,9 +27,9 @@ def get_latest_commit(changed_local_repos:list) -> list:
             response = requests.get(url, headers = headers)
             print(response)
         except requests.exceptions.RequestException as e:
-            print(custom_message)
             custom_message = f"Request failed for {repo}: {e}"
             custom_subject = f"Repository fetch failure."
+            print(custom_message)
             create_freshdesk_ticket(custom_message, custom_subject)
             
             continue
@@ -54,6 +54,7 @@ def get_latest_commit(changed_local_repos:list) -> list:
             print(f"Error fetching commits for {repo}: {response.status_code}{response.text}{response.content}")
             custom_message = f"{response.content}{response.text}{response.status_code}"
             custom_subject = f"Error {response.status_code}"
+            print(custom_message)
             create_freshdesk_ticket(custom_message, custom_subject)
 
             continue

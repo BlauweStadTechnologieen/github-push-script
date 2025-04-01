@@ -49,5 +49,3 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
         freshdesk_ticket.create_freshdesk_ticket(custom_message, custom_subject)
 
         return False
-
-    return False
