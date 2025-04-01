@@ -77,11 +77,6 @@ def is_valid_directory(cwd:str) -> bool:
         create_freshdesk_ticket(custom_message,custom_subject)
         return False
 
-    if is_git_repo(cwd):
-        return True
-    
-    False
-
 def is_git_repo(cwd) -> bool:
     
     git_path        =   os.path.join(cwd, '.git')
@@ -110,6 +105,9 @@ def push_to_github() -> None:
         cwd = str(Path(base_dir) / sub_dir)
         
         if not is_valid_directory(cwd):
+            continue
+
+        if not is_git_repo(cwd):
             continue
                                                 
         if not check_for_changes(cwd):

@@ -37,8 +37,6 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
                             msg.as_string()
             )
 
-            print("SMTP Successfully Authenticated")
-
             return True
         
     except Exception as e:
