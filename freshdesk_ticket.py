@@ -48,6 +48,10 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     ticket_id       = None
     
     try:
+        
+        if not FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"] or not FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]:
+            raise KeyError("One or more of your Freshdesk credentials are missing. Please enter these and try again")
+        
         response = r.post(
             API_URL,
             auth    = (FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"], 'X'),
@@ -61,6 +65,11 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     
     except r.RequestException as e:
         custom_message = f"Requests Exception: {e}"
+
+    except KeyError as e:
+        custom_message = f"{e}"
+        send_email.freshdesk_inop_notification(custom_message)
+        return
 
     except Exception as e:
         custom_message = f"General Exception: {e}"
@@ -79,4 +88,4 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     if custom_message:
         print(custom_message)
         send_email.freshdesk_inop_notification(custom_message)
-        return None
+        return
