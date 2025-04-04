@@ -40,6 +40,9 @@ def check_for_changes(cwd:str) -> bool:
     custom_subject = "An error occured when checking for changes in a local directory"
     
     try:
+        
+        os.chdir(cwd)
+        
         result = run_command(["git", "status", "--short"], cwd).strip()
 
         if result.strip():
