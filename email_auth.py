@@ -1,10 +1,10 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import freshdesk_ticket
 import os
 from dotenv import load_dotenv
 import settings_mapper
+import error_handler
 
 load_dotenv()
 
@@ -44,8 +44,6 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
         custom_message = f"Error sending email: {e}"
         custom_subject  = "SMTP Authentication Error"
 
-        print(custom_subject)
-        print(custom_message)
-        freshdesk_ticket.create_freshdesk_ticket(custom_message, custom_subject)
+        error_handler.report_error(custom_subject, custom_message)
 
         return False
