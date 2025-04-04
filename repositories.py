@@ -19,3 +19,15 @@ def repository_list_test() -> set:
     repositories = {"version-management-system", "client_api"}
 
     return repositories
+
+def local_repository_structure() -> set:
+    
+    directory_structure = {
+        
+        "Experts\\Advisors": ["bluecitycapitaltechnologies"],
+        "Include\\Expert":["Signal", "PriceStats", "Money"],
+        "Scripts":["CreateLicence"]
+
+    }
+
+    return directory_structure
