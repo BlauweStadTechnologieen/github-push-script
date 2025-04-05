@@ -57,7 +57,8 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
     * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
     {company_signoff()}
     """
-    email_auth.smtp_auth(message_body, custom_subject)
+    if not email_auth.smtp_auth(message_body, custom_subject):
+         return
 
     return
 
