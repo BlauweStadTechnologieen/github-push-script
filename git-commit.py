@@ -65,7 +65,8 @@ def check_for_changes(cwd:str) -> bool:
         custom_message = f"{{type{e}}} {e}"
 
     if custom_message:
-        return error_handler.report_error(custom_subject, custom_message)
+        error_handler.report_error(custom_subject, custom_message)
+        return False
 
 def parent_directory_validation() -> bool:
     
@@ -84,13 +85,16 @@ def parent_directory_validation() -> bool:
             raise ValueError(f"The specified parent directory in the PARENT_DIRECTORY key - {parent_directory} is invalid. Please verify the path and try again.")
             
     except KeyError as e:
-        return error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
+        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
+        return False
 
     except ValueError as e:
-        return error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
+        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
+        return False
     
     except Exception as e:
-        return error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
+        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
+        return False
         
     return True
 
@@ -104,7 +108,8 @@ def is_valid_directory(cwd:str) -> bool:
             raise ValueError(f"The resulting directory {cwd} is not valid, please check and try again")
 
     except ValueError as e:
-        return error_handler.report_error("Directory Validation Incident", f"{e}")
+        error_handler.report_error("Directory Validation Incident", f"{e}")
+        return False
         
     return True
 
@@ -117,7 +122,8 @@ def is_git_repo(cwd:str) -> bool:
         return True
     else:
         custom_message = f"{cwd} is not a Git Repository. Navigate do {cwd}, then run 'git init' from the command shell "
-        return error_handler.report_error(custom_subject, custom_message)
+        error_handler.report_error(custom_subject, custom_message)
+        return False
     
 def push_to_github() -> None:
     """Adds, commits and pushes all files to the Git repo.
@@ -129,7 +135,7 @@ def push_to_github() -> None:
 
     changed_dirs = []
 
-    if parent_directory_validation():
+    if not parent_directory_validation():
     
         for base, sub_dirs in directory_structure.items():
             

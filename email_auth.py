@@ -45,5 +45,4 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
         custom_subject  = "SMTP Authentication Error"
 
         error_handler.report_error(custom_subject, custom_message)
-
         return False

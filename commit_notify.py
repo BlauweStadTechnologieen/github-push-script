@@ -16,10 +16,12 @@ def github_token_validation() -> bool:
             raise KeyError("GITHUB_TOKEN is not set. Please set the environment variable.")
                
     except KeyError as e:
-        return error_handler.report_error("No Github Token Specified", f"{e}")
+        error_handler.report_error("No Github Token Specified", f"{e}")
+        return False
 
     except Exception as e:
-        return error_handler.report_error("Invalid GitHub Token", f"{e}")
+        error_handler.report_error("Invalid GitHub Token", f"{e}")
+        return False
 
     return True
 
@@ -33,11 +35,11 @@ def get_latest_commit(changed_local_repos:list) -> list:
         remote_repo_list    = []
         headers             = {"Authorization": f"token {settings_mapper.GITHUB_CONSTANTS['GITHUB_TOKEN']}"}
         repos               = repositories.remote_repositories()
-        
+        url                 = GITHUB_API_URL.format(owner = settings_mapper.GITHUB_CONSTANTS["OWNER"], repo=repo)
+
         for repo in repos:
 
             try:
-                url = GITHUB_API_URL.format(owner=settings_mapper.GITHUB_CONSTANTS["OWNER"], repo=repo)
                 response = requests.get(url, headers = headers)
                 print(response)
             except requests.exceptions.RequestException as e:
