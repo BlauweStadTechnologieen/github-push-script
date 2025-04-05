@@ -26,7 +26,7 @@ def local_repository_structure() -> set:
         
         "Experts\\Advisors": ["bluecitycapitaltechnologies"],
         "Include\\Expert":["Signal", "PriceStats", "Money"],
-        "Scripts":["CreateLicence"]
+        "Scripts":["CreateLicence", "Non-existent-directorys"]
 
     }
 
