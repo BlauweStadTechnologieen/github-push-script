@@ -14,7 +14,7 @@ def company_signoff() -> None:
 
 github_owner = settings_mapper.GITHUB_CONSTANTS["OWNER"]
 
-def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:str) -> None:
+def send_message(latest_commit_data:dict = None, changed_repo_list:list = None, github_owner:str = None) -> None:
     """
     Send an email to aleter the user of any essential or important information - and will serve as a backup for whenever FD is not operating.
 
@@ -70,9 +70,9 @@ def send_message(latest_commit_data:dict, changed_repo_list:list, github_owner:s
     {company_signoff()}
     """
     if not email_auth.smtp_auth(message_body, custom_subject):
-         return
+         return None
 
-    return
+    return None
 
 def generate_incident_uuid() -> str:
     return f"""{uuid.uuid4()}"""
@@ -80,11 +80,11 @@ def generate_incident_uuid() -> str:
 def freshdesk_inop_notification(custom_message:str) -> None:
       
     incident_uuid   =   generate_incident_uuid()
-    custom_subject  =   "(CRMIN) CRM Inoperable Notification"
+    custom_subject  =   "Error Generating Support Ticket."
     
     freshdesk_inop_text_body = f"""
         Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br><br>
-        We are writing to you because our support ticketing system is inoperable
+        We are writing to you because our support ticketing system is either currently offline or our credentials are invalid.
         ========================================================================<br>
         <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse; text-align: left;">
             <tr>
