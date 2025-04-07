@@ -192,9 +192,7 @@ def push_to_github() -> None:
     changed_dirs        = []
 
     if parent_dir is None:
-        
-        print("Youe should see this message if the parent_directory method returns NONE")
-        
+                
         return None
     
     for base, sub_dirs in directory_structure.items():
@@ -206,10 +204,10 @@ def push_to_github() -> None:
             if not is_valid_directory(cwd):
                 continue
 
-            """if not is_git_repo(cwd):
+            if not is_git_repo(cwd):
                 continue
                                                 
-            if not check_for_changes(cwd):
+            """if not check_for_changes(cwd):
                 continue
 
             changed_dirs.append(cwd)
