@@ -103,5 +103,11 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
             custom_message = f"Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
             print(custom_message)
             send_email.freshdesk_inop_notification(custom_message)
-            return None
+            return -1
+        
+    finally:
+        if custom_message:
+            send_email.freshdesk_inop_notification(custom_message)
+        return -1
+    
     
