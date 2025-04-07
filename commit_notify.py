@@ -8,19 +8,43 @@ import error_handler
 # GitHub repository info
 GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 
-def github_token_validation() -> bool:
-    """Checks for the presence and the valitity of the user-specified GitHub token in the .env file."""
+def github_repository_validation() -> bool:
+    
+    """
+    Validates the presence and correctness of essential GitHub-related environment variables.
+
+    This function checks the `.env` file for the following:
+    - The `GITHUB_TOKEN`, which is necessary for authentication.
+    - The `OWNER`, which specifies the GitHub account owner.
+    - The `GITHUB_API_URL`, which defines the GitHub API endpoint.
+
+    If any of these variables are missing or invalid, it raises a `KeyError` with an appropriate message and logs the error using the `error_handler` module.
+
+    Returns:
+        bool: True if all validations pass, otherwise False.
+
+    Exceptions:
+        KeyError: Raised if any required environment variable is not set.
+        Exception: Catches and handles any unexpected errors during validation.
+    """
+
     try:
         
         if not settings_mapper.GITHUB_CONSTANTS["GITHUB_TOKEN"]:
             raise KeyError("GITHUB_TOKEN is not set. Please set the environment variable.")
+        
+        if not settings_mapper.GITHUB_CONSTANTS["OWNER"]:
+            raise KeyError("GITHUB owner is not set. Please set the environmental variable.")
+        
+        if not GITHUB_API_URL:
+            raise KeyError("Please specifty an GitHub API URL.")
                
     except KeyError as e:
-        error_handler.report_error("No Github Token Specified", f"{e}")
+        error_handler.report_error("Github Repository Validation Failure", f"{e}")
         return False
 
     except Exception as e:
-        error_handler.report_error("Invalid GitHub Token", f"{e}")
+        error_handler.report_error("Github Repository Validation Failure", f"{e}")
         return False
 
     return True
@@ -28,10 +52,42 @@ def github_token_validation() -> bool:
 # Function to get the latest commit hash from GitHub
 def get_latest_commit(changed_local_repos:list) -> list:
     
-    """Retrieves the latest commits via the GitHub API, checks for any changes and displays them in a email sent to the user."""    
+    """
+    Retrieves the latest commits for remote GitHub repositories via the GitHub API.
+
+    This function performs the following steps:
+    1. Validates essential GitHub environment variables using the `github_repository_validation` function.
+    2. Initializes an empty `remote_repo_list` to store details about repositories and their latest commits.
+    3. Constructs request headers using the GitHub token from the `.env` file.
+    4. Fetches a list of remote repositories from the `repositories` module.
+    5. Builds the GitHub API URL for each repository to retrieve commit data.
+    6. Sends an email summarizing the changes in remote repositories to the user.
+
+    For each remote repository:
+    - Sends a GET request to the GitHub API to retrieve commit details.
+    - Handles request exceptions gracefully, logging errors using `error_handler`.
+    - If the response status is 200, extracts commit details such as SHA, author ID, date, and message.
+    - Appends these commit details to the `remote_repo_list`.
+
+    Args:
+        changed_local_repos (list): List of locally changed repositories.
+
+    Returns:
+
+        list: A list containing details of remote GitHub repositories with the latest commits.
+
+    Exceptions:
+
+        - requests.exceptions.RequestException: Raised when a network request fails, and errors are logged.
+        - Other exceptions are caught and logged using `error_handler`.
+
+    Notes:
+        - The function sends an email notification summarizing repository changes if `remote_repo_list` is populated.
+    """
+   
     
-    if github_token_validation():
-    
+    if github_repository_validation():
+                    
         remote_repo_list    = []
         headers             = {"Authorization": f"token {settings_mapper.GITHUB_CONSTANTS['GITHUB_TOKEN']}"}
         repos               = repositories.remote_repositories()
@@ -76,4 +132,7 @@ def get_latest_commit(changed_local_repos:list) -> list:
         if remote_repo_list:
             send_email.send_message(remote_repo_list, changed_local_repos, settings_mapper.GITHUB_CONSTANTS["OWNER"])
     
-    return remote_repo_list
+        return remote_repo_list
+    
+    else:
+        return[]

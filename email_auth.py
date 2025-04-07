@@ -16,17 +16,34 @@ SMTP_CREDENTIALS = {
 }
 
 def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
-    """Authenticate the SMTP credentials, if False, it will terminate the programme"""
+    """Authenticate the SMTP credentials, if False, it will terminate the programme
+    
+    Args:
+        message_body(str): Denotes the body of the message.
+        subject(str)`: Denotes the subject line of the message.
+        mime_text(str, optional): Denotes the email format. Defauls to "html".
+    
+    Returns:
+        bool: Returns `True` if the SMTP credentilas are authenticated, else it will return `False`, and send a Freshdesk support ticket with the details of the error
+    
+    Exceptions:
+        KeyError: Raised if any SMTP credential is missing.
+        Exception: Catches & handles any unexpected errors during validations.
+
+    Notes:
+        Any error of exception will be halded by the `error_hander` module, which includes sending an support ticket to FreshDesk.
+
+    """
     try:
         if not SMTP_CREDENTIALS["SMTP_EMAIL"] or not SMTP_CREDENTIALS["SMTP_PASSWORD"] or not SMTP_CREDENTIALS["SMTP_PORT"] or not SMTP_CREDENTIALS["SMTP_SERVER"]:
-            raise ValueError("One or nore of your SMTP credentials are mising, please chek these details.")
+            raise KeyError("One or nore of your SMTP credentials are mising, please chek these details.")
         
-    except ValueError as e:
-        error_handler.report_error("Missing SMTO Credentials", f"{e}")
+    except KeyError as e:
+        error_handler.report_error("Missing SMTP Credentials", f"{e}")
         return False
     
     except Exception as e:
-        error_handler.report_error("SMTO Authentication Error", f"{e}")
+        error_handler.report_error("SMTP Exception Error", f"{e}")
         return False
     
     else:

@@ -13,13 +13,29 @@ FRESHDESK_CREDENTIALS = {
 }
 
 def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_id:int = 201000039106, responder_id:int = 201002411183) -> int:
+    
     """
-    When an exception or error occurs during the execution of a function within this package, this will lodge a support toclet with Freshdesk. 
-    A notification that a ticket has been created will be sent to the users email. When this function is called, it will return the ticket id.
+    Creates a Freshdesk support ticket if any method fails during the execution of the script. 
+    This is called by the `error_handler` module.
 
-    You will need to manually pass the exception_or_error_message and the subject parameters prior to calling the function. 
+    Args:
+        exception_or_error_message (str): Customized error message or exception. If this is called 
+            by an exception handling block, it will denote an exception message; otherwise, it will 
+            be a custom message provided by the user.
+        subject (str): Denotes the subject of the support ticket.
+        group_id (int, optional): Denotes the group set in the Freshdesk account.
+        responder_id (int, optional): Denotes the support agent to whom the support ticket is sent.
 
-    The group_id and the responder_id parameters have been set to defaults, however, you may override these if necessary. 
+    Returns:
+        ticket_id (int): A support ticket number is generated; otherwise, it will return `None`. 
+            If `None` is returned, the `send_email` module will be executed, sending an email to 
+            the user notifying them that it was unable to generate a support ticket.
+
+    Exceptions:
+        TypeError: Raised when there is a conflict of type errors.
+        KeyError: Raised when any `FRESHDESK_CREDENTIALS` variable is missing.
+        RequestException: Raised when the request fails and returns an error message.
+        Exception: Catches any other error that may occur.
     """
     
     API_URL = f'https://{FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]}.freshdesk.com/api/v2/tickets/'
@@ -68,8 +84,6 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
 
     except KeyError as e:
         custom_message = f"{e}"
-        send_email.freshdesk_inop_notification(custom_message)
-        return
 
     except Exception as e:
         custom_message = f"General Exception: {e}"
