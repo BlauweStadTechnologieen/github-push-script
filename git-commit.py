@@ -97,8 +97,6 @@ def parent_directory_validation() -> str:
         ValyeError: A `ValueError` is raised of the parent directory is invalid.
 
     """
-    
-    
     custom_subject = "Parent Directory Validation Error"
     
     try:
@@ -150,7 +148,7 @@ def is_valid_directory(cwd:str) -> bool:
     except ValueError as e:
         error_handler.report_error("Directory Validation Incident", f"{e}")
         return False
-        
+    
     return True
 
 def is_git_repo(cwd:str) -> bool:
