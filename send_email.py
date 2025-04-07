@@ -103,4 +103,4 @@ def freshdesk_inop_notification(custom_message:str) -> None:
     print(freshdesk_inop_text_body)
     email_auth.smtp_auth(freshdesk_inop_text_body, custom_subject)
 
-    return
+    return None
