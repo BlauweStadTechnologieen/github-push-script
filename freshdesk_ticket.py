@@ -109,5 +109,3 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         if custom_message:
             send_email.freshdesk_inop_notification(custom_message)
         return -1
-    
-    
