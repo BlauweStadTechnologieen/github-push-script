@@ -17,7 +17,17 @@ import error_handler
 #    return wrapper
 
 def run_command(command:str, cwd:str = None) -> str:
-    """Run a command in the terminal and capture the output. An email will be sent in the event of an error, stating the nature of the error. No message will be printed if there are no errors."""
+    """Run a command in the terminal and capture the output. An email will be sent in the event of an error, stating the nature of the error. No message will be printed if there are no errors.
+    Args:
+        command(str): Defines a list of git commands to run in the command window.
+        cwd(str, optional): Denotes the current working directory where the git commands are to be commanded
+    Returns:
+        custom_message(str): returns a `custom_message` if there is an error, else it returns `result.stdout`.
+    Notes:
+    -
+        If there is an error, the `error_handler` function will handle the error by creating a support ticket. 
+    """
+    
     result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
     
     custom_message = None
