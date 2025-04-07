@@ -38,36 +38,39 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         Exception: Catches any other error that may occur.
     """
     
-    API_URL = f'https://{FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]}.freshdesk.com/api/v2/tickets/'
-
-    description = f"""
-    Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br>
-    A support ticket has been automatically generated because of the following error or exception message:<br><br>
-    {exception_or_error_message}<br><br>
-    ===================================================
-    """
-
-    ticket_data = {
-        "subject"     : subject,
-        "description" : description, 
-        'priority'    : 1,
-        'status'      : 2,
-        'group_id'    : group_id,
-        'responder_id': responder_id,
-        'requester'   : {
-            'name'    : settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"],
-            'email'   : settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]
-        } 
-    }
-
-    custom_message  = None
-    ticket_id       = None
-    
     try:
-        
+    
+        if not settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"] or not settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]:
+            raise KeyError("Messaging metadata is missing in your  file. Please verify it and try again.")
+    
         if not FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"] or not FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]:
-            raise KeyError("One or more of your Freshdesk credentials are missing. Please enter these and try again")
+            raise KeyError("Some of your Freshdesk credentials are missing. Please provide them and try again.")
         
+        API_URL = f'https://{FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]}.freshdesk.com/api/v2/tickets/'
+
+        description = f"""
+        Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br>
+        A support ticket has been automatically generated because of the following error or exception message:<br><br>
+        {exception_or_error_message}<br><br>
+        ===================================================
+        """
+
+        ticket_data = {
+            "subject"     : subject,
+            "description" : description, 
+            'priority'    : 1,
+            'status'      : 2,
+            'group_id'    : group_id,
+            'responder_id': responder_id,
+            'requester'   : {
+                'name'    : settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"],
+                'email'   : settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]
+            } 
+        }
+
+        custom_message  = None
+        ticket_id       = None
+                    
         response = r.post(
             API_URL,
             auth    = (FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"], 'X'),
@@ -98,8 +101,7 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
 
         else:
             custom_message = f"Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
-
-    if custom_message:
-        print(custom_message)
-        send_email.freshdesk_inop_notification(custom_message)
-        return
+            print(custom_message)
+            send_email.freshdesk_inop_notification(custom_message)
+            return None
+    
