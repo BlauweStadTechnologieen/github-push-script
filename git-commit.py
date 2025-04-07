@@ -106,11 +106,11 @@ def parent_directory_validation() -> str:
         parent_directory = settings_mapper.DIRECTORY_CONSTANTS["PARENT_DIRECTORY"]
 
         if not parent_directory:
-            """Checks to ensure that a parent directory is specified"""
+            #Checks to ensure that a parent directory is specified
             raise KeyError("PARENT_DIRECTORY key is missing from the DIRECTORY_CONSTANTS variables environment.")
         
         if not os.path.isdir(parent_directory):
-            """If a parent directory is specified, it will then check that this is valid."""
+            #If a parent directory is specified, it will then check that this is valid.
             raise ValueError(f"The specified parent directory in the PARENT_DIRECTORY key - {parent_directory} is invalid. Please verify the path and try again.")
             
     except KeyError as e:
@@ -145,8 +145,6 @@ def is_valid_directory(cwd:str) -> bool:
     try:
         
         if not os.path.isdir(cwd):
-            """Checks to ensure that the entire directory is valid.
-            'cwd' represents the entire directory path: parnet + base + subdir"""
             raise ValueError(f"The resulting directory {cwd} is not valid, please check and try again")
 
     except ValueError as e:
