@@ -53,10 +53,10 @@ def github_repository_validation() -> bool:
 def get_latest_commit(changed_local_repos:list) -> list:
     
     """
-    Retrieves the latest commits for remote GitHub repositories via the GitHub API.
+    Retrieves the latest commits from remote GitHub repositories via the GitHub API.
 
     This function performs the following steps:
-    1. Validates essential GitHub environment variables using the `github_repository_validation` function.
+    1. Validates essential GitHub environment variables using the `github_repository_validation` function,
     2. Initializes an empty `remote_repo_list` to store details about repositories and their latest commits.
     3. Constructs request headers using the GitHub token from the `.env` file.
     4. Fetches a list of remote repositories from the `repositories` module.

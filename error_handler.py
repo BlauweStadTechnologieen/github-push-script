@@ -1,7 +1,8 @@
 from freshdesk_ticket import create_freshdesk_ticket
 
 def report_error(subject:str, error_message:str) -> None:
-    """The master error handing method. This with both print and and call the `create_freshdesk_ticket` method, which will process the creation of a support ticket.
+    """This method will be called whenever an error or Exception occurs. 
+    A support ticket will be generated via the FreshDesk system. Please ensure that you regularly check your FreshDesk dashboard for any emergent issues. 
     Args:
         subject(str): Denotes the subject of the error, which will be send to Freshdesk.
         error_message(str): Denoted the message and description of the error, which will be sent to Freshdesk.

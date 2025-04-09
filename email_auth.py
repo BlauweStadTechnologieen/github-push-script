@@ -16,7 +16,7 @@ SMTP_CREDENTIALS = {
 }
 
 def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
-    """Authenticate the SMTP credentials, if False, it will terminate the programme
+    """Authenticate the SMTP credentials.
     
     Args:
         message_body(str): Denotes the body of the message.
@@ -31,7 +31,7 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
         Exception: Catches & handles any unexpected errors during validations.
 
     Notes:
-        Any error of exception will be halded by the `error_hander` module, which includes sending an support ticket to FreshDesk.
+        Any error or caught Exception will he handled by the error hander module whereby a support ticket will be generated.  
 
     """
     try:

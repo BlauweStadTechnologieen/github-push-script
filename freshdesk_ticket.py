@@ -15,16 +15,15 @@ FRESHDESK_CREDENTIALS = {
 def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_id:int = 201000039106, responder_id:int = 201002411183) -> int:
     
     """
-    Creates a Freshdesk support ticket if any method fails during the execution of the script. 
-    This is called by the `error_handler` module.
+    Creates a Freshdesk support ticket in the event of an error of Exception occuring. 
 
     Args:
         exception_or_error_message (str): Customized error message or exception. If this is called 
-            by an exception handling block, it will denote an exception message; otherwise, it will 
-            be a custom message provided by the user.
-        subject (str): Denotes the subject of the support ticket.
-        group_id (int, optional): Denotes the group set in the Freshdesk account.
-        responder_id (int, optional): Denotes the support agent to whom the support ticket is sent.
+        by an exception handling block, it will denote the exception message, otherwise it will 
+        be the custom message provided by the user,
+        subject (str): Denotes the subject of the support ticket,
+        group_id (int, optional): Denotes the technical team to whom the support ticket is sent to. Defaults to `201000039106`,
+        responder_id (int, optional): Denotes the support agent to whom the support ticket is sent. Defaults to `201002411183`.
 
     Returns:
         ticket_id (int): A support ticket number is generated; otherwise, it will return `None`. 
@@ -33,8 +32,8 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
 
     Exceptions:
         TypeError: Raised when there is a conflict of type errors.
-        KeyError: Raised when any `FRESHDESK_CREDENTIALS` variable is missing.
-        RequestException: Raised when the request fails and returns an error message.
+        KeyError: Raised if any credentials are missing.
+        RequestException: Raised when the API request fails.
         Exception: Catches any other error that may occur.
     """
     

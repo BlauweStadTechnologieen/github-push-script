@@ -1,7 +1,7 @@
 def local_repositories() -> set:
     
     """
-    Cycles through all local repositories and pushes each local repo to their respective, pre-configured, remote repository.
+    Contains the list of the local repositories to cycle through.
 
     Notes
     -----
@@ -14,6 +14,7 @@ def local_repositories() -> set:
 def remote_repositories() -> set:
     """
     Used to make an API call to GitHub in order to retreieve the latest commits to each remote repo.
+    
     Returns:
         set: `remote_repositories`
     """
@@ -31,15 +32,15 @@ def local_repository_structure() -> set:
     
     """
     Cycles through all local repositoroes after checking:
-    - that all directories are calid,
-    - each directory is a git repoo by the presence of a `.git` folder.
+    - that all directories are valid,
+    - each local directory is a valid local repository.
     
     Returns:
         directory_structure(set) : Returns a `set` of directories. 
 
     Notes:
     -
-        All errore are handled by the calling function.
+        All errors or exceptions are handler by the calling function.
 
     """
     directory_structure = {
