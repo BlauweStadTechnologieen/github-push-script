@@ -16,17 +16,36 @@ import error_handler
 #            raise e
 #    return wrapper
 
-def run_command(command:str, cwd:str = None) -> str:
-    """Run a command in the terminal and capture the output. An email will be sent in the event of an error, stating the nature of the error. No message will be printed if there are no errors.
+def run_command(command:str, cwd:str) -> str:
+    """Runs specified commands in the local machine's terminal. The process of this is as follows:
+    - It will check for the existence of the directory. 
+    - If no exceptions occur, it will run the specified commands using the `subprocess` module.
     Args:
         command(str): Defines a list of git commands to run in the command window.
-        cwd(str, optional): Denotes the current working directory where the git commands are to be commanded
+        cwd(str): Denotes the current working directory where the git commands are to be commanded
     Returns:
-        custom_message(str): returns a `custom_message` if there is an error, else it returns `result.stdout`.
+        custom_message(str): Returns a `custom_message` if there is an error, else it returns `result.stdout`.
+    Exceptions:
+        FileNotFoundError: If the directory is not valid, this will throw a FileNotFoundError exception.
+        Exception: An excepion is raised is any other error occours.
     Notes:
     -
-        If there is an error, the `error_handler` function will handle the error by creating a support ticket. 
+        If there is an error or Exception, the `error_handler` function will create a support ticket. 
     """
+    
+    try:
+
+        if not os.path.isdir(cwd):
+            raise FileNotFoundError(f"The directory '{cwd}' does not exist.")
+        os.chdir(cwd)
+
+    except FileNotFoundError as e:
+        error_handler.report_error("Directory Error", str(e))
+        return str(e)
+
+    except Exception as e:
+        error_handler.report_error("Runn Command Exception", str(e))
+        return str(e)
     
     result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
     
@@ -37,21 +56,20 @@ def run_command(command:str, cwd:str = None) -> str:
         custom_message =  result.stderr.strip() if result.stderr else "Unknown error occured - check repo directory as a possible solution"
         error_handler.report_error(custom_subject, custom_message)
         return custom_message
-    else:
-        print(f"Command Output: {result.stdout}") 
-        return result.stdout
+
+    return result.stdout.strip()
     
 def check_for_changes(cwd:str) -> bool:
     """
-    Checks for any differences between the local and the remote repos. 
+    Checks for any differences between the local and the remote repositories. 
 
     Args:
         cwd(str): Denoted the current working directory.
     Returns:
-        bool: True if there is a mismatch between the remoted and the local repo, else it returns False.
+        bool: True if there is a mismatch between the remote and the local repositories, else it returns False.
 
     Raises:
-        Exceptions: Catches any error if any issues are detected. The the exception block is called, the `error_handler` function is called, and processed.
+        Exceptions: Catches any error if one or more are detected. Should any exception be called, the `error_handler` function will process a support ticket, which will be sent to the FreshDesk system.
     """
     print("checking for changes....")
     
@@ -59,9 +77,7 @@ def check_for_changes(cwd:str) -> bool:
     custom_subject = "An error occured when checking for changes in a local directory"
     
     try:
-        
-        os.chdir(cwd)
-        
+                
         result = run_command(["git", "status", "--short"], cwd).strip()
 
         if result.strip():
@@ -87,13 +103,13 @@ def check_for_changes(cwd:str) -> bool:
 def parent_directory_validation() -> str:
     
     """
-    Checkes to ensure that the specified parent directory has bother been specified and that it is valid, this is retrieved from the `.env` constant.
+    Checks and validates the parent directory specified in the `.env` file.
 
     Returns:
         parent_directory(str): Returns the parent directory as a string format, else it will return `None` if the parent directory is either missing or invalud.
 
     Raises:
-        KeyError: A `KeyError` is raised if no parent directory has been specigied.
+        KeyError: A `KeyError` is raised if a parent directory as hot been specified.
         ValyeError: A `ValueError` is raised of the parent directory is invalid.
 
     """
@@ -127,7 +143,7 @@ def parent_directory_validation() -> str:
 
 def is_valid_directory(cwd:str) -> bool:
     """
-    Check to ensure that the specified directory is valid
+    Checks and validates the full directory. The full directory is constructed from the parent directory, & appending each sub-directory which is attained by looping through all of the sub-directories listed in the `repositories` module.
 
     Args:
         cwd(str): Denotes the Current Working Directory.
@@ -138,7 +154,6 @@ def is_valid_directory(cwd:str) -> bool:
     Raises:
         ValueError: A `ValueError` will be raised if the directory is not valid. If the exception handing block is exected, the `error_hander` module will catch and processes the error. 
     """    
-    
     
     try:
         
@@ -153,7 +168,8 @@ def is_valid_directory(cwd:str) -> bool:
 
 def is_git_repo(cwd:str) -> bool:
     
-    """Checks to ensure that the specified directory is a valid git repositiry by checking for the presece of a `.git` folder. 
+    """Once the current working directory is confirmed as valid, it will then check to ensure that the specified directory is a valid git repository.
+    This is achieved by checking for the presece of a `.git` folder. 
     
     Args:
         cwd(str): Denoted the full directory.
@@ -163,7 +179,7 @@ def is_git_repo(cwd:str) -> bool:
 
     Notes:
     -
-        Please be aware that this directory *NOT* check to ensure that this, if true, it is pointing to the corrector remote repo. This simple checks to ensure that a `.git` folder is present. 
+        Please be aware that this does *NOT* check to ensure that the directory is pointing to the correct remote repository.
     
     """
     
@@ -178,18 +194,16 @@ def is_git_repo(cwd:str) -> bool:
         return False
     
 def push_to_github() -> None:
-    """Adds, commits and pucshed the comntect of each directory to the remote repo.
+    """Pushes all files and folders to the remote GitHib repository.
 
-    - First, it checks to ensure that the parent directory is valid. This will return `NONE` if the if an exception is raised.
-    - Second, it will access each directory in the list of dorectories specified in the `local_repository_structure()` method, located in the `repositore` module.
-    - On each iteration throgun the loop, it will check the following:
-        - the validitiry of the working directory
-        - that the working directory is a valid local repostiry
-        - checks for any changed between the local and the remote repo's
-        - any changes, it will `.append()` them to a list, in preparation to send to email.
-    - Third, it will run the `git add .`, `git commit` and `git push` if changes were detected.
-
-    If there are any items in the `changed_dirs` list, these will be send, via email, to the user.  
+    - First, it checks to ensure that the parent directory is valid. This will return `NONE` if an error or exception occurs.
+    - Second, it will access each directory in the list of directories specified in the `local_repository_structure()` method, located in the `repositories` module.
+    - On each iteration through the loop, it will check the following:
+        - the validity of the current working directory,
+        - that the current working directory is a git repository,
+        - checks for any changes made in the local repository since the previous pull from the remote repository,
+        - append any changes to a list of updated local repositories.
+    - Third, it will run the `git add .`, `git commit` and `git push` commands, if changes were detected.
     
     """
     
@@ -232,7 +246,7 @@ def push_to_github() -> None:
     if changed_dirs:
         get_latest_commit(changed_dirs)  """
             
-    return
+    return None
         
 if __name__ == "__main__":
     push_to_github()
