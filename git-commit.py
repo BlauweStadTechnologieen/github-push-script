@@ -227,7 +227,7 @@ def push_to_github() -> None:
             if not is_git_repo(cwd):
                 continue
                                                 
-            """if not check_for_changes(cwd):
+            if not check_for_changes(cwd):
                 continue
 
             changed_dirs.append(cwd)
@@ -244,7 +244,7 @@ def push_to_github() -> None:
             run_command(["git", "push"], cwd)
 
     if changed_dirs:
-        get_latest_commit(changed_dirs)  """
+        get_latest_commit(changed_dirs)
             
     return None
         
