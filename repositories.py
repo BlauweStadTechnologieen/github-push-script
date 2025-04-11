@@ -45,9 +45,9 @@ def local_repository_structure() -> set:
     """
     directory_structure = {
         
-        "Experts\\Advisors": ["bluecitycapitaltechnologies"],
-        "Include\\Expert":["Signal", "PriceStats", "Money"],
-        "Scripts":["CreateLicence", "Non-existent-directorys"]
+        "Experts\\Advisors": ["BlueCityCapital"],
+        "Include\\Expert":["BlueCityCapital"],
+        "Scripts":["BlueCityCapital"]
 
     }
 
