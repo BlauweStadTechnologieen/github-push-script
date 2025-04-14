@@ -62,7 +62,6 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
     
     except KeyError as e:
         error_handler.report_error("Missing SMTP Credentials", f"{e}")
-        return False
     
     except smtplib.SMTPAuthenticationError as e:
         error_handler.report_error("SMTP Authentication Error", f"{e}")
