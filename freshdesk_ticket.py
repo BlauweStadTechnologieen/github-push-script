@@ -88,7 +88,6 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         else:
             custom_message = f"Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
             print(custom_message)
-            error_handler.report_error("Support Ticket Error",f"{response.status_code}")
             return response.status_code
 
     except TypeError as e:
@@ -104,5 +103,5 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         custom_message = f"General Exception: {e}"
 
     if custom_message:
-        send_email.freshdesk_inop_notification(custom_message)
-        return -1
+        print(custom_message)
+        return e
