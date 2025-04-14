@@ -104,4 +104,4 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
 
     if custom_message:
         print(custom_message)
-        return e
+        return -1
