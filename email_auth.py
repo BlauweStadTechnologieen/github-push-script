@@ -36,18 +36,8 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
     """
     try:
         if not SMTP_CREDENTIALS["SMTP_EMAIL"] or not SMTP_CREDENTIALS["SMTP_PASSWORD"] or not SMTP_CREDENTIALS["SMTP_PORT"] or not SMTP_CREDENTIALS["SMTP_SERVER"]:
-            raise KeyError("One or nore of your SMTP credentials are mising, please chek these details.")
+            raise KeyError("One or nore of your SMTP credentials are mising, please check these details.")
         
-    except KeyError as e:
-        error_handler.report_error("Missing SMTP Credentials", f"{e}")
-        return False
-    
-    except Exception as e:
-        error_handler.report_error("SMTP Exception Error", f"{e}")
-        return False
-    
-    else:
-    
         msg             = MIMEMultipart()
         msg['Subject']  = subject
         msg['From']     = f'"{settings_mapper.MESSAGING_METADATA["SENDER_NAME"]}" <{settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"]}>'
@@ -55,30 +45,41 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
         body            = message_body
         msg.attach(MIMEText(body, mime_text))
 
-        try:
-            
-            with smtplib.SMTP(SMTP_CREDENTIALS["SMTP_SERVER"], SMTP_CREDENTIALS["SMTP_PORT"]) as server:
+        with smtplib.SMTP(SMTP_CREDENTIALS["SMTP_SERVER"], SMTP_CREDENTIALS["SMTP_PORT"]) as server:
 
-                server.starttls()
+            server.starttls()
 
-                server.login(SMTP_CREDENTIALS["SMTP_EMAIL"], 
-                            SMTP_CREDENTIALS["SMTP_PASSWORD"]
-                )
-                server.sendmail(settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"],
-                                settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"], 
-                                msg.as_string()
-                )
+            server.login(SMTP_CREDENTIALS["SMTP_EMAIL"], 
+                        SMTP_CREDENTIALS["SMTP_PASSWORD"]
+            )
+            server.sendmail(settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"],
+                            settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"], 
+                            msg.as_string()
+            )
 
-                return True
+            return True
+    
+    
+    except KeyError as e:
+        error_handler.report_error("Missing SMTP Credentials", f"{e}")
+        return False
+    
+    except smtplib.SMTPAuthenticationError as e:
+        error_handler.report_error("SMTP Authentication Error", f"{e}")
+
+    except smtplib.SMTPConnectError as e:
+        error_handler.report_error("SMTP Connection Error",f"{e}")
+
+    except smtplib.SMTPResponseException as e:
+        error_handler.report_error("SMTP Response Exception",f"{e}")
+    
+    except Exception as e:
+        error_handler.report_error("SMTP Exception Error", f"{e}")
         
-        except ValueError as e:
-            error_handler.report_error("Missing SMTO Credentials", f"{e}")
-            return False
+    return False
+    
+    
+    
         
-        except Exception as e:
 
-            custom_message = f"Error sending email: {e}"
-            custom_subject  = "SMTP Authentication Error"
-
-            error_handler.report_error(custom_subject, custom_message)
-            return False
+        

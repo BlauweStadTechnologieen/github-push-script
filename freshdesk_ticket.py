@@ -4,6 +4,7 @@ import send_email
 import os
 from dotenv import load_dotenv
 import settings_mapper
+import error_handler
 
 load_dotenv()
 
@@ -78,6 +79,18 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
             headers = {'Content-Type' : 'application/json'}
         )
 
+        if response.status_code == 201:
+            
+            ticket_info = response.json
+            ticket_id   = ticket_info.get("id")
+            return ticket_id
+
+        else:
+            custom_message = f"Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
+            print(custom_message)
+            error_handler.report_error("Support Ticket Error",f"{response.status_code}")
+            return response.status_code
+
     except TypeError as e:
         custom_message = f"Type Error Exception: {e}"
     
@@ -90,21 +103,6 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     except Exception as e:
         custom_message = f"General Exception: {e}"
 
-    else:
-    
-        if response.status_code == 201:
-            
-            ticket_info = response.json
-            ticket_id   = ticket_info.get("id")
-            return ticket_id
-
-        else:
-            custom_message = f"Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
-            print(custom_message)
-            send_email.freshdesk_inop_notification(custom_message)
-            return -1
-        
-    finally:
-        if custom_message:
-            send_email.freshdesk_inop_notification(custom_message)
+    if custom_message:
+        send_email.freshdesk_inop_notification(custom_message)
         return -1
