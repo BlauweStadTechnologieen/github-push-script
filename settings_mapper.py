@@ -8,7 +8,7 @@ MESSAGING_METADATA = {
      "SENDER_DOMAIN"        : os.getenv("SENDER_DOMAIN"), 
      "SENDER_NAME"          : os.getenv("SENDER_NAME"),
      "SENDER_DEPARTMENT"    : os.getenv("SENDER_DEPARTMENT"),
-     "SENDER_EMAIL"         : f"{os.getenv("SENDER_DEPARTMENT").lower()}{os.getenv("SENDER_DOMAIN")}",
+     "SENDER_EMAIL"         : os.getenv("SENDER_EMAIL"),
      "REQUESTER_NAME"       : os.getenv("REQUESTER_NAME"),
      "REQUESTER_EMAIL"      : os.getenv("REQUESTER_EMAIL")
 }
