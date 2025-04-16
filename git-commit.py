@@ -220,6 +220,8 @@ def push_to_github() -> None:
         for sub_dir in sub_dirs:
             
             cwd = os.path.join(parent_dir, base, sub_dir)
+
+            print(cwd)
                     
             if not is_valid_directory(cwd):
                 continue
