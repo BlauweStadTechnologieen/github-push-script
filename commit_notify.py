@@ -91,10 +91,11 @@ def get_latest_commit(changed_local_repos:list) -> list:
         remote_repo_list    = []
         headers             = {"Authorization": f"token {settings_mapper.GITHUB_CONSTANTS['GITHUB_TOKEN']}"}
         repos               = repositories.remote_repositories()
-        url                 = GITHUB_API_URL.format(owner = settings_mapper.GITHUB_CONSTANTS["OWNER"], repo=repo)
 
         for repo in repos:
 
+            url = GITHUB_API_URL.format(owner = settings_mapper.GITHUB_CONSTANTS["OWNER"], repo=repo) 
+            
             try:
                 response = requests.get(url, headers = headers)
                 print(response)
