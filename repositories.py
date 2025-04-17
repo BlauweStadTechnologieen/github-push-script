@@ -18,7 +18,7 @@ def remote_repositories() -> set:
     Returns:
         set: `remote_repositories`
     """
-    remote_repositories = {"Experts", "Include", "Screenshots", "Scripts"}
+    remote_repositories = {"MQL5Experts", "MQL5Include", "Screenshots", "MQL5Scripts"}
 
     return remote_repositories
 
