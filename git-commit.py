@@ -208,7 +208,7 @@ def push_to_github() -> None:
     """
     
     parent_dir          = parent_directory_validation()
-    directory_structure = repositories.local_repository_structure("MQL5")
+    directory_structure = repositories.local_repository_structure()
     changed_dirs        = []
 
     if parent_dir is None:

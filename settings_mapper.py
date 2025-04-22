@@ -20,5 +20,6 @@ GITHUB_CONSTANTS={
 
 DIRECTORY_CONSTANTS = {
     "PARENT_DIRECTORY"      : os.getenv("PARENT_DIRECTORY"),
-    "DEV_BASE_DIR"          : os.getenv("DEV_BASE_DIR")
+    "DEV_BASE_DIR"          : os.getenv("DEV_BASE_DIR"),
+    "VERSION_FOLDER"        : os.getenv("VERSION_FOLDER")
 }

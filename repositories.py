@@ -1,3 +1,5 @@
+import settings_mapper
+
 def local_repositories() -> set:
     
     """
@@ -28,7 +30,7 @@ def repository_list_test() -> set:
 
     return repositories
 
-def local_repository_structure(version_folder:str) -> set:
+def local_repository_structure() -> set:
     
     """
     Cycles through all local repositoroes after checking:
@@ -45,10 +47,10 @@ def local_repository_structure(version_folder:str) -> set:
     """
     directory_structure = {
         
-        f"{version_folder}\\Experts\\Advisors": ["BlueCityCapital"],
-        f"{version_folder}\\Include\\Expert":["BlueCityCapital"],
-        f"{version_folder}\\Scripts":["BlueCityCapital"],
-        f"{version_folder}":["Files"]
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Experts\\Advisors": ["BlueCityCapital"],
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Include\\Expert":["BlueCityCapital"],
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Scripts":["BlueCityCapital"],
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}":["Files"]
 
     }
 
