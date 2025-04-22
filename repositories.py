@@ -47,7 +47,8 @@ def local_repository_structure() -> set:
         
         "Experts\\Advisors": ["BlueCityCapital"],
         "Include\\Expert":["BlueCityCapital"],
-        "Scripts":["BlueCityCapital"]
+        "Scripts":["BlueCityCapital"],
+        "Files":[]
 
     }
 
