@@ -28,7 +28,7 @@ def repository_list_test() -> set:
 
     return repositories
 
-def local_repository_structure() -> set:
+def local_repository_structure(version_folder:str) -> set:
     
     """
     Cycles through all local repositoroes after checking:
@@ -45,10 +45,10 @@ def local_repository_structure() -> set:
     """
     directory_structure = {
         
-        "Experts\\Advisors": ["BlueCityCapital"],
-        "Include\\Expert":["BlueCityCapital"],
-        "Scripts":["BlueCityCapital"],
-        "Files":[]
+        f"{version_folder}\\Experts\\Advisors": ["BlueCityCapital"],
+        f"{version_folder}\\Include\\Expert":["BlueCityCapital"],
+        f"{version_folder}\\Scripts":["BlueCityCapital"],
+        f"{version_folder}":["Files"]
 
     }
 
