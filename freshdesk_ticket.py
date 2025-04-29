@@ -90,6 +90,9 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
             print(custom_message)
             return response.status_code
 
+    except AttributeError as e:
+        custom_message = f"Unfortunatley there was an attribute error {e}"
+    
     except TypeError as e:
         custom_message = f"Type Error Exception: {e}"
     

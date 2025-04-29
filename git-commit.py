@@ -127,6 +127,10 @@ def parent_directory_validation() -> str:
             # If a parent directory is specified, it will then check to ensure this is valid.
             raise ValueError(f"The specified parent directory in the PARENT_DIRECTORY key - {parent_directory} is invalid. Please verify the path and try again.")
             
+    except AttributeError as e:
+        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
+        return None
+    
     except KeyError as e:
         error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
         return None

@@ -60,6 +60,9 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
             return True
     
     
+    except AttributeError as e:
+        error_handler.report_error("Missing Attribute",f"{e}")
+    
     except KeyError as e:
         error_handler.report_error("Missing SMTP Credentials", f"{e}")
     

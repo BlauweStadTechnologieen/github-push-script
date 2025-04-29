@@ -37,8 +37,12 @@ def github_repository_validation() -> bool:
             raise KeyError("GITHUB owner is not set. Please set the environmental variable.")
         
         if not GITHUB_API_URL:
-            raise KeyError("Please specifty an GitHub API URL.")
+            raise KeyError("Please specify a GitHub API URL to continue.")
                
+    except AttributeError as e:
+        error_handler.report_error("We do not have a GITHUB_CONSTANTS attribute.",f"{e}")
+        return False
+    
     except KeyError as e:
         error_handler.report_error("Github Repository Validation Failure", f"{e}")
         return False
