@@ -11,5 +11,5 @@ def report_error(subject:str, error_message:str) -> None:
         The Freshdesk system has not currently been rolled out, therefore, you will only see print statements in the command window. 
     """
     print(f"{subject} - { error_message}")
-    #create_freshdesk_ticket(error_message, subject)
+    create_freshdesk_ticket(error_message, subject)
     return
