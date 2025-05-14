@@ -55,3 +55,35 @@ def local_repository_structure() -> set:
     }
 
     return directory_structure
+
+def tester_directory() -> set:
+    """
+    Provides a mock directory structure for testing purposes.
+
+    Returns:
+        set: A dictionary where keys are base folder paths and values are lists of subdirectories or files.
+    """
+    directory_list = {
+
+        "nbc\\friends": ["Ross", "Rachel", "Chandler", "Monica", "Joey", "Phoebe"],
+        "paramount\\fraiser": ["Fraiser", "Daphanie", "Martin", "Niles", "Roz"],
+        "nbc\\will&grace": ["Will", "Grace", "Jack", "Karen"],
+        "channel4\\coupling": ["Steve", "Susan", "Jeff", "Sally", "Patrick"],
+        "channel4\\peep-show": ["Mark", "Jeremy", "SuperHans", "Dobby"],
+        "channel4\\black-mirror": ["Charlie", "Brooker", "Annabel", "Jones"],
+
+    }
+
+    return directory_list
+
+local = tester_directory()
+
+import os
+
+for base_folder, local_dirs in local.items():
+
+    for local_dir in local_dirs:
+
+        cwd = os.path.join(base_folder,local_dir)
+
+        print(cwd)
