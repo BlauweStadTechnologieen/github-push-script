@@ -1,6 +1,5 @@
-import json as j
-import requests as r
 import os
+import requests
 from dotenv import load_dotenv
 import settings_mapper
 
@@ -68,17 +67,17 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         custom_message  = None
         ticket_id       = None
                     
-        response = r.post(
+        response = requests.post(
             API_URL,
             auth    = (FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"], 'X'),
-            json    = j.dumps(ticket_data),
+            json    = ticket_data,
             timeout = 30,
             headers = {'Content-Type' : 'application/json'}
         )
 
         if response.status_code == 201:
             
-            ticket_info = response.json
+            ticket_info = response.json()
             ticket_id   = ticket_info.get("id")
             return ticket_id
 
@@ -93,7 +92,7 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     except TypeError as e:
         custom_message = f"Type Error Exception: {e}"
     
-    except r.RequestException as e:
+    except requests.RequestException as e:
         custom_message = f"Requests Exception: {e}"
 
     except KeyError as e:
