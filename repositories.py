@@ -49,7 +49,7 @@ def local_repository_structure() -> set:
         
         f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Experts\\Advisors": ["BlueCityCapital"],
         f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Include\\Expert":["BlueCityCapital"],
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Scripts\\BlueCityCapital":["mqh"],
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Scripts":["BlueCityCapital\\mqh"],
         f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}":["Files"]
 
     }
