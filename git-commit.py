@@ -165,7 +165,11 @@ def is_valid_directory(cwd:str) -> bool:
             raise ValueError(f"The resulting directory {cwd} is not valid, please check and try again")
 
     except ValueError as e:
-        error_handler.report_error("Directory Validation Incident", f"{e}")
+
+        ticket_subject = "The specified directory is not valid"
+        ticket_description = f"{type(e)} - {e}"
+        
+        error_handler.report_error(ticket_subject, ticket_description)
         return False
     
     return True
@@ -187,13 +191,13 @@ def is_git_repo(cwd:str) -> bool:
     
     """
     
-    git_path        =   os.path.join(cwd, '.git')
-    custom_subject  =   "Invalid Git Repository"
+    git_path        = os.path.join(cwd, '.git')
+    custom_subject  = "You have not initialised a Git Repository"
     
     if os.path.isdir(git_path):
         return True
     else:
-        custom_message = f"{cwd} is not a Git Repository. Navigate do {cwd}, then run 'git init' from the command shell "
+        custom_message = f"{cwd} is not an initialized Git repository. Navigate to {cwd}, then run 'git init' from the command shell."
         error_handler.report_error(custom_subject, custom_message)
         return False
     
