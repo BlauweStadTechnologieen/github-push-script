@@ -127,8 +127,16 @@ def get_latest_commit(changed_local_repos:list) -> list:
                 })
                 
             else:
-                custom_message = f"Message: Error fetching commit records for {repo}.\nSystem Message: {response.text}\nStatus Code: {response.status_code}\nStatus Content: {response.content}"
+                
+                custom_message = (
+
+                    f"Message: Error in fetching commit records for {repo}.\n"
+                    f"API Response Message: {response.text}\n"
+                    f"API Response Status Code: {response.status_code}"
+                    
+                )
                 custom_subject = f"Error Fetching commit records - {response.status_code}"
+
                 error_handler.report_error(custom_subject, custom_message)
 
                 break
