@@ -1,13 +1,7 @@
 import requests
-import send_email
-import settings_mapper
 import repositories
 import error_handler
 import os
-
-# GitHub repository info
-#GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
-
 
 def get_latest_commit() -> list:
     
