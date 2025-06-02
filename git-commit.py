@@ -1,20 +1,9 @@
 import os
 import subprocess
-from pathlib import Path
 from commit_notify import get_latest_commit
 import settings_mapper
 import repositories
 import error_handler
-
-#def assign_log_number(func) -> str:
-#    @wraps(func)
-#    def wrapper(*args, **kwargs):
-#        assign_log_number = generate_incident_ref()
-#        try:
-#            return func(*args, **kwargs, assign_log_number = assign_log_number)
-#        except Exception as e:
-#            raise e
-#    return wrapper
 
 def run_command(command:str, cwd:str) -> str:
     """Runs specified commands in the local machine's terminal. The process of this is as follows:
@@ -249,12 +238,13 @@ def push_to_github() -> None:
             commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
             if "nothing to commit, working tree clean" in commit_result:
+                
                 continue
             
             run_command(["git", "push"], cwd)
 
     if changed_dirs:
-        get_latest_commit(changed_dirs)
+        get_latest_commit(changed_dirs) 
             
     return None
         
