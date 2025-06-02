@@ -1,150 +1,177 @@
 import requests
 import send_email
-from freshdesk_ticket import create_freshdesk_ticket
 import settings_mapper
 import repositories
 import error_handler
+import os
 
 # GitHub repository info
-GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
+#GITHUB_API_URL  = "https://api.github.com/repos/{owner}/{repo}/commits"
 
-def github_repository_validation() -> bool:
+
+def get_latest_commit() -> list:
     
     """
-    Validates the presence and correctness of essential GitHub-related environment variables.
+    Fetches the latest commit information for each remote GitHub repository.
 
-    This function checks the `.env` file for the following:
-    - The `GITHUB_TOKEN`, which is necessary for authentication.
-    - The `OWNER`, which specifies the GitHub account owner.
-    - The `GITHUB_API_URL`, which defines the GitHub API endpoint.
-
-    If any of these variables are missing or invalid, it raises a `KeyError` with an appropriate message and logs the error using the `error_handler` module.
-
-    Returns:
-        bool: True if all validations pass, otherwise False.
-
-    Exceptions:
-        KeyError: Raised if any required environment variable is not set.
-        Exception: Catches and handles any unexpected errors during validation.
-    """
-
-    try:
-        
-        if not settings_mapper.GITHUB_CONSTANTS["GITHUB_TOKEN"]:
-            raise KeyError("GITHUB_TOKEN is not set. Please set the environment variable.")
-        
-        if not settings_mapper.GITHUB_CONSTANTS["OWNER"]:
-            raise KeyError("GITHUB owner is not set. Please set the environmental variable.")
-        
-        if not GITHUB_API_URL:
-            raise KeyError("Please specify a GitHub API URL to continue.")
-               
-    except AttributeError as e:
-        error_handler.report_error("We do not have a GITHUB_CONSTANTS attribute.",f"{e}")
-        return False
-    
-    except KeyError as e:
-        error_handler.report_error("Github Repository Validation Failure", f"{e}")
-        return False
-
-    except Exception as e:
-        error_handler.report_error("Github Repository Validation Failure", f"{e}")
-        return False
-
-    return True
-
-# Function to get the latest commit hash from GitHub
-def get_latest_commit(changed_local_repos:list) -> list:
-    
-    """
-    Retrieves the latest commits from remote GitHub repositories via the GitHub API.
-
-    This function performs the following steps:
-    1. Validates essential GitHub environment variables using the `github_repository_validation` function,
-    2. Initializes an empty `remote_repo_list` to store details about repositories and their latest commits.
-    3. Constructs request headers using the GitHub token from the `.env` file.
-    4. Fetches a list of remote repositories from the `repositories` module.
-    5. Builds the GitHub API URL for each repository to retrieve commit data.
-    6. Sends an email summarizing the changes in remote repositories to the user.
-
-    For each remote repository:
-    - Sends a GET request to the GitHub API to retrieve commit details.
-    - Handles request exceptions gracefully, logging errors using `error_handler`.
-    - If the response status is 200, extracts commit details such as SHA, author ID, date, and message.
-    - Appends these commit details to the `remote_repo_list`.
+    This function:
+    - Validates required GitHub environment variables.
+    - Iterates through all remote repositories defined in the `repositories` module.
+    - For each repository, queries the GitHub API for the latest commit.
+    - Compares the latest commit SHA with the previously stored SHA (in 'latest_sha.txt').
+    - If a new commit is found, appends its details (repo, sha, author_id, date, message) to the result list and updates the stored SHA.
+    - Handles and logs errors using the `error_handler` module.
 
     Args:
-        changed_local_repos (list): List of locally changed repositories.
+        changed_local_repos (list): List of locally changed repositories (currently unused).
 
     Returns:
-
-        list: A list containing details of remote GitHub repositories with the latest commits.
-
-    Exceptions:
-
-        - requests.exceptions.RequestException: Raised when a network request fails, and errors are logged.
-        - Other exceptions are caught and logged using `error_handler`.
-
-    Notes:
-        - The function sends an email notification summarizing repository changes if `remote_repo_list` is populated.
+        list: A list of dictionaries, each containing details of the latest commit for repositories with new commits.
     """
-   
-    
-    if github_repository_validation():
                     
-        remote_repo_list    = []
-        headers             = {"Authorization": f"token {settings_mapper.GITHUB_CONSTANTS['GITHUB_TOKEN']}"}
-        repos               = repositories.remote_repositories()
+    required_env_vars = {
 
-        for repo in repos:
+        "GITHUB_TOKEN"      : os.getenv("GITHUB_TOKEN"),
+        "OWNER"             : os.getenv("OWNER"),
+        "PARENT_DIRECTORY"  : os.getenv("PARENT_DIRECTORY"),
+        "VERSION_FOLDER"    : os.getenv("VERSION_FOLDER")
 
-            url = GITHUB_API_URL.format(owner = settings_mapper.GITHUB_CONSTANTS["OWNER"], repo=repo) 
-            
-            try:
-                response = requests.get(url, headers = headers)
-                print(response)
-            except requests.exceptions.RequestException as e:
-                custom_message = f"Request failed for {repo}: {e}"
-                custom_subject = f"Repository fetch failure."
-                error_handler.report_error(custom_subject, custom_message)
-                
-                continue
+    }
+
+    missing_vars = [key for key, value in required_env_vars.items() if not value]
+
+    if missing_vars:
+
+        error_handler.report_error(
+
+            "Environment Configuration Error",
+            f"The following environment variables are missing: {', '.join(missing_vars)}. Please check your configuration.",
+            True
+
+        )
+
+        return []
+
+    github_auth_token   = required_env_vars["GITHUB_TOKEN"]
+    github_company      = required_env_vars["OWNER"]
+    directory_path      = required_env_vars["PARENT_DIRECTORY"]
+    mql_version         = required_env_vars["VERSION_FOLDER"]
+
+    remote_repo_list = []
+        
+    headers = {
+
+            "User-Agent"    : "GitHub Commit Notifier",
+            "Authorization" : f"Bearer {github_auth_token}"
+
+        }
+
+    base_directory = os.path.join(directory_path, mql_version)
+
+    if not os.path.exists(base_directory):
+        
+        error_handler.report_error(
+
+            "Directory Not Found",
+            f"The specified directory '{base_directory}' does not exist. Please check your configuration.",
+            True
+
+        )
+
+        return []
+    
+    latest_sha_file = "latest_sha.txt"
+
+    for repo in repositories.remote_repositories():
+        
+        try:
+
+            url = f"https://api.github.com/repos/{github_company}/{repo}/commits"
+                        
+            response = requests.get(url, headers=headers)
 
             if response.status_code == 200:
-                commits = response.json()
-                latest_commit_sha = commits[0]["sha"]
-                latest_commit_date = commits[0]["commit"]["author"]["date"]
-                latest_commit_id = commits[0]["author"]["id"]
-                latest_commit_msg = commits[0]["commit"]["message"]
                 
-                remote_repo_list.append({
-                    "repo"  : repo,
-                    "sha"   : latest_commit_sha,
-                    "url"   : url,
-                    "date"  : latest_commit_date,
-                    "id"    : latest_commit_id,
-                    "msg"   : latest_commit_msg   
-                })
-                
-            else:
-                
-                custom_message = (
+                sha = response.json()
 
-                    f"Message: Error in fetching commit records for {repo}.\n"
-                    f"API Response Message: {response.text}\n"
-                    f"API Response Status Code: {response.status_code}"
+                if not sha:
                     
-                )
-                custom_subject = f"Error Fetching commit records - {response.status_code}"
+                    custom_message = (
 
-                error_handler.report_error(custom_subject, custom_message)
+                        f"Message: No commits found for {repo}.\n"
+                        f"API Response Message: {response.text}\n"
+                        f"API Response Status Code: {response.status_code}"
 
-                break
+                    )
 
-        if remote_repo_list:
-            send_email.send_message(remote_repo_list, changed_local_repos, settings_mapper.GITHUB_CONSTANTS["OWNER"])
-    
-        return remote_repo_list
-    
-    else:
-        return[]
+                    custom_subject = f"No commits found - {response.status_code}"
+
+                    error_handler.report_error(custom_subject, custom_message, True)
+
+                    continue
+                
+                cwd = os.path.join(base_directory, repo)
+
+                if not os.path.exists(cwd):
+                    
+                    error_handler.report_error(
+
+                        "Directory Not Found",
+                        f"The specified directory '{cwd}' does not exist for repository '{repo}'. Please check your configuration.",
+                        True
+
+                    )
+
+                    return []
+
+                latest_sha_directory = os.path.join(cwd, latest_sha_file)
+
+                if os.path.exists(latest_sha_directory):
+
+                    with open(latest_sha_directory, "r") as file:
+
+                        stored_sha = file.read().strip()    
+
+                else:
+
+                    stored_sha = None
+
+                latest_commit_sha = sha[0]["sha"]
+
+                if latest_commit_sha != stored_sha:
+                    
+                    commit_author_id    = sha[0]["author"]["id"]
+                    commit_date         = sha[0]["commit"]["committer"]["date"]
+                    commit_message      = sha[0]["commit"]["message"]
+
+                    remote_repo_list.append({
+
+                        "repo": repo,
+                        "sha": latest_commit_sha,
+                        "author_id": commit_author_id,
+                        "date": commit_date,
+                        "message": commit_message
+
+                    }) 
+                        
+                    with open(latest_sha_directory, "w") as file:
+
+                        file.write(latest_commit_sha)
+                    
+                    #send_email.send_message()
+
+                else:
+                    
+                    print(f"No new commit found in {repo}. Latest SHA: {latest_commit_sha}")
+                
+        except requests.exceptions.RequestException as e:
+            
+            error_handler.report_error("GitHub API Request Error", f"Error fetching commits for {repo}: {e}")
+        
+        except Exception as e:
+
+            error_handler.report_error("Unexpected Error", f"An unexpected error occurred: {e}")
+
+if __name__ == "__main__":
+
+    get_latest_commit()
