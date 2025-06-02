@@ -86,4 +86,4 @@ for base_folder, local_dirs in local.items():
 
         cwd = os.path.join(base_folder,local_dir)
 
-        print(cwd)
+        #print(cwd)
