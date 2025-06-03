@@ -4,6 +4,8 @@ from commit_notify import get_latest_commit
 import settings_mapper
 import repositories
 import error_handler
+import requests
+from typing import Optional
 
 def run_command(command:str, cwd:str) -> str:
     """Runs specified commands in the local machine's terminal. The process of this is as follows:
@@ -48,7 +50,7 @@ def run_command(command:str, cwd:str) -> str:
 
     return result.stdout.strip()
     
-def check_for_changes(cwd:str) -> bool:
+def check_for_changes(cwd:str, package:str) -> Optional[str]:
     """
     Checks for any differences between the local and the remote repositories. 
 
@@ -61,34 +63,150 @@ def check_for_changes(cwd:str) -> bool:
         Exceptions: Catches any error if one or more are detected. Should any exception be called, the `error_handler` function will process a support ticket, which will be sent to the FreshDesk system.
     """
     print("checking for changes....")
-    
-    custom_message = None
-    custom_subject = "An error occured when checking for changes in a local directory"
-    
+      
     try:
-                
-        result = run_command(["git", "status", "--short"], cwd).strip()
 
-        if result.strip():
-            print(f"Tracked Files Git Status Output: {result}") 
-            return True
+        required_env_vars = {
+
+            "GITHUB_TOKEN"      : os.getenv("GITHUB_TOKEN"),
+            "OWNER"             : os.getenv("OWNER"),
+            "PARENT_DIRECTORY"  : os.getenv("PARENT_DIRECTORY"),
+            "VERSION_FOLDER"    : os.getenv("VERSION_FOLDER")
+
+        }
+
+        missing_vars = [key for key, value in required_env_vars.items() if not value]
+
+        if missing_vars:
+
+            error_handler.report_error(
+
+                "Environment Configuration Error",
+                f"The following environment variables are missing: {', '.join(missing_vars)}. Please check your configuration.",
+                True
+
+            )
+
+            return None
+
+        github_auth_token   = required_env_vars["GITHUB_TOKEN"]
+        github_company      = required_env_vars["OWNER"]
+
+        commit_api_url = f"https://api.github.com/repos/{github_company}/{package}/commits"
+
+        remote_repo_attrs = None
+
+        headers = {
+
+            "User-Agent"    : "GitHub Commit Notifier",
+            "Authorization" : f"Bearer {github_auth_token}"
+
+        }
+                
+        response = requests.get(commit_api_url, headers=headers)
+
+        if response.status_code == 200:
+
+            sha = response.json()
+
+            if not sha:
+
+                custom_message = (
+
+                    f"Message: No commits found for {package}.\n"
+                    f"API Response Message: {response.text}\n"
+                    f"API Response Status Code: {response.status_code}"
+
+                )
+
+                custom_subject = f"No commits found - {response.status_code}"
+                
+                error_handler.report_error(custom_subject, custom_message, True)
+                
+                return None
+            
+            latest_sha_file = "latest_sha.txt"
+            sha_dir         = os.path.join(cwd, latest_sha_file)
+
+            if not os.path.exists(sha_dir):
+
+                with open(sha_dir, "r") as file:
+
+                    stored_sha = file.read().strip()
+
+            else:
+
+                stored_sha = None
+
+            latest_commit_sha = sha[0]["sha"]
+            
+            if stored_sha != latest_commit_sha:
+
+                commit_author_id    = sha[0]["author"]["id"]
+                commit_date         = sha[0]["commit"]["committer"]["date"]
+                commit_message      = sha[0]["commit"]["message"]
+
+                remote_repo_attrs.append({
+
+                    "repo"      : package.title(),
+                    "sha"       : latest_commit_sha,
+                    "author_id" : commit_author_id,
+                    "date"      : commit_date,
+                    "message"   : commit_message
+
+                })
+
+                with open(sha_dir, "w") as file:
+
+                    file.write(latest_commit_sha)
+
+                return remote_repo_attrs
+
+            else:
+
+                print(f"No changes detected for {package}.")
+                
+                return None
+            
+        else:
+
+            custom_message = (
+                
+                f"Message: Failed to retrieve commits for {package}.\n"
+                f"API Response Message: {response.text}\n"
+                f"API Response Status Code: {response.status_code}"
+
+            )
+            custom_subject = f"Failed to retrieve commits - {response.status_code}"
+
+            error_handler.report_error(custom_subject, custom_message, True)
+
+            return None
+                
+    except FileNotFoundError as e:
         
-        # If nothing was detected, check for untracked files.
-        untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd).strip()
-        if untracked_files.strip():
-            print(f"Untracked Files Git Status Output: {result}") 
-            return True
-        
-        print("There were no changes to the working tree detected.")
-        return False
+        custom_subject = "Directory Not Found Error"
+        custom_message = f"Please check your configuration: {e}"
+        error_handler.report_error(custom_subject, custom_message, True)
+
+        return None
+    
+    except requests.exceptions.RequestException as e:
+
+        custom_subject = "GitHub API Request Error"
+        custom_message = f"An error occurred while making a request to the GitHub API: {e}"
+        error_handler.report_error(custom_subject, custom_message, True)
+
+        return None
     
     except Exception as e:
+        
+        custom_subject = "An error occured when checking for changes in a local directory"
         custom_message = f"{{type{e}}} {e}"
+        error_handler.report_error(custom_subject, custom_message, True)
 
-    if custom_message:
-        error_handler.report_error(custom_subject, custom_message)
-        return False
-
+        return None
+        
 def parent_directory_validation() -> str:
     
     """
@@ -190,6 +308,8 @@ def is_git_repo(cwd:str) -> bool:
         error_handler.report_error(custom_subject, custom_message)
         return False
     
+
+    
 def push_to_github() -> None:
     """Pushes all files and folders to the remote GitHib repository.
 
@@ -218,18 +338,26 @@ def push_to_github() -> None:
             
             cwd = os.path.join(parent_dir, base, sub_dir)
 
-            print(cwd)
+            if not os.path.exists(cwd):
+
+                custom_subject = "Directory Not Found Error"
+                custom_message = f"The directory {cwd} does not exist. Please check your configuration."
+                error_handler.report_error(custom_subject, custom_message, True)
+
+                continue
                     
             if not is_valid_directory(cwd):
                 continue
 
             if not is_git_repo(cwd):
                 continue
-                                                
-            if not check_for_changes(cwd):
-                continue
+                                            
+            tracked_files   = run_command(["git", "status", "--short"], cwd).strip()
+            untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd).strip()
 
-            changed_dirs.append(cwd)
+            if not (untracked_files.strip() or tracked_files.strip()):
+
+                continue
             
             run_command(["git", "add", "."], cwd)
 
@@ -242,6 +370,14 @@ def push_to_github() -> None:
                 continue
             
             run_command(["git", "push"], cwd)
+
+            changed_package = check_for_changes(cwd, sub_dir)
+
+            if not changed_package:
+                
+                continue
+
+            changed_dirs.append(changed_package.title())
 
     if changed_dirs:
         get_latest_commit(changed_dirs) 
