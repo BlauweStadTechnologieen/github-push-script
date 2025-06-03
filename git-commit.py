@@ -128,7 +128,7 @@ def check_for_changes(cwd:str, package:str) -> Optional[str]:
             latest_sha_file = "latest_sha.txt"
             sha_dir         = os.path.join(cwd, latest_sha_file)
 
-            if not os.path.exists(sha_dir):
+            if os.path.exists(sha_dir):
 
                 with open(sha_dir, "r") as file:
 
@@ -163,7 +163,7 @@ def check_for_changes(cwd:str, package:str) -> Optional[str]:
                 return remote_repo_attrs
 
             else:
-
+ 
                 print(f"No changes detected for {package}.")
                 
                 return None
@@ -332,11 +332,13 @@ def push_to_github() -> None:
                 
         return None
     
-    for base, sub_dirs in directory_structure.items():
+    for base, packages in directory_structure.items():
         
-        for sub_dir in sub_dirs:
-            
-            cwd = os.path.join(parent_dir, base, sub_dir)
+        for entry in packages:
+
+            sub_dir     = entry["name"]
+            remote_repo = entry["repo"]
+            cwd         = os.path.join(parent_dir, base, sub_dir)
 
             if not os.path.exists(cwd):
 
@@ -371,7 +373,7 @@ def push_to_github() -> None:
             
             run_command(["git", "push"], cwd)
 
-            changed_package = check_for_changes(cwd, sub_dir)
+            changed_package = check_for_changes(cwd, remote_repo)
 
             if not changed_package:
                 
