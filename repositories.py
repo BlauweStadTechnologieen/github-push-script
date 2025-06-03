@@ -45,11 +45,13 @@ def local_repository_structure() -> set:
         All errors or exceptions are handler by the calling function.
 
     """
+    shared_subdir = ["BlueCityCapital"]
+
     directory_structure = {
         
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Experts\\Advisors": ["BlueCityCapital"],
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Include\\Expert":["BlueCityCapital"],
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Scripts":["BlueCityCapital"],
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Experts\\Advisors": shared_subdir,
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Include\\Expert":shared_subdir,
+        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Scripts":shared_subdir,
         f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}":["Files"]
 
     }
