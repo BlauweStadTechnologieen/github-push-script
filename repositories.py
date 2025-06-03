@@ -30,33 +30,27 @@ def repository_list_test() -> set:
 
     return repositories
 
-def local_repository_structure() -> set:
+from typing import Dict, List
+
+def local_repository_structure() -> Dict[str, List[Dict[str, str]]]:
     
-    """
-    Cycles through all local repositoroes after checking:
-    - that all directories are valid,
-    - each local directory is a valid local repository.
-    
-    Returns:
-        directory_structure(set) : Returns a `set` of directories. 
+    version_folder = settings_mapper.DIRECTORY_CONSTANTS['VERSION_FOLDER']
 
-    Notes:
-    -
-        All errors or exceptions are handler by the calling function.
-
-    """
-    shared_subdir = ["BlueCityCapital"]
-
-    directory_structure = {
-        
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Experts\\Advisors": shared_subdir,
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Include\\Expert":shared_subdir,
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}\\Scripts":shared_subdir,
-        f"{settings_mapper.DIRECTORY_CONSTANTS["VERSION_FOLDER"]}":["Files"]
-
+    return {
+        os.path.join(version_folder, "Experts", "Advisors"): [
+            {"name": "BlueCityCapital", "repo": "MQL5Experts"}
+        ],
+        os.path.join(version_folder, "Include", "Expert"): [
+            {"name": "BlueCityCapital", "repo": "MQL5Include"}
+        ],
+        os.path.join(version_folder, "Scripts"): [
+            {"name": "BlueCityCapital", "repo": "MQL5Scripts"}
+        ],
+        version_folder: [
+            {"name": "Files", "repo": "Screenshots"}
+        ]
     }
 
-    return directory_structure
 
 def tester_directory() -> set:
     """
