@@ -1,6 +1,5 @@
 import email_auth
 import uuid
-import os
 import settings_mapper
 
 def company_signoff() -> None:
@@ -12,23 +11,23 @@ def company_signoff() -> None:
     return
     """
 
-github_owner = settings_mapper.GITHUB_CONSTANTS["OWNER"]
-
-def send_message(latest_commit_data:dict = None, changed_repo_list:list = None, github_owner:str = None) -> None:
+def send_message(latest_commit_data:set) -> None:
     """
-    Sends an email containing a list of updated remote repositories, contaning (but not limited to) the latest commit `sha`, the date of the commit and the latest commit message.
-
+    Sends an email notification containing a summary of the latest GitHub commit data.
     Args:
-        latest_commit_date(dict): A list of data pertaining to each remote repository, 
-        changed_repo_list(list): A list of changed local repositories,
-        github_owner(str): Denotes the owner of the GitHub account - this is retrieved from the `.env` file. 
-    Notes:
-    -
-    The SMTP credentils will then be checked via the `smtp_auth` module. For obvious reason if autnehtication fails, then a message will not be send, however, a support ticket will be generated in the FreshDesk portal. 
+        latest_commit_data (set): A set of dictionaries, each containing information about a GitHub commit.
+            Each dictionary should have the following keys:
+                - 'sha': The commit's SHA hash (string).
+                - 'repo': The name of the repository (string).
+                - 'date': The commit date (string).
+                - 'message': The commit message (string).
+                - 'author_id': The author's identifier (string).
+    Returns:
+        None
+    The function formats the commit data into an HTML table and sends it as the body of an email.
+    The email subject is set to "Github Commit Report". If the email fails to send, the function returns None.
     """
     
-    GITHUB_URL      =   "https://github.com/{owner}"
-    github_url      =   GITHUB_URL.format(owner=github_owner)
     custom_subject  =   "Github Commit Report"
     
     resource_data_table = ""
@@ -50,11 +49,11 @@ def send_message(latest_commit_data:dict = None, changed_repo_list:list = None, 
                 </tr>
                 <tr>
                     <th>Commit message:</th>
-                    <td>{data['msg']}</td>
+                    <td>{data['message']}</td>
                 </tr>
                 <tr>
                     <th>Author ID:</th>
-                    <td>{data['id']}</td>
+                    <td>{data['author_id']}</td>
                 </tr>
             </table>
             """    
@@ -62,10 +61,8 @@ def send_message(latest_commit_data:dict = None, changed_repo_list:list = None, 
     message_body = f"""
     Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br><br>
     We are writing to you because you have a new commit uploaded to your GitHub repository.
-    Check it out by visiting your GitHub account at {github_url}<br><br>
     {resource_data_table}
     ========================================================================<br>
-    The local directories which have been changed since the last commit are {changed_repo_list}<br><br>
     * You must be logged into the GitHub Repository in order to see the list of commits within the API call.<br><br>
     {company_signoff()}
     """
