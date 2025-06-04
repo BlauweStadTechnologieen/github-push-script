@@ -1,11 +1,10 @@
 import os
 import subprocess
-from commit_notify import get_latest_commit
 import settings_mapper
 import repositories
 import error_handler
 import requests
-from typing import Optional
+from send_email import send_message
 
 def run_command(command:str, cwd:str) -> str:
     """Runs specified commands in the local machine's terminal. The process of this is as follows:
@@ -50,7 +49,7 @@ def run_command(command:str, cwd:str) -> str:
 
     return result.stdout.strip()
     
-def check_for_changes(cwd:str, package:str) -> Optional[str]:
+def check_for_changes(cwd:str, package:str) -> set | None:
     """
     Checks for any differences between the local and the remote repositories. 
 
@@ -94,7 +93,7 @@ def check_for_changes(cwd:str, package:str) -> Optional[str]:
 
         commit_api_url = f"https://api.github.com/repos/{github_company}/{package}/commits"
 
-        remote_repo_attrs = None
+        remote_repo_attrs = set()
 
         headers = {
 
@@ -273,10 +272,10 @@ def is_valid_directory(cwd:str) -> bool:
 
     except ValueError as e:
 
-        ticket_subject = "The specified directory is not valid"
-        ticket_description = f"{type(e)} - {e}"
+        custom_subject = "The specified directory is not valid"
+        custom_message = f"{type(e)} - {e}"
         
-        error_handler.report_error(ticket_subject, ticket_description)
+        error_handler.report_error(custom_subject, custom_message)
         return False
     
     return True
@@ -302,14 +301,59 @@ def is_git_repo(cwd:str) -> bool:
     custom_subject  = "You have not initialised a Git Repository"
     
     if os.path.isdir(git_path):
+
         return True
+    
     else:
         custom_message = f"{cwd} is not an initialized Git repository. Navigate to {cwd}, then run 'git init' from the command shell."
         error_handler.report_error(custom_subject, custom_message)
         return False
     
-
+def run_me_them_commands(cwd:str) -> bool:
+    """
+    Executes a sequence of Git commands to add, commit, and push changes in the specified working directory.
+    This function checks for any tracked or untracked file changes in the given directory. If changes are detected,
+    it stages all changes, commits them with a default message, and pushes the commit to the remote repository.
+    If there are no changes to commit, or if an error occurs, the function returns False.
     
+    Args:
+        cwd (str): The path to the working directory where Git commands will be executed.
+    
+    Returns:
+        bool: True if changes were committed and pushed successfully, False otherwise.
+    Exceptions:
+        Any exceptions encountered during execution are reported via the error_handler and result in a return value of False.
+    """
+    
+    try:
+       
+        tracked_files = run_command(["git", "status", "--short"], cwd).strip()
+        untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd).strip()
+
+        if not (tracked_files or untracked_files):
+            
+            return False
+
+        run_command(["git", "add", "."], cwd)
+
+        commit_message = "New Commit Found"
+        
+        commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
+
+        if "nothing to commit" in commit_result.lower():
+
+            return False
+
+        run_command(["git", "push"], cwd)
+
+        return True
+    
+    except Exception as e:
+        
+        error_handler.report_error("Unexpected Error", str(e), True)
+
+        return False
+
 def push_to_github() -> None:
     """Pushes all files and folders to the remote GitHib repository.
 
@@ -340,49 +384,24 @@ def push_to_github() -> None:
             remote_repo = entry["repo"]
             cwd         = os.path.join(parent_dir, base, sub_dir)
 
-            if not os.path.exists(cwd):
-
-                custom_subject = "Directory Not Found Error"
-                custom_message = f"The directory {cwd} does not exist. Please check your configuration."
-                error_handler.report_error(custom_subject, custom_message, True)
-
-                continue
-                    
             if not is_valid_directory(cwd):
                 continue
 
             if not is_git_repo(cwd):
                 continue
                                             
-            tracked_files   = run_command(["git", "status", "--short"], cwd).strip()
-            untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd).strip()
-
-            if not (untracked_files.strip() or tracked_files.strip()):
-
+            if not run_me_them_commands(cwd):
                 continue
-            
-            run_command(["git", "add", "."], cwd)
-
-            commit_message = f"<b>New Commit: {sub_dir.capitalize()}</b>"
-
-            commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
-
-            if "nothing to commit, working tree clean" in commit_result:
-                
-                continue
-            
-            run_command(["git", "push"], cwd)
 
             changed_package = check_for_changes(cwd, remote_repo)
 
-            if not changed_package:
-                
+            if not isinstance(changed_package, set) or not changed_package:
                 continue
 
             changed_dirs.append(changed_package.title())
 
     if changed_dirs:
-        get_latest_commit(changed_dirs) 
+        send_message(changed_dirs)
             
     return None
         
