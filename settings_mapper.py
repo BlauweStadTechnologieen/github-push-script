@@ -14,7 +14,7 @@ MESSAGING_METADATA = {
 }
 
 GITHUB_CONSTANTS={
-    "OWNER"                 : os.getenv("OWNER"),
+    "OWNER"                 : os.getenv("GITHUB_USERNAME"),
     "GITHUB_TOKEN"          : os.getenv("GITHUB_TOKEN")
 }
 

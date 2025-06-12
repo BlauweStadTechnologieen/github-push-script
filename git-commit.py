@@ -68,7 +68,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
         required_env_vars = {
 
             "GITHUB_TOKEN"      : os.getenv("GITHUB_TOKEN"),
-            "OWNER"             : os.getenv("OWNER"),
+            "OWNER"             : os.getenv("GITHUB_USERNAME"),
             "PARENT_DIRECTORY"  : os.getenv("PARENT_DIRECTORY"),
             "VERSION_FOLDER"    : os.getenv("VERSION_FOLDER")
 
@@ -385,22 +385,27 @@ def push_to_github() -> None:
             cwd         = os.path.join(parent_dir, base, sub_dir)
 
             if not is_valid_directory(cwd):
+                
                 continue
 
             if not is_git_repo(cwd):
+                
                 continue
                                             
             if not run_me_them_commands(cwd):
+                
                 continue
 
             changed_package = check_for_changes(cwd, remote_repo)
 
             if not isinstance(changed_package, set) or not changed_package:
+                
                 continue
 
             changed_dirs.append(changed_package.title())
 
     if changed_dirs:
+        
         send_message(changed_dirs)
             
     return None
