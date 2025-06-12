@@ -3,17 +3,18 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 from dotenv import load_dotenv
-import settings_mapper
 import error_handler
 
 load_dotenv()
 
-SMTP_CREDENTIALS = {
-    "SMTP_SERVER"       : os.getenv("SMTP_SERVER"),
-    "SMTP_EMAIL"        : os.getenv("SMTP_EMAIL"),
-    "SMTP_PASSWORD"     : os.getenv("SMTP_PASSWORD"),
-    "SMTP_PORT"         : os.getenv("SMTP_PORT")
-}
+organization_smtp_server    = os.getenv("SMTP_SERVER")
+organization_smtp_email     = os.getenv("SMTP_EMAIL")
+organization_smtp_password  = os.getenv("SMTP_PASSWORD")
+organization_smtp_port      = os.getenv("SMTP_PORT")
+organization_sender_name    = os.getenv("SENDER_NAME")
+organization_sender_email   = os.getenv("SENDER_EMAIL")
+organization_sender_name    = os.getenv("SENDER_NAME")
+client_email                = os.getenv("REQUESTER_EMAIL")
 
 def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
     """Authenticate the SMTP credentials.
@@ -35,27 +36,24 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
 
     """
     try:
-        if not SMTP_CREDENTIALS["SMTP_EMAIL"] or not SMTP_CREDENTIALS["SMTP_PASSWORD"] or not SMTP_CREDENTIALS["SMTP_PORT"] or not SMTP_CREDENTIALS["SMTP_SERVER"]:
+        if not organization_smtp_email or not organization_smtp_password or not organization_smtp_port or not organization_smtp_server:
+            
             raise KeyError("One or nore of your SMTP credentials are mising, please check these details.")
         
         msg             = MIMEMultipart()
         msg['Subject']  = subject
-        msg['From']     = f'"{settings_mapper.MESSAGING_METADATA["SENDER_NAME"]}" <{settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"]}>'
-        msg['To']       = settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]
+        msg['From']     = f'"{organization_sender_name}" <{organization_sender_email}>'
+        msg['To']       = client_email
         body            = message_body
         msg.attach(MIMEText(body, mime_text))
 
-        with smtplib.SMTP(SMTP_CREDENTIALS["SMTP_SERVER"], SMTP_CREDENTIALS["SMTP_PORT"]) as server:
+        with smtplib.SMTP(organization_smtp_server, organization_smtp_port) as server:
 
             server.starttls()
 
-            server.login(SMTP_CREDENTIALS["SMTP_EMAIL"], 
-                        SMTP_CREDENTIALS["SMTP_PASSWORD"]
-            )
-            server.sendmail(settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"],
-                            settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"], 
-                            msg.as_string()
-            )
+            server.login(organization_smtp_email, organization_smtp_password)
+            
+            server.sendmail(organization_sender_email,client_email, msg.as_string())
 
             return True
     

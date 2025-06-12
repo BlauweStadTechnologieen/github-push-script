@@ -1,14 +1,13 @@
 import os
 import requests
 from dotenv import load_dotenv
-import settings_mapper
 
 load_dotenv()
 
-FRESHDESK_CREDENTIALS = {
-    "FRESHDESK_DOMAIN" : os.getenv("FRESHDESK_DOMAIN"),
-    "FRESHDESK_API_KEY": os.getenv("FRESHDESK_API_KEY")
-}
+FRESHDESK_DOMAIN    = os.getenv("FRESHDESK_DOMAIN")
+FRESHDESK_API       = os.getenv("FRESHDESK_API_KEY")
+requester_name      = os.getenv("REQUESTER_NAME")
+requester_email     = os.getenv("REQUESTER_EMAIL")
 
 def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_id:int = 201000039106, responder_id:int = 201002411183) -> int:
     
@@ -37,16 +36,16 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     
     try:
     
-        if not settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"] or not settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]:
+        if not requester_name or not requester_email:
             raise KeyError("Messaging metadata is missing in your  file. Please verify it and try again.")
     
-        if not FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"] or not FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]:
+        if not FRESHDESK_API or not FRESHDESK_DOMAIN:
             raise KeyError("Some of your Freshdesk credentials are missing. Please provide them and try again.")
         
-        API_URL = f'https://{FRESHDESK_CREDENTIALS["FRESHDESK_DOMAIN"]}.freshdesk.com/api/v2/tickets/'
+        freshdesk_api_url = f'https://{FRESHDESK_DOMAIN}.freshdesk.com/api/v2/tickets/'
 
         description = f"""
-        Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br>
+        Dear {requester_name}<br>
         A support ticket has been automatically generated because of the following error or exception message:<br><br>
         {exception_or_error_message}<br><br>
         ===================================================
@@ -59,8 +58,8 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
             'status'        : 2,
             'group_id'      : group_id,
             'responder_id'  : responder_id,
-            'name'          : settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"],
-            'email'         : settings_mapper.MESSAGING_METADATA["REQUESTER_EMAIL"]
+            'name'          : requester_name,
+            'email'         : requester_email
 
         }
 
@@ -68,8 +67,8 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         ticket_id       = None
                     
         response = requests.post(
-            API_URL,
-            auth    = (FRESHDESK_CREDENTIALS["FRESHDESK_API_KEY"], 'X'),
+            freshdesk_api_url,
+            auth    = (FRESHDESK_API, 'X'),
             json    = ticket_data,
             timeout = 30,
             headers = {'Content-Type' : 'application/json'}

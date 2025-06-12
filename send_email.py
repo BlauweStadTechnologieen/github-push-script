@@ -1,13 +1,18 @@
 import email_auth
 import uuid
-import settings_mapper
+import os
+
+organization_name   = os.getenv("SENDER_NAME")
+organization_dept   = os.getenv("SENDER_DEPARTMENT")
+organization_email  = os.getenv("SENDER_EMAIL")
+requester_name      = os.getenv("REQUESTER_NAME")
 
 def company_signoff() -> None:
     return f"""
     Yours sincerely<br>
-    <b>{settings_mapper.MESSAGING_METADATA["SENDER_NAME"]}</b><br>
-    The {settings_mapper.MESSAGING_METADATA["SENDER_DEPARTMENT"]} Team<br>
-    {settings_mapper.MESSAGING_METADATA["SENDER_EMAIL"]}<br><br>
+    <b>{organization_name}</b><br>
+    The {organization_dept} Team<br>
+    {organization_email}<br><br>
     return
     """
 
@@ -59,7 +64,7 @@ def send_message(latest_commit_data:set) -> None:
             """    
             
     message_body = f"""
-    Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br><br>
+    Dear {requester_name}<br><br>
     We are writing to you because you have a new commit uploaded to your GitHub repository.
     {resource_data_table}
     ========================================================================<br>
@@ -87,7 +92,7 @@ def freshdesk_inop_notification(custom_message:str) -> None:
     custom_subject  =   "Error Generating Support Ticket."
     
     freshdesk_inop_text_body = f"""
-        Dear {settings_mapper.MESSAGING_METADATA["REQUESTER_NAME"]}<br><br>
+        Dear {requester_name},<br><br>
         We are writing to you because our support ticketing system is either currently offline or our credentials are invalid.
         ========================================================================<br>
         <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse; text-align: left;">
@@ -105,7 +110,9 @@ def freshdesk_inop_notification(custom_message:str) -> None:
     """
 
     print(freshdesk_inop_text_body)
+
     if not email_auth.smtp_auth(freshdesk_inop_text_body, custom_subject):
-         return None
+        
+        return None
 
     return None
