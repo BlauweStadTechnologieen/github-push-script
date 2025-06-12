@@ -1,6 +1,5 @@
 import os
 import subprocess
-import settings_mapper
 import repositories
 import error_handler
 import requests
@@ -223,7 +222,7 @@ def parent_directory_validation() -> str:
     
     try:
 
-        parent_directory = settings_mapper.DIRECTORY_CONSTANTS["PARENT_DIRECTORY"]
+        parent_directory = os.getenv("PARENT_DIRECTORY")
 
         if not parent_directory:
             # Checks to ensure that a parent directory is specified
@@ -378,10 +377,10 @@ def push_to_github() -> None:
     
     for base, packages in directory_structure.items():
         
-        for entry in packages:
+        for package in packages:
 
-            sub_dir     = entry["name"]
-            remote_repo = entry["repo"]
+            sub_dir     = package["name"]
+            remote_repo = package["repo"]
             cwd         = os.path.join(parent_dir, base, sub_dir)
 
             if not is_valid_directory(cwd):
