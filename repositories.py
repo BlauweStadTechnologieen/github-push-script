@@ -1,4 +1,4 @@
-import settings_mapper
+from error_handler import report_error
 
 def local_repositories() -> set:
     
@@ -32,19 +32,26 @@ def repository_list_test() -> set:
 
 from typing import Dict, List
 
-def local_repository_structure() -> Dict[str, List[Dict[str, str]]]:
+def local_repository_structure() -> Dict[str, List[Dict[str, str]]] | None:
     
-    version_folder = settings_mapper.DIRECTORY_CONSTANTS['VERSION_FOLDER']
+    version_folder = os.getenv("VERSION_FOLDER")
+    package = os.getenv("PACKAGE_NAME")
+
+    if not version_folder or not package:
+
+        report_error("Version folder or package name has not been specified","The version folder has not been specified, this is a mandarory entry")
+
+        return None
 
     return {
         os.path.join(version_folder, "Experts", "Advisors"): [
-            {"name": "BlueCityCapital", "repo": "MQL5Experts"}
+            {"name": f"{package}", "repo": "MQL5Experts"}
         ],
         os.path.join(version_folder, "Include", "Expert"): [
-            {"name": "BlueCityCapital", "repo": "MQL5Include"}
+            {"name": f"{package}", "repo": "MQL5Include"}
         ],
         os.path.join(version_folder, "Scripts"): [
-            {"name": "BlueCityCapital", "repo": "MQL5Scripts"}
+            {"name": f"{package}", "repo": "MQL5Scripts"}
         ],
         version_folder: [
             {"name": "Files", "repo": "Screenshots"}
