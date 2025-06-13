@@ -16,7 +16,7 @@ def company_signoff() -> None:
     return
     """
 
-def send_message(latest_commit_data:set) -> None:
+def send_message(latest_commit_data:list[dict]) -> None:
     """
     Sends an email notification containing a summary of the latest GitHub commit data.
     Args:
