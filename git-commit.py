@@ -267,7 +267,7 @@ def is_valid_directory(cwd:str) -> bool:
     
     try:
         
-        if not os.path.isdir(cwd):
+        if not os.path.exists(cwd):
             raise ValueError(f"The resulting directory {cwd} is not valid, please check and try again")
 
     except ValueError as e:
@@ -300,7 +300,7 @@ def is_git_repo(cwd:str) -> bool:
     git_path        = os.path.join(cwd, '.git')
     custom_subject  = "You have not initialised a Git Repository"
     
-    if os.path.isdir(git_path):
+    if os.path.exists(git_path):
 
         return True
     
