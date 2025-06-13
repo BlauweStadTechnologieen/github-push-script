@@ -4,6 +4,8 @@ import repositories
 import error_handler
 import requests
 from send_email import send_message
+from dotenv import load_dotenv
+
 
 def run_command(command:str, cwd:str) -> str:
     """Runs specified commands in the local machine's terminal. The process of this is as follows:
@@ -61,7 +63,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
         Exceptions: Catches any error if one or more are detected. Should any exception be called, the `error_handler` function will process a support ticket, which will be sent to the FreshDesk system.
     """
     print("checking for changes....")
-      
+    load_dotenv()
     try:
 
         required_env_vars = {
