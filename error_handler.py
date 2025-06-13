@@ -1,4 +1,5 @@
 from freshdesk_ticket import create_freshdesk_ticket
+from send_email import send_error_report_by_email
 
 def report_error(subject:str, error_message:str, debug:bool = False) -> None:
     """This method will be called whenever an error or Exception occurs. 
@@ -14,6 +15,8 @@ def report_error(subject:str, error_message:str, debug:bool = False) -> None:
         print("Debug mode is enabled. A support ticket will not be created whilst in debug mode.")
 
         return
+    
+    send_error_report_by_email(subject, error_message)
     
     create_freshdesk_ticket(error_message, subject)
 

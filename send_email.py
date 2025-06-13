@@ -76,6 +76,26 @@ def send_message(latest_commit_data:set) -> None:
 
     return None
 
+def send_error_report_by_email(subject:str, message:str) -> None:
+     
+    message = f"""
+    Dear {requester_name}<br><br>
+    We are writing to you because you have encountered an error in processing of your scripts.<br><br>
+    I know, it's bullshit, right? But alas, here we are!<br><br>
+    Take a look below at the error message & return code to diagnose the issue:<br><br>
+    {message}<br><br>
+    Yours Sincerely<br><br>
+    {organization_name}<br>
+    {organization_dept}<br>
+    {organization_email}<br>
+    """
+
+    if not email_auth.smtp_auth(message, subject):
+        
+        return None
+    
+    return None
+
 def generate_incident_uuid() -> str:
     return f"""{uuid.uuid4()}"""
 
