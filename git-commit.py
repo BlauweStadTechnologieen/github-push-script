@@ -50,7 +50,7 @@ def run_command(command:str, cwd:str) -> str:
 
     return result.stdout.strip()
     
-def check_for_changes(cwd:str, package:str) -> set | None:
+def check_for_changes(cwd:str, package:str) -> list | None:
     """
     Checks for any differences between the local and the remote repositories. 
 
@@ -402,11 +402,11 @@ def push_to_github() -> None:
 
             changed_package = check_for_changes(cwd, remote_repo)
 
-            if not isinstance(changed_package, set) or not changed_package:
+            if not isinstance(changed_package, list) or not changed_package:
                 
                 continue
 
-            changed_dirs.append(changed_package.title())
+            changed_dirs.extend(changed_package)
 
     if changed_dirs:
         
