@@ -26,7 +26,7 @@ def run_command(command:str, cwd:str) -> str:
     
     try:
 
-        if not os.path.isdir(cwd):
+        if not os.path.exists(cwd):
             raise FileNotFoundError(f"The directory '{cwd}' does not exist.")
         os.chdir(cwd)
 
@@ -229,7 +229,7 @@ def parent_directory_validation() -> str:
             # Checks to ensure that a parent directory is specified
             raise KeyError("PARENT_DIRECTORY key is missing from the DIRECTORY_CONSTANTS variables environment.")
         
-        if not os.path.isdir(parent_directory):
+        if not os.path.exists(parent_directory):
             # If a parent directory is specified, it will then check to ensure this is valid.
             raise ValueError(f"The specified parent directory in the PARENT_DIRECTORY key - {parent_directory} is invalid. Please verify the path and try again.")
             
