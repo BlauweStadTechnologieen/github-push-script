@@ -93,7 +93,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
 
         commit_api_url = f"https://api.github.com/repos/{github_company}/{package}/commits"
 
-        remote_repo_attrs = set()
+        remote_repo_attrs = []
 
         headers = {
 
