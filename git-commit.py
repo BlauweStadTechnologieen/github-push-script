@@ -338,7 +338,7 @@ def run_me_them_commands(cwd:str) -> bool:
 
         run_command(["git", "add", "."], cwd)
 
-        commit_message = "New Commit Found"
+        commit_message = input("Please enter your commit message here....")
         
         commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
