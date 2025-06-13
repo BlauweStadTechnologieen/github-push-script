@@ -82,8 +82,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
             error_handler.report_error(
 
                 "Environment Configuration Error",
-                f"The following environment variables are missing: {', '.join(missing_vars)}. Please check your configuration.",
-                True
+                f"The following environment variables are missing: {', '.join(missing_vars)}. Please check your configuration."
 
             )
 
@@ -121,7 +120,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
 
                 custom_subject = f"No commits found - {response.status_code}"
                 
-                error_handler.report_error(custom_subject, custom_message, True)
+                error_handler.report_error(custom_subject, custom_message)
                 
                 return None
             
@@ -179,7 +178,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
             )
             custom_subject = f"Failed to retrieve commits - {response.status_code}"
 
-            error_handler.report_error(custom_subject, custom_message, True)
+            error_handler.report_error(custom_subject, custom_message)
 
             return None
                 
@@ -187,7 +186,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
         
         custom_subject = "Directory Not Found Error"
         custom_message = f"Please check your configuration: {e}"
-        error_handler.report_error(custom_subject, custom_message, True)
+        error_handler.report_error(custom_subject, custom_message)
 
         return None
     
@@ -195,7 +194,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
 
         custom_subject = "GitHub API Request Error"
         custom_message = f"An error occurred while making a request to the GitHub API: {e}"
-        error_handler.report_error(custom_subject, custom_message, True)
+        error_handler.report_error(custom_subject, custom_message)
 
         return None
     
@@ -203,7 +202,7 @@ def check_for_changes(cwd:str, package:str) -> set | None:
         
         custom_subject = "An error occured when checking for changes in a local directory"
         custom_message = f"{{type{e}}} {e}"
-        error_handler.report_error(custom_subject, custom_message, True)
+        error_handler.report_error(custom_subject, custom_message)
 
         return None
         
@@ -351,7 +350,7 @@ def run_me_them_commands(cwd:str) -> bool:
     
     except Exception as e:
         
-        error_handler.report_error("Unexpected Error", str(e), True)
+        error_handler.report_error("Unexpected Error", str(e))
 
         return False
 
