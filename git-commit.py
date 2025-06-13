@@ -268,14 +268,16 @@ def is_valid_directory(cwd:str) -> bool:
     try:
         
         if not os.path.exists(cwd):
-            raise ValueError(f"The resulting directory {cwd} is not valid, please check and try again")
+            
+            raise ValueError(f"The directory path: {cwd} is not valid, please check and try again")
 
     except ValueError as e:
 
-        custom_subject = "The specified directory is not valid"
+        custom_subject = "Invalid Directory Path"
         custom_message = f"{type(e)} - {e}"
         
         error_handler.report_error(custom_subject, custom_message)
+        
         return False
     
     return True
@@ -305,7 +307,7 @@ def is_git_repo(cwd:str) -> bool:
         return True
     
     else:
-        custom_message = f"{cwd} is not an initialized Git repository. Navigate to {cwd}, then run 'git init' from the command shell."
+        custom_message = f"{cwd} is not an Git Repository. Navigate to {cwd}, then run 'git init' from the command shell."
         error_handler.report_error(custom_subject, custom_message)
         return False
     
@@ -375,6 +377,8 @@ def push_to_github() -> None:
     if parent_dir is None:
                 
         return None
+    
+    print("Now going through the packages....")
     
     for base, packages in directory_structure.items():
         
