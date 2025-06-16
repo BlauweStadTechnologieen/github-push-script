@@ -329,17 +329,29 @@ def run_me_them_commands(cwd:str) -> bool:
     
     try:
        
-        if not run_command(["git", "status", "--porcelain"], cwd):
+        if not run_command(["git", "status", "--porcelain"], cwd).strip():
 
-            print("Your working tree is clean")
+            print("Your working tree is clean.")
 
             return False
         
-        print("Committing changed to remote repository...")
-        
         run_command(["git", "add", "."], cwd)
+        
+        while True:
 
-        commit_message = input("Please enter your commit message here....")
+            try:
+
+                commit_message = input("Please enter your commit message here....")
+
+                if not commit_message or len(commit_message) <= 10:
+
+                    raise ValueError("Commit message formatting error.")
+
+                break
+
+            except ValueError as e:
+
+                print(f"{e} | You must specificy a commit message and the message must be at least 10 charachters long.")
         
         run_command(["git", "commit", "-m", commit_message], cwd)
 
