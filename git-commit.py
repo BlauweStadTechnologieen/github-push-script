@@ -355,7 +355,7 @@ def run_me_them_commands(cwd:str) -> bool:
     
 def replicate_me_them_commands():
 
-    cwd = "C:\\Users\\toddg\\OneDrive\\Documents\\Utilities\\github-push-script\\git-commit.py"
+    cwd = "C:\\Users\\toddg\\OneDrive\\Documents\\Utilities\\github-push-script"
     
     if not run_command(["git", "status", "--porcelain"], cwd):
 
