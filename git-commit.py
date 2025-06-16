@@ -329,24 +329,21 @@ def run_me_them_commands(cwd:str) -> bool:
     
     try:
        
-        tracked_files = run_command(["git", "status", "--short"], cwd).strip()
-        untracked_files = run_command(["git", "ls-files", "--others", "--exclude-standard"], cwd).strip()
+        if not run_command(["git", "status", "--porcelain"], cwd):
 
-        if not (tracked_files or untracked_files):
-            
+            print("You have a clean working tree, you have nothing to commit")
+
             return False
-
-        run_command(["git", "add", "."], cwd)
-
-        commit_message = "New Commit Found"
         
-        commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
+        print("You have stuff to commit")
+        
+        #run_command(["git", "add", "."], cwd)
 
-        if "nothing to commit" in commit_result.lower():
+        #commit_message = "New Commit Found"
+        
+        #commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
 
-            return False
-
-        run_command(["git", "push"], cwd)
+        #run_command(["git", "push"], cwd)
 
         return True
     
@@ -355,6 +352,18 @@ def run_me_them_commands(cwd:str) -> bool:
         error_handler.report_error("Unexpected Error", str(e))
 
         return False
+    
+def replicate_me_them_commands():
+
+    cwd = "C:\\Users\\toddg\\OneDrive\\Documents\\Utilities\\github-push-script\\git-commit.py"
+    
+    if not run_command(["git", "status", "--porcelain"], cwd):
+
+        print("You have a clean working tree, you have nothing to commit")
+
+        return False
+        
+    print("You have stuff to commit")
 
 def push_to_github() -> None:
     """Pushes all files and folders to the remote GitHib repository.
@@ -415,4 +424,5 @@ def push_to_github() -> None:
     return None
         
 if __name__ == "__main__":
-    push_to_github()
+    #push_to_github()
+    replicate_me_them_commands()
