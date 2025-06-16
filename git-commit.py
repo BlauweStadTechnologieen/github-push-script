@@ -345,13 +345,25 @@ def run_me_them_commands(cwd:str) -> bool:
 
                 if not commit_message or len(commit_message) <= 10:
 
-                    raise ValueError("Commit message formatting error.")
+                    raise ValueError("Either the character length is too short, or you have not entered a commit message at all ")
+                
+                if "ghp" in commit_message:
 
+                    raise ValueError("It looked like you are trying to include a commit message which includes a sensitive token. Don't do what, Silly Boy!")
+                
+                import re
+                
+                email_pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}\b"
+
+                if re.search(email_pattern, commit_message):
+
+                    raise ValueError("It looks like you are trying to enter an email address into the commit message. Don't do that, Silly Boy!")
+            
                 break
 
             except ValueError as e:
 
-                print(f"{e} | You must specificy a commit message and the message must be at least 10 charachters long.")
+                print(f"Commit Message Formatting Error : {e}")
         
         run_command(["git", "commit", "-m", commit_message], cwd)
 
