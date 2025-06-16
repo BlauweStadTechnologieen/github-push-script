@@ -331,21 +331,21 @@ def run_me_them_commands(cwd:str) -> bool:
        
         if not run_command(["git", "status", "--porcelain"], cwd):
 
-            print("You have a clean working tree, you have nothing to commit")
-
-            print("You have a clean working tree, you have nothing to commit")
+            print("Your working tree is clean")
 
             return False
         
-        print("You have stuff to commit")
+        print("Committing changed to remote repository...")
         
-        #run_command(["git", "add", "."], cwd)
+        run_command(["git", "add", "."], cwd)
 
-        #commit_message = "New Commit Found"
+        commit_message = "New Commit Found"
         
-        #commit_result = run_command(["git", "commit", "-m", commit_message], cwd)
+        run_command(["git", "commit", "-m", commit_message], cwd)
 
-        #run_command(["git", "push"], cwd)
+        run_command(["git", "push"], cwd)
+
+        print("Changes committed to remote repository!")
 
         return True
     
@@ -354,18 +354,6 @@ def run_me_them_commands(cwd:str) -> bool:
         error_handler.report_error("Unexpected Error", str(e))
 
         return False
-    
-def replicate_me_them_commands():
-
-    cwd = "C:\\Users\\toddg\\OneDrive\\Documents\\Utilities\\github-push-script"
-    
-    if not run_command(["git", "status", "--porcelain"], cwd):
-
-        print("You have a clean working tree, you have nothing to commit")
-
-        return False
-        
-    print("You have stuff to commit")
 
 def push_to_github() -> None:
     """Pushes all files and folders to the remote GitHib repository.
@@ -426,5 +414,4 @@ def push_to_github() -> None:
     return None
         
 if __name__ == "__main__":
-    #push_to_github()
-    replicate_me_them_commands()
+    push_to_github()
