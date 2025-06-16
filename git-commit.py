@@ -7,7 +7,7 @@ from send_email import send_message
 from dotenv import load_dotenv
 
 
-def run_command(command:str, cwd:str) -> str:
+def run_command(command:list[str], cwd:str) -> str:
     """Runs specified commands in the local machine's terminal. The process of this is as follows:
     - It will check for the existence of the directory. 
     - If no exceptions occur, it will run the specified commands using the `subprocess` module.
