@@ -329,13 +329,13 @@ def run_me_them_commands(cwd:str) -> bool:
     
     try:
        
-        if not run_command(["git", "status", "--porcelain"], cwd):
+        if not run_command(["git", "status", "--porcelain"], cwd).strip():
 
             print("Your working tree is clean")
 
             return False
         
-        print("Committing changed to remote repository...")
+        print("Committing changes to remote repository...")
         
         run_command(["git", "add", "."], cwd)
 
