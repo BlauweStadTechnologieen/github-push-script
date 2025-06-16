@@ -333,6 +333,8 @@ def run_me_them_commands(cwd:str) -> bool:
 
             print("You have a clean working tree, you have nothing to commit")
 
+            print("You have a clean working tree, you have nothing to commit")
+
             return False
         
         print("You have stuff to commit")
