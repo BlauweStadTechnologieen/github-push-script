@@ -34,8 +34,8 @@ from typing import Dict, List
 
 def local_repository_structure() -> Dict[str, List[Dict[str, str]]] | None:
     
-    version_folder = os.getenv("VERSION_FOLDER")
-    package = os.getenv("PACKAGE_NAME")
+    version_folder  = os.getenv("VERSION_FOLDER")
+    package         = os.getenv("PACKAGE_NAME")
 
     if not version_folder or not package:
 
