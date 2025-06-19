@@ -354,7 +354,7 @@ def is_git_repo(cwd:str) -> bool:
 
         return False
     
-def run_me_them_commands(cwd:str) -> bool:
+def run_me_them_commands(cwd:str, package_name:str) -> bool:
     """
     Executes a sequence of Git commands to add, commit, and push changes in the specified working directory.
     This function checks for any tracked or untracked file changes in the given directory. If changes are detected,
@@ -380,33 +380,9 @@ def run_me_them_commands(cwd:str) -> bool:
         
         run_command(["git", "add", "."], cwd)
         
-        while True:
+        from commit_message import commit_message_validation
 
-            try:
-
-                commit_message = input("Please enter your commit message here....")
-
-                if not commit_message or len(commit_message) <= 10:
-
-                    raise ValueError("Either the character length is too short, or you have not entered a commit message at all ")
-                
-                if "ghp" in commit_message:
-
-                    raise ValueError("It looked like you are trying to include a commit message which includes a sensitive token. Don't do what, Silly Boy!")
-                
-                import re
-                
-                email_pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}\b"
-
-                if re.search(email_pattern, commit_message):
-
-                    raise ValueError("It looks like you are trying to enter an email address into the commit message. Don't do that, Silly Boy!")
-            
-                break
-
-            except ValueError as e:
-
-                print(f"Commit Message Formatting Error : {e}")
+        commit_message = commit_message_validation(package_name)
         
         run_command(["git", "commit", "-m", commit_message], cwd)
 
@@ -464,7 +440,7 @@ def push_to_github() -> None:
 
             add_gitignore_entries(cwd)
                                             
-            if not run_me_them_commands(cwd):
+            if not run_me_them_commands(cwd,remote_repo):
                 
                 continue
 
