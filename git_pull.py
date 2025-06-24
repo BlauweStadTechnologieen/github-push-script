@@ -6,21 +6,13 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
 
     try:
         
-        print(github_username)
-        print(cwd)
-        print(remote_repo_name)
-
         if not github_username:
 
             raise KeyError("You have not specified a GitHub owner, please check these credentials and try again")
         
         git_repo_url = f"https://github.com/{github_username}/{remote_repo_name}.git"
-
-        print(git_repo_url)
         
         git_pull_result = run_command(["git", "clone","--quiet", git_repo_url,"."], cwd)
-
-        print(git_pull_result)
 
         if git_pull_result.returncode != 0:
             
@@ -31,7 +23,7 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
             
             return git_pull_result.stderr
         
-        print("Repo successully pulled!")
+        print(f"Repo {remote_repo_name} has been successully integrated!")
         
         return git_pull_result.stdout
 
