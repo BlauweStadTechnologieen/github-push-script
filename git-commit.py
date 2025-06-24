@@ -5,51 +5,9 @@ import error_handler
 import requests
 from send_email import send_message
 from dotenv import load_dotenv
+from run_command import run_command
+from git_pull import init_git_pull_command
 
-
-def run_command(command:list[str], cwd:str) -> str:
-    """Runs specified commands in the local machine's terminal. The process of this is as follows:
-    - It will check for the existence of the directory. 
-    - If no exceptions occur, it will run the specified commands using the `subprocess` module.
-    Args:
-        command(str): Defines a list of git commands to run in the command window.
-        cwd(str): Denotes the current working directory where the git commands are to be commanded
-    Returns:
-        custom_message(str): Returns a `custom_message` if there is an error, else it returns `result.stdout`.
-    Exceptions:
-        FileNotFoundError: If the directory is not valid, this will throw a FileNotFoundError exception.
-        Exception: An excepion is raised is any other error occours.
-    Notes:
-    -
-        If there is an error or Exception, the `error_handler` function will create a support ticket. 
-    """
-    
-    try:
-
-        if not os.path.exists(cwd):
-            raise FileNotFoundError(f"The directory '{cwd}' does not exist.")
-        os.chdir(cwd)
-
-    except FileNotFoundError as e:
-        error_handler.report_error("Directory Error", str(e))
-        return str(e)
-
-    except Exception as e:
-        error_handler.report_error("Runn Command Exception", str(e))
-        return str(e)
-    
-    result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
-    
-    custom_message = None
-    custom_subject = "Run Command Error"
-    
-    if result.returncode != 0:
-        custom_message =  result.stderr.strip() if result.stderr else "Unknown error occured - check repo directory as a possible solution"
-        error_handler.report_error(custom_subject, custom_message)
-        return custom_message
-
-    return result.stdout.strip()
-    
 def check_for_changes(cwd:str, package:str) -> list | None:
     """
     Checks for any differences between the local and the remote repositories. 
@@ -415,6 +373,7 @@ def push_to_github() -> None:
     parent_dir          = parent_directory_validation()
     directory_structure = repositories.local_repository_structure()
     changed_dirs        = []
+    github_username     = os.getenv("GITHUB_USERNAME")
 
     if parent_dir is None:
                 
@@ -435,6 +394,8 @@ def push_to_github() -> None:
                 continue
 
             if not is_git_repo(cwd):
+
+                init_git_pull_command(cwd, remote_repo, github_username)
                 
                 continue
 
