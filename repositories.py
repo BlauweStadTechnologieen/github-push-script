@@ -58,7 +58,6 @@ def local_repository_structure() -> Dict[str, List[Dict[str, str]]] | None:
         ]
     }
 
-
 def tester_directory() -> set:
     """
     Provides a mock directory structure for testing purposes.

@@ -440,7 +440,7 @@ def push_to_github() -> None:
 
             add_gitignore_entries(cwd)
                                             
-            if not run_me_them_commands(cwd,remote_repo):
+            if not run_me_them_commands(cwd, remote_repo):
                 
                 continue
 

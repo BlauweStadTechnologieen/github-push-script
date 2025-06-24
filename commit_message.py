@@ -14,7 +14,7 @@ def commit_message_validation(package_name:str) -> str:
 
             try:
 
-                commit_message = input(f"Please enter your commit message for {package_name}....")
+                commit_message = input(f"Please enter your commit message for {package_name.title()}....")
 
                 if not commit_message or len(commit_message) <= 10:
 
