@@ -330,9 +330,11 @@ def run_me_them_commands(cwd:str, package_name:str) -> bool:
     
     try:
        
-        if not run_command(["git", "status", "--porcelain"], cwd):
-
-            print("Your working tree is clean.")
+        git_status_porcelain =  run_command(["git", "status", "--porcelain"], cwd)
+        
+        if not git_status_porcelain.stdout.strip():
+        
+            print(f"The working tree for {package_name} is clean.")
 
             return False
         
