@@ -1,6 +1,7 @@
 from run_command import run_command
 import os
 from error_handler import report_error
+from create_git_ignore_file import add_gitignore_entries
 
 def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) -> str | None:
 
@@ -22,6 +23,8 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
             report_error(error_subject, error_message)
             
             return git_pull_result.stderr
+        
+        add_gitignore_entries(cwd)
         
         print(f"Repo {remote_repo_name} has been successully integrated!")
         
