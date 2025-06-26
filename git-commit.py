@@ -264,7 +264,6 @@ def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
                 write.write("!*.mq5\n")
                 write.write("!*.ex5\n")
                 write.write("!*.mqh\n")
-                write.write("!*.txt\n")
                 write.write("!*.py\n")
  
                 print(".gitignore file successfully added!")
