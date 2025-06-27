@@ -1,91 +1,47 @@
 from error_handler import report_error
+import os
+from dotenv import load_dotenv
 
-def local_repositories() -> set:
-    
-    """
-    Contains the list of the local repositories to cycle through.
+def git_communication_validation(master_directory:str, git_username:str, git_token:str) -> dict | None:
 
-    Notes
-    -----
-    This is to be deprecated when we migrate to MT5.
-    """
-    repositories = {"Scripts", "Experts", "Include", "Images", "Files"}
+    import requests
+    from pathlib import Path
 
-    return repositories
+    load_dotenv()
 
-def remote_repositories() -> set:
-    """
-    Used to make an API call to GitHub in order to retreieve the latest commits to each remote repo.
-    
-    Returns:
-        set: `remote_repositories`
-    """
-    remote_repositories = {"MQL5Experts", "MQL5Include", "Screenshots", "MQL5Scripts"}
-
-    return remote_repositories
-
-def repository_list_test() -> set:
-    """Not to be used in production"""
-    repositories = {"version-management-system", "client_api"}
-
-    return repositories
-
-from typing import Dict, List
-
-def local_repository_structure() -> Dict[str, List[Dict[str, str]]] | None:
-    
     version_folder  = os.getenv("VERSION_FOLDER")
-    package         = os.getenv("PACKAGE_NAME")
 
-    if not version_folder or not package:
+    paths = {
+        Path(f"{version_folder}/Experts/Advisors") : "MQL5Experts",
+        Path(f"{version_folder}/Include/Expert") : "MQL5Include",
+        Path(f"{version_folder}/Scripts") : "MQL5Scripts",
+        Path(f"{version_folder}/Files") : "Screenshots"
+    }
 
-        report_error("Version folder or package name has not been specified","The version folder has not been specified, this is a mandarory entry")
+    for directory in paths.keys():
+
+        existing_directory = os.path.join(master_directory, directory)
+        
+        if not os.path.exists(existing_directory):
+
+            report_error("Path does not exist","Upon checking the paths, the path does not exist")
+
+            return None
+        
+    if git_username is None or git_token is None:
 
         return None
 
-    return {
-        os.path.join(version_folder, "Experts", "Advisors"): [
-            {"name": f"{package}", "repo": "MQL5Experts"}
-        ],
-        os.path.join(version_folder, "Include", "Expert"): [
-            {"name": f"{package}", "repo": "MQL5Include"}
-        ],
-        os.path.join(version_folder, "Scripts"): [
-            {"name": f"{package}", "repo": "MQL5Scripts"}
-        ],
-        version_folder: [
-            {"name": "Files", "repo": "Screenshots"}
-        ]
-    }
+    for remote_repo in paths.values():
 
-def tester_directory() -> set:
-    """
-    Provides a mock directory structure for testing purposes.
+        url         = f"https://api.github.com/repos/{git_username}/{remote_repo}"
+        headers     = {"Authorization": f"token {git_token}"} 
+        response    = requests.get(url, headers=headers)
 
-    Returns:
-        set: A dictionary where keys are base folder paths and values are lists of subdirectories or files.
-    """
-    directory_list = {
+        if response.status_code != 200:
 
-        "nbc\\friends": ["Ross", "Rachel", "Chandler", "Monica", "Joey", "Phoebe"],
-        "paramount\\fraiser": ["Fraiser", "Daphanie", "Martin", "Niles", "Roz"],
-        "nbc\\will&grace": ["Will", "Grace", "Jack", "Karen"],
-        "channel4\\coupling": ["Steve", "Susan", "Jeff", "Sally", "Patrick"],
-        "channel4\\peep-show": ["Mark", "Jeremy", "SuperHans", "Dobby"],
-        "channel4\\black-mirror": ["Charlie", "Brooker", "Annabel", "Jones"],
+            report_error("Github Repository Valid Failed",f"Unfortunately, the remote repository validation failed with an error code of {response.status_code}")
 
-    }
+            return None
 
-    return directory_list
-
-local = tester_directory()
-
-import os
-
-for base_folder, local_dirs in local.items():
-
-    for local_dir in local_dirs:
-
-        cwd = os.path.join(base_folder,local_dir)
-
-        #print(cwd)
+    return paths
