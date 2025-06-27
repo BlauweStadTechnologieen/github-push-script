@@ -1,5 +1,4 @@
 import os
-import subprocess
 import repositories
 import error_handler
 import requests
@@ -164,7 +163,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
 
         return None
         
-def parent_directory_validation() -> str:
+def parent_directory_validation() -> str | None:
     
     """
     Checks and validates the parent directory specified in the `.env` file.
@@ -333,45 +332,55 @@ def push_to_github() -> None:
     """
     
     parent_dir          = parent_directory_validation()
-    directory_structure = repositories.local_repository_structure()
-    changed_dirs        = []
     github_username     = os.getenv("GITHUB_USERNAME")
+    github_token        = os.getenv("GITHUB_TOKEN")
+    package             = os.getenv("PACKAGE_NAME")
+    changed_dirs        = []
 
-    if parent_dir is None:
-                
+    if not isinstance(parent_dir, str):
+
+        return None
+    
+    if not package:
+
+        return None
+
+    git_link_validation = repositories.git_communication_validation(parent_dir, github_username, github_token)
+    
+    if not isinstance(git_link_validation, dict):
+
         return None
     
     print("Now going through the packages....")
     
-    for base, packages in directory_structure.items():
+    for directory, repo in git_link_validation.items():
         
-        for package in packages:
+        remote_repo = repo
+        cwd         = os.path.join(parent_dir, directory, package)
 
-            sub_dir     = package["name"]
-            remote_repo = package["repo"]
-            cwd         = os.path.join(parent_dir, base, sub_dir)
+        os.makedirs(cwd, exist_ok=True)
 
-            if not is_valid_directory(cwd):
+        if not is_valid_directory(cwd):
+            
+            continue
+
+        if not is_git_repo(cwd):
+            
+            init_git_pull_command(cwd, remote_repo, github_username)
+            
+            continue
                 
-                continue
+        if not run_me_them_commands(cwd, remote_repo):
+            
+            continue
 
-            if not is_git_repo(cwd):
-                
-                init_git_pull_command(cwd, remote_repo, github_username)
-                
-                continue
-                 
-            if not run_me_them_commands(cwd, remote_repo):
-                
-                continue
+        changed_package = check_for_changes(cwd, remote_repo)
 
-            changed_package = check_for_changes(cwd, remote_repo)
+        if not isinstance(changed_package, list) or not changed_package:
+            
+            continue
 
-            if not isinstance(changed_package, list) or not changed_package:
-                
-                continue
-
-            changed_dirs.extend(changed_package)
+        changed_dirs.extend(changed_package)
 
     if changed_dirs:
         
