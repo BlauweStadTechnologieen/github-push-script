@@ -2,23 +2,7 @@ import error_handler
 from dotenv import load_dotenv
 import os
 
-def is_value_none(variable) -> bool:
-    """
-    Check if the variable is None.
-    """
-    try:
 
-        if variable is None:
-            
-            raise ValueError("Variable cannot be None")
-        
-        return False
-        
-    except ValueError as ve:
-        
-        error_handler.report_error("Value Error", str(ve))
-        
-        return True
     
 def all_env_vars_exist() -> bool:
     """
@@ -54,7 +38,7 @@ def all_env_vars_exist() -> bool:
 
     return True
         
-def instance_validation(variable, instance):
+def instance_validation(variable:any, instance:any) -> bool:
     """
     Validates whether a given variable is an instance of the specified type.
     Args:
@@ -79,10 +63,13 @@ def instance_validation(variable, instance):
         return True
     
     except ValueError as ve:
-        error_handler.report_error("Value Error", str(ve))    
+        error_handler.report_error("Value Error", str(ve))
+        return False    
 
     except TypeError as te:
         error_handler.report_error("Type Error", str(te))
+        return False
     
     except Exception as e:
         error_handler.report_error("Unexpected Error", str(e))
+        return False
