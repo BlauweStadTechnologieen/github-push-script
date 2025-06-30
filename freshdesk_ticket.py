@@ -35,13 +35,7 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     """
     
     try:
-    
-        if not requester_name or not requester_email:
-            raise KeyError("Messaging metadata is missing in your  file. Please verify it and try again.")
-    
-        if not FRESHDESK_API or not FRESHDESK_DOMAIN:
-            raise KeyError("Some of your Freshdesk credentials are missing. Please provide them and try again.")
-        
+            
         freshdesk_api_url = f'https://{FRESHDESK_DOMAIN}.freshdesk.com/api/v2/tickets/'
 
         description = f"""
@@ -93,9 +87,6 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
     
     except requests.RequestException as e:
         custom_message = f"Requests Exception: {e}"
-
-    except KeyError as e:
-        custom_message = f"{e}"
 
     except Exception as e:
         custom_message = f"General Exception: {e}"
