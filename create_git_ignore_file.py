@@ -1,5 +1,6 @@
 import os
 import error_handler
+from validate_directory import is_existing_directory
 
 def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
     """
@@ -17,7 +18,7 @@ def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
     
         gitignore_path = os.path.join(cwd, name)
 
-        if not os.path.exists(gitignore_path):
+        if not is_existing_directory(gitignore_path):
 
             with open(gitignore_path, "w") as write:
 
