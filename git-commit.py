@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from run_command import run_command
 from git_pull import init_git_pull_command
 from validate_directory import is_valid_directory, is_existing_directory
-from instance_validation import instance_validation, is_value_none, dot_env_variables_none
+from instance_validation import instance_validation, is_value_none, all_env_vars_exist
 
 def check_for_changes(cwd:str, package:str) -> list | None:
     """
@@ -250,7 +250,7 @@ def push_to_github() -> None:
     
     """
 
-    if not dot_env_variables_none():
+    if not all_env_vars_exist():
 
         return None
     

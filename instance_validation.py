@@ -20,7 +20,7 @@ def is_value_none(variable) -> bool:
         
         return True
     
-def dot_env_variables_none() -> bool:
+def all_env_vars_exist() -> bool:
     """
     Check if any of the variables in the list are None.
     """
@@ -80,6 +80,20 @@ def dot_env_variables_none() -> bool:
         return False
         
 def instance_validation(variable, instance):
+    """
+    Validates whether a given variable is an instance of the specified type.
+    Args:
+        variable: The variable to check.
+        instance: The type or class to check against.
+    Returns:
+        bool: True if variable is an instance of instance, otherwise handles the error.
+    Raises:
+        TypeError: If variable is not an instance of instance.
+        ValueError: If a value error occurs during validation.
+        Exception: For any other unexpected errors.
+    Note:
+        Errors are reported using the error_handler's report_error method.
+    """
 
     try:
         
