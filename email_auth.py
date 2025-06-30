@@ -4,6 +4,7 @@ from email.mime.multipart import MIMEMultipart
 import os
 from dotenv import load_dotenv
 import error_handler
+from instance_validation import is_value_none
 
 load_dotenv()
 
@@ -13,7 +14,6 @@ organization_smtp_password  = os.getenv("SMTP_PASSWORD")
 organization_smtp_port      = os.getenv("SMTP_PORT")
 organization_sender_name    = os.getenv("SENDER_NAME")
 organization_sender_email   = os.getenv("SENDER_EMAIL")
-organization_sender_name    = os.getenv("SENDER_NAME")
 client_email                = os.getenv("REQUESTER_EMAIL")
 
 def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
@@ -36,9 +36,7 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
 
     """
     try:
-        if not organization_smtp_email or not organization_smtp_password or not organization_smtp_port or not organization_smtp_server:
-            
-            raise KeyError("One or nore of your SMTP credentials are mising, please check these details.")
+
         
         msg             = MIMEMultipart()
         msg['Subject']  = subject
@@ -56,7 +54,6 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
             server.sendmail(organization_sender_email,client_email, msg.as_string())
 
             return True
-    
     
     except AttributeError as e:
         error_handler.report_error("Missing Attribute",f"{e}")
