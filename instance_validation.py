@@ -1,4 +1,4 @@
-from error_handler import report_error
+import error_handler
 from dotenv import load_dotenv
 import os
 
@@ -16,7 +16,7 @@ def is_value_none(variable) -> bool:
         
     except ValueError as ve:
         
-        report_error("Value Error", str(ve))
+        error_handler.report_error("Value Error", str(ve))
         
         return True
     
@@ -29,23 +29,23 @@ def dot_env_variables_none() -> bool:
 
     try:
         
-        git_user_name = os.getenv("GIT_USERNAME")
-        github_token = os.getenv("GITHUB_TOKEN")
-        parent_directory = os.getenv("PARENT_DIRECTORY")
-        version_folder = os.getenv("VERSION_FOLDER")
-        package_name = os.getenv("PACKAGE_NAME")
-        sender_email = os.getenv
-        sender_domain = os.getenv("SENDER_DOMAIN")
-        sender_name = os.getenv("SENDER_NAME")
-        sender_department = os.getenv("SENDER_DEPARTMENT")
-        requester_name = os.getenv("REQUESTER_NAME")
-        requester_email = os.getenv("REQUESTER_EMAIL")
-        smtp_server = os.getenv("SMTP_SERVER")
-        smtp_port = os.getenv("SMTP_PORT")
-        smtp_email = os.getenv("SMTP_EMAIL")
-        smtp_password = os.getenv("SMTP_PASSWORD")
-        fd_domain = os.getenv("FRESHDESK_DOMAIN")
-        fd_email = os.getenv("FRESHDESK_EMAIL")
+        git_user_name       = os.getenv("GITHUB_USERNAME")
+        github_token        = os.getenv("GITHUB_TOKEN")
+        parent_directory    = os.getenv("PARENT_DIRECTORY")
+        version_folder      = os.getenv("VERSION_FOLDER")
+        package_name        = os.getenv("PACKAGE_NAME")
+        sender_email        = os.getenv("SENDER_EMAIL")
+        sender_domain       = os.getenv("SENDER_DOMAIN")
+        sender_name         = os.getenv("SENDER_NAME")
+        sender_department   = os.getenv("SENDER_DEPARTMENT")
+        requester_name      = os.getenv("REQUESTER_NAME")
+        requester_email     = os.getenv("REQUESTER_EMAIL")
+        smtp_server         = os.getenv("SMTP_SERVER")
+        smtp_port           = os.getenv("SMTP_PORT")
+        smtp_email          = os.getenv("SMTP_EMAIL")
+        smtp_password       = os.getenv("SMTP_PASSWORD")
+        fd_domain           = os.getenv("FRESHDESK_DOMAIN")
+        fd_api_key          = os.getenv("FRESHDESK_API_KEY")
 
         dot_env_credentials = [
             git_user_name,
@@ -64,7 +64,7 @@ def dot_env_variables_none() -> bool:
             smtp_email,
             smtp_password,
             fd_domain,
-            fd_email
+            fd_api_key
         ]
 
         if any(is_value_none(cred) for cred in dot_env_credentials):
@@ -75,7 +75,7 @@ def dot_env_variables_none() -> bool:
     
     except ValueError as ve:
 
-        report_error("Value Error", str(ve))
+        error_handler.report_error("Value Error", str(ve))
 
         return False
         
@@ -90,10 +90,10 @@ def instance_validation(variable, instance):
         return True
     
     except ValueError as ve:
-        report_error("Value Error", str(ve))    
+        error_handler.report_error("Value Error", str(ve))    
 
     except TypeError as te:
-        report_error("Type Error", str(te))
+        error_handler.report_error("Type Error", str(te))
     
     except Exception as e:
-        report_error("Unexpected Error", str(e))
+        error_handler.report_error("Unexpected Error", str(e))
