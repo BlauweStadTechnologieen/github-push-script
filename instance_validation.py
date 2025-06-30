@@ -22,62 +22,37 @@ def is_value_none(variable) -> bool:
     
 def all_env_vars_exist() -> bool:
     """
-    Check if any of the variables in the list are None.
+    Check if all required environment variables are set.
     """
-
     load_dotenv()
 
-    try:
-        
-        git_user_name       = os.getenv("GITHUB_USERNAME")
-        github_token        = os.getenv("GITHUB_TOKEN")
-        parent_directory    = os.getenv("PARENT_DIRECTORY")
-        version_folder      = os.getenv("VERSION_FOLDER")
-        package_name        = os.getenv("PACKAGE_NAME")
-        sender_email        = os.getenv("SENDER_EMAIL")
-        sender_domain       = os.getenv("SENDER_DOMAIN")
-        sender_name         = os.getenv("SENDER_NAME")
-        sender_department   = os.getenv("SENDER_DEPARTMENT")
-        requester_name      = os.getenv("REQUESTER_NAME")
-        requester_email     = os.getenv("REQUESTER_EMAIL")
-        smtp_server         = os.getenv("SMTP_SERVER")
-        smtp_port           = os.getenv("SMTP_PORT")
-        smtp_email          = os.getenv("SMTP_EMAIL")
-        smtp_password       = os.getenv("SMTP_PASSWORD")
-        fd_domain           = os.getenv("FRESHDESK_DOMAIN")
-        fd_api_key          = os.getenv("FRESHDESK_API_KEY")
+    required_vars = [
+        "GITHUB_USERNAME",
+        "GITHUB_TOKEN",
+        "PARENT_DIRECTORY",
+        "VERSION_FOLDER",
+        "PACKAGE_NAME",
+        "SENDER_EMAIL",
+        "SENDER_DOMAIN",
+        "SENDER_NAME",
+        "SENDER_DEPARTMENT",
+        "REQUESTER_NAME",
+        "REQUESTER_EMAIL",
+        "SMTP_SERVER",
+        "SMTP_PORT",
+        "SMTP_EMAIL",
+        "SMTP_PASSWORD",
+        "FRESHDESK_DOMAIN",
+        "FRESHDESK_API_KEY"
+    ]
 
-        dot_env_credentials = [
-            git_user_name,
-            github_token,
-            parent_directory,
-            version_folder,
-            package_name,
-            sender_email,
-            sender_domain,
-            sender_name,
-            sender_department,
-            requester_name,
-            requester_email,
-            smtp_server,
-            smtp_port,
-            smtp_email,
-            smtp_password,
-            fd_domain,
-            fd_api_key
-        ]
+    missing_vars = [var for var in required_vars if os.getenv(var) is None]
 
-        if any(is_value_none(cred) for cred in dot_env_credentials):
-            
-            raise ValueError("One or more of your .env variables are missing. Please check these details.")
-        
-        return True
-    
-    except ValueError as ve:
-
-        error_handler.report_error("Value Error", str(ve))
-
+    if missing_vars:
+        error_handler.report_error("Missing Environment Variables", f"The following variables are missing: {', '.join(missing_vars)}")
         return False
+
+    return True
         
 def instance_validation(variable, instance):
     """
