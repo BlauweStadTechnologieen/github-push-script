@@ -2,14 +2,11 @@ from run_command import run_command
 import os
 from error_handler import report_error
 from create_git_ignore_file import add_gitignore_entries
+from instance_validation import is_value_none
 
 def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) -> str | None:
 
     try:
-        
-        if not github_username:
-
-            raise KeyError("You have not specified a GitHub owner, please check these credentials and try again")
         
         git_repo_url = f"https://github.com/{github_username}/{remote_repo_name}.git"
         
@@ -29,15 +26,6 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         print(f"Repo {remote_repo_name} has been successully integrated!")
         
         return git_pull_result.stdout
-
-    except KeyError as e:
-
-        error_subject = "Github Owner was not specified"
-        error_message = f"You have not secified a valid GitHub owner - {e}"
-
-        report_error(error_subject, error_message)
-
-        return None
 
     except NotADirectoryError as e:
 
