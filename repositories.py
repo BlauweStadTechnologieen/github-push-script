@@ -2,7 +2,6 @@ from error_handler import report_error
 import os
 from dotenv import load_dotenv
 from validate_directory import is_valid_directory
-from instance_validation import is_value_none
 
 def git_communication_validation(master_directory:str, git_username:str, git_token:str) -> dict | None:
     """
