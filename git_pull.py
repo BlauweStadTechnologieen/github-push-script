@@ -2,7 +2,6 @@ from run_command import run_command
 import os
 from error_handler import report_error
 from create_git_ignore_file import add_gitignore_entries
-from instance_validation import is_value_none
 
 def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) -> str | None:
     """
