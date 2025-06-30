@@ -1,11 +1,13 @@
 import os
 import repositories
-import error_handler
+from error_handler import report_error
 import requests
 from send_email import send_message
 from dotenv import load_dotenv
 from run_command import run_command
 from git_pull import init_git_pull_command
+from validate_directory import is_valid_directory, is_existing_directory
+from instance_validation import instance_validation, is_value_none, dot_env_variables_none
 
 def check_for_changes(cwd:str, package:str) -> list | None:
     """
@@ -23,30 +25,8 @@ def check_for_changes(cwd:str, package:str) -> list | None:
     load_dotenv()
     try:
 
-        required_env_vars = {
-
-            "GITHUB_TOKEN"      : os.getenv("GITHUB_TOKEN"),
-            "OWNER"             : os.getenv("GITHUB_USERNAME"),
-            "PARENT_DIRECTORY"  : os.getenv("PARENT_DIRECTORY"),
-            "VERSION_FOLDER"    : os.getenv("VERSION_FOLDER")
-
-        }
-
-        missing_vars = [key for key, value in required_env_vars.items() if not value]
-
-        if missing_vars:
-
-            error_handler.report_error(
-
-                "Environment Configuration Error",
-                f"The following environment variables are missing: {', '.join(missing_vars)}. Please check your configuration."
-
-            )
-
-            return None
-
-        github_auth_token   = required_env_vars["GITHUB_TOKEN"]
-        github_company      = required_env_vars["OWNER"]
+        github_auth_token   = os.getenv("GITHUB_TOKEN")
+        github_company      = os.getenv("GIT_USERNAME")
 
         commit_api_url = f"https://api.github.com/repos/{github_company}/{package}/commits"
 
@@ -77,14 +57,14 @@ def check_for_changes(cwd:str, package:str) -> list | None:
 
                 custom_subject = f"No commits found - {response.status_code}"
                 
-                error_handler.report_error(custom_subject, custom_message)
+                report_error(custom_subject, custom_message)
                 
                 return None
             
             latest_sha_file = "latest_sha.txt"
             sha_dir         = os.path.join(cwd, latest_sha_file)
 
-            if os.path.exists(sha_dir):
+            if is_existing_directory(sha_dir):
 
                 with open(sha_dir, "r") as file:
 
@@ -135,7 +115,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
             )
             custom_subject = f"Failed to retrieve commits - {response.status_code}"
 
-            error_handler.report_error(custom_subject, custom_message)
+            report_error(custom_subject, custom_message)
 
             return None
                 
@@ -143,7 +123,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
         
         custom_subject = "Directory Not Found Error"
         custom_message = f"Please check your configuration: {e}"
-        error_handler.report_error(custom_subject, custom_message)
+        report_error(custom_subject, custom_message)
 
         return None
     
@@ -151,7 +131,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
 
         custom_subject = "GitHub API Request Error"
         custom_message = f"An error occurred while making a request to the GitHub API: {e}"
-        error_handler.report_error(custom_subject, custom_message)
+        report_error(custom_subject, custom_message)
 
         return None
     
@@ -159,7 +139,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
         
         custom_subject = "An error occured when checking for changes in a local directory"
         custom_message = f"{{type{e}}} {e}"
-        error_handler.report_error(custom_subject, custom_message)
+        report_error(custom_subject, custom_message)
 
         return None
         
@@ -169,76 +149,21 @@ def parent_directory_validation() -> str | None:
     Checks and validates the parent directory specified in the `.env` file.
 
     Returns:
-        parent_directory(str): Returns the parent directory as a string format, else it will return `None` if the parent directory is either missing or invalud.
+        str | None: Returns the parent directory as a string if valid, otherwise returns None.
 
     Raises:
-        KeyError: A `KeyError` is raised if a parent directory as hot been specified.
-        ValyeError: A `ValueError` is raised of the parent directory is invalid.
-
+        Reports errors via error_handler if the parent directory is missing or invalid.
     """
     custom_subject = "Parent Directory Validation Error"
     
-    try:
+    parent_directory = os.getenv("PARENT_DIRECTORY")
+    
+    if not is_valid_directory(parent_directory):
 
-        parent_directory = os.getenv("PARENT_DIRECTORY")
-
-        if not parent_directory:
-            # Checks to ensure that a parent directory is specified
-            raise KeyError("PARENT_DIRECTORY key is missing from the DIRECTORY_CONSTANTS variables environment.")
-        
-        if not os.path.exists(parent_directory):
-            # If a parent directory is specified, it will then check to ensure this is valid.
-            raise ValueError(f"The specified parent directory in the PARENT_DIRECTORY key - {parent_directory} is invalid. Please verify the path and try again.")
-            
-    except AttributeError as e:
-        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
         return None
     
-    except KeyError as e:
-        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
-        return None
-
-    except ValueError as e:
-        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
-        return None
-    
-    except Exception as e:
-        error_handler.report_error(f"{type(e)} - {custom_subject}", f"{e}")
-        return None
-        
     return parent_directory
-
-def is_valid_directory(cwd:str) -> bool:
-    """
-    Checks and validates the full directory. The full directory is constructed from the parent directory, & appending each sub-directory which is attained by looping through all of the sub-directories listed in the `repositories` module.
-
-    Args:
-        cwd(str): Denotes the Current Working Directory.
-
-    Returns:
-        bool: True of the cwd is valid, ensure returns `False`.
-
-    Raises:
-        ValueError: A `ValueError` will be raised if the directory is not valid. If the exception handing block is exected, the `error_hander` module will catch and processes the error. 
-    """    
     
-    try:
-        
-        if not os.path.exists(cwd):
-            
-            raise ValueError(f"The directory path: {cwd} is not valid, please check and try again")
-
-    except ValueError as e:
-
-        custom_subject = "Invalid Directory Path"
-        custom_message = f"{type(e)} - {e}"
-        
-        error_handler.report_error(custom_subject, custom_message)
-        
-        return False
-    
-    return True
-
 def is_git_repo(cwd:str) -> bool:
     
     """Once the current working directory is confirmed as valid, it will then check to ensure that the specified directory is a valid git repository.
@@ -255,21 +180,15 @@ def is_git_repo(cwd:str) -> bool:
         Please be aware that this does *NOT* check to ensure that the directory is pointing to the correct remote repository.
     
     """
-    
     git_path        = os.path.join(cwd, '.git')
-    custom_subject  = "You have not initialised a Git Repository"
     
-    if os.path.exists(git_path):        
+    if is_existing_directory(git_path):
+
+        print(f"{cwd} is a valid git repository.")
         
         return True
     
-    else:
-
-        custom_message = f"{cwd} is not an Git Repository. Navigate to {cwd}, then run 'git init' from the command shell."
-
-        error_handler.report_error(custom_subject, custom_message)
-
-        return False
+    return False
     
 def run_me_them_commands(cwd:str, package_name:str) -> bool:
     """
@@ -313,7 +232,7 @@ def run_me_them_commands(cwd:str, package_name:str) -> bool:
     
     except Exception as e:
         
-        error_handler.report_error("Unexpected Error", str(e))
+        report_error("Unexpected Error", str(e))
 
         return False
 
@@ -330,6 +249,10 @@ def push_to_github() -> None:
     - Third, it will run the `git add .`, `git commit` and `git push` commands, if changes were detected.
     
     """
+
+    if not dot_env_variables_none():
+
+        return None
     
     parent_dir          = parent_directory_validation()
     github_username     = os.getenv("GITHUB_USERNAME")
@@ -337,26 +260,21 @@ def push_to_github() -> None:
     package             = os.getenv("PACKAGE_NAME")
     changed_dirs        = []
 
-    if not isinstance(parent_dir, str):
-
-        return None
-    
-    if not package:
+    if not instance_validation(parent_dir, str):
 
         return None
 
     git_link_validation = repositories.git_communication_validation(parent_dir, github_username, github_token)
     
-    if not isinstance(git_link_validation, dict):
+    if not instance_validation(git_link_validation, dict):
 
         return None
     
     print("Now going through the packages....")
     
-    for directory, repo in git_link_validation.items():
+    for directory, remote_repo in git_link_validation.items():
         
-        remote_repo = repo
-        cwd         = os.path.join(parent_dir, directory, package)
+        cwd = os.path.join(parent_dir, directory, package)
 
         os.makedirs(cwd, exist_ok=True)
 
@@ -376,7 +294,7 @@ def push_to_github() -> None:
 
         changed_package = check_for_changes(cwd, remote_repo)
 
-        if not isinstance(changed_package, list) or not changed_package:
+        if not instance_validation(changed_package, list) or not changed_package:
             
             continue
 
