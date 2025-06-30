@@ -1,6 +1,8 @@
 from error_handler import report_error
 import os
 from dotenv import load_dotenv
+from validate_directory import is_valid_directory
+from instance_validation import is_value_none
 
 def git_communication_validation(master_directory:str, git_username:str, git_token:str) -> dict | None:
 
@@ -22,16 +24,12 @@ def git_communication_validation(master_directory:str, git_username:str, git_tok
 
         existing_directory = os.path.join(master_directory, directory)
         
-        if not os.path.exists(existing_directory):
+        if not is_valid_directory(existing_directory):
 
             report_error("Path does not exist","Upon checking the paths, the path does not exist")
 
             return None
         
-    if git_username is None or git_token is None:
-
-        return None
-
     for remote_repo in paths.values():
 
         url         = f"https://api.github.com/repos/{git_username}/{remote_repo}"
