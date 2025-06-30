@@ -5,6 +5,20 @@ from validate_directory import is_valid_directory
 from instance_validation import is_value_none
 
 def git_communication_validation(master_directory:str, git_username:str, git_token:str) -> dict | None:
+    """
+    Validates local directory structure and remote GitHub repository access.
+
+    Checks that required subdirectories exist within the master directory and that the user has access
+    to the corresponding GitHub repositories using the provided credentials.
+
+    Args:
+        master_directory (str): Root directory containing the expected subdirectories.
+        git_username (str): GitHub username for repository validation.
+        git_token (str): GitHub personal access token for authentication.
+
+    Returns:
+        dict | None: Mapping of local Path objects to remote repository names if all validations pass; otherwise, None.
+    """
 
     import requests
     from pathlib import Path
