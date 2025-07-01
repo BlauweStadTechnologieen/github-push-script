@@ -37,6 +37,22 @@ def all_env_vars_exist() -> bool:
         return False
 
     return True
+
+def is_instance_applicable(variable:any, instance:any) -> bool:
+    """
+    Checks if a variable is an instance of a specified type or class. The instance is applicable if it returns the instance we are expecting in order to execute the remainder of the script. 
+    Args:
+        variable: The variable to check.
+        instance: The type or class to check against.
+    Returns:
+        bool: True if variable is an instance of instance, otherwise False.
+    """
+
+    if not isinstance(variable, instance):
+        
+        return False
+    
+    return True
         
 def instance_validation(variable:any, instance:any) -> bool:
     """
