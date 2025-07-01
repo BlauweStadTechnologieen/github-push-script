@@ -4,7 +4,6 @@ from email.mime.multipart import MIMEMultipart
 import os
 from dotenv import load_dotenv
 import error_handler
-from instance_validation import is_value_none
 
 load_dotenv()
 
