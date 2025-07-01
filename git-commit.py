@@ -276,7 +276,9 @@ def push_to_github() -> None:
         
         cwd = os.path.join(parent_dir, directory, package)
 
-        os.makedirs(cwd, exist_ok=True)
+        if not is_existing_directory(cwd):
+        
+            os.makedirs(cwd, exist_ok=True)
 
         if not is_valid_directory(cwd):
             
