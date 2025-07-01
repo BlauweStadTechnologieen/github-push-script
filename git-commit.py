@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from run_command import run_command
 from git_pull import init_git_pull_command
 from validate_directory import is_valid_directory, is_existing_directory
-from instance_validation import instance_validation, all_env_vars_exist
+from instance_validation import instance_validation, all_env_vars_exist, is_instance_applicable
 
 def check_for_changes(cwd:str, package:str) -> list | None:
     """
@@ -26,7 +26,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
     try:
 
         github_auth_token   = os.getenv("GITHUB_TOKEN")
-        github_company      = os.getenv("GIT_USERNAME")
+        github_company      = os.getenv("GITHUB_USERNAME")
 
         commit_api_url = f"https://api.github.com/repos/{github_company}/{package}/commits"
 
@@ -296,7 +296,7 @@ def push_to_github() -> None:
 
         changed_package = check_for_changes(cwd, remote_repo)
 
-        if not instance_validation(changed_package, list) or not changed_package:
+        if not is_instance_applicable(changed_package, list):
             
             continue
 
