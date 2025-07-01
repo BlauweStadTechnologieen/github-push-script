@@ -60,11 +60,7 @@ def instance_validation(variable:any, instance:any) -> bool:
 
             raise TypeError(f"Expected {instance.__name__}, got {type(variable).__name__}")  
            
-        return True
-    
-    except ValueError as ve:
-        error_handler.report_error("Value Error", str(ve))
-        return False    
+        return True 
 
     except TypeError as te:
         error_handler.report_error("Type Error", str(te))
