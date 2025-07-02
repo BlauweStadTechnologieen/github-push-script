@@ -2,8 +2,6 @@ import error_handler
 from dotenv import load_dotenv
 import os
 
-
-    
 def all_env_vars_exist() -> bool:
     """
     Check if all required environment variables are set.
@@ -38,9 +36,25 @@ def all_env_vars_exist() -> bool:
 
     return True
 
+def is_none(variable:any) -> bool:
+    """
+    Checks if a variable is not None.
+    Args:
+        variable: The variable to check.
+    Returns:
+        bool: True if variable is not None, otherwise False.
+    """
+    
+    if variable is None:
+        
+        return True
+    
+    return False
+
 def is_instance_applicable(variable:any, instance:any) -> bool:
     """
-    Checks if a variable is an instance of a specified type or class. The instance is applicable if it returns the instance we are expecting in order to execute the remainder of the script. 
+    Checks if a variable is an instance of a specified type or class.
+    If the variable returns the the instance type it's checking against, it returns True, else it returns False.
     Args:
         variable: The variable to check.
         instance: The type or class to check against.
