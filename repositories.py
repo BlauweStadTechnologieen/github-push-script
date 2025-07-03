@@ -39,8 +39,6 @@ def git_communication_validation(master_directory:str, git_username:str, git_tok
         
         if not is_valid_directory(existing_directory):
 
-            report_error("Path does not exist", f"Upon checking the paths, the {existing_directory} path does not exist")
-
             return None
         
     for remote_repo in paths.values():
