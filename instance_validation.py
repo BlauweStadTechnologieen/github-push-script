@@ -15,7 +15,6 @@ def all_env_vars_exist() -> bool:
         "VERSION_FOLDER",
         "PACKAGE_NAME",
         "SENDER_EMAIL",
-        "SENDER_DOMAIN",
         "SENDER_NAME",
         "SENDER_DEPARTMENT",
         "REQUESTER_NAME",
