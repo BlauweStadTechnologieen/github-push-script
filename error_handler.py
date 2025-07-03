@@ -1,5 +1,11 @@
 from freshdesk_ticket import create_freshdesk_ticket
 from send_email import send_error_report_by_email
+import logging
+
+logging.basicConfig(filename="logger.log", filemode='a', format='%(asctime)s - %(funcName)s')
+
+logging.disable(logging.CRITICAL)
+logging.disable()
 
 def report_error(subject:str, error_message:str, debug:bool = False) -> None:
     """This method will be called whenever an error or Exception occurs. 
@@ -8,7 +14,7 @@ def report_error(subject:str, error_message:str, debug:bool = False) -> None:
         subject(str): Denotes the subject of the error, which will be sent to Freshdesk.
         error_message(str): Denoted the message and description of the error, which will be sent to Freshdesk.
     """
-    print(f"{subject} - { error_message}")
+    logging.debug(f"{subject} - { error_message}")
 
     if debug:
         
