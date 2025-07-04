@@ -21,8 +21,8 @@ def report_error(subject: str, error_message: str, logging_level=logging.DEBUG) 
 
     if logging_level <= logging.WARNING:
 
-        print(f"{subject} - {error_message} - {logging_level}")
-
+        print(f"{logging.getLevelName(logging_level)}: {subject} - {error_message}")
+        
         return
 
     if logging_level >= logging.ERROR:
