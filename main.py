@@ -143,27 +143,6 @@ def check_for_changes(cwd:str, package:str) -> list | None:
 
         return None
         
-def parent_directory_validation() -> str | None:
-    
-    """
-    Checks and validates the parent directory specified in the `.env` file.
-
-    Returns:
-        str | None: Returns the parent directory as a string if valid, otherwise returns None.
-
-    Raises:
-        Reports errors via error_handler if the parent directory is missing or invalid.
-    """
-    custom_subject = "Parent Directory Validation Error"
-    
-    parent_directory = os.getenv("PARENT_DIRECTORY")
-    
-    if not is_valid_directory(parent_directory):
-
-        return None
-    
-    return parent_directory
-    
 def is_git_repo(cwd:str) -> bool:
     
     """Once the current working directory is confirmed as valid, it will then check to ensure that the specified directory is a valid git repository.
@@ -254,17 +233,12 @@ def push_to_github() -> None:
 
         return None
     
-    parent_dir          = parent_directory_validation()
     github_username     = os.getenv("GITHUB_USERNAME")
     github_token        = os.getenv("GITHUB_TOKEN")
     package             = os.getenv("PACKAGE_NAME")
     changed_dirs        = []
 
-    if not instance_validation(parent_dir, str):
-
-        return None
-
-    git_link_validation = repositories.git_communication_validation(parent_dir, github_username, github_token)
+    git_link_validation = repositories.git_communication_validation(github_username, github_token)
     
     if not instance_validation(git_link_validation, dict):
 
@@ -274,7 +248,7 @@ def push_to_github() -> None:
     
     for directory, remote_repo in git_link_validation.items():
         
-        cwd = os.path.join(parent_dir, directory, package)
+        cwd = os.path.join(directory, package)
 
         if not is_existing_directory(cwd):
         

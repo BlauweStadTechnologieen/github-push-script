@@ -1,5 +1,6 @@
 from error_handler import report_error
 import os
+from instance_validation import instance_validation
 
 def is_existing_directory(cwd: str) -> bool:
     """
@@ -48,3 +49,28 @@ def is_valid_directory(cwd:str) -> bool:
         return False
     
     return True
+
+def parent_directory_validation() -> str | None:
+    
+    """
+    Checks and validates the parent directory specified in the `.env` file.
+
+    Returns:
+        str | None: Returns the parent directory as a string if valid, otherwise returns None.
+
+    Raises:
+        Reports errors via error_handler if the parent directory is missing or invalid.
+    """
+    custom_subject = "Parent Directory Validation Error"
+    
+    parent_directory = os.getenv("PARENT_DIRECTORY")
+
+    if not instance_validation(parent_directory, str):
+        
+        return None
+    
+    if not is_valid_directory(parent_directory):
+
+        return None
+    
+    return parent_directory
