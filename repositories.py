@@ -1,47 +1,51 @@
 from error_handler import report_error
 import os
 from dotenv import load_dotenv
-from validate_directory import is_valid_directory
+from validate_directory import is_valid_directory, parent_directory_validation
+from pathlib import Path
+import requests
 
-def git_communication_validation(master_directory:str, git_username:str, git_token:str) -> dict | None:
+def git_communication_validation(git_username:str, git_token:str) -> dict | None:
     """
-    Validates local directory structure and remote GitHub repository access.
+    Validates the existence of required local directories and checks access to corresponding GitHub repositories.
 
-    Checks that required subdirectories exist within the master directory and that the user has access
-    to the corresponding GitHub repositories using the provided credentials.
+    Ensures that specific subdirectories exist within the parent directory and verifies that the provided
+    GitHub username and token have access to the associated remote repositories.
 
     Args:
-        master_directory (str): Root directory containing the expected subdirectories.
         git_username (str): GitHub username for repository validation.
         git_token (str): GitHub personal access token for authentication.
 
     Returns:
-        dict | None: Mapping of local Path objects to remote repository names if all validations pass; otherwise, None.
+        dict | None: Dictionary mapping local Path objects to remote repository names if all validations succeed; otherwise, None.
     """
-
-    import requests
-    from pathlib import Path
 
     load_dotenv()
 
-    version_folder  = os.getenv("VERSION_FOLDER")
+    parent_directory = parent_directory_validation()
+
+    if parent_directory is None:
+
+        return None
+
+    parent_directory = Path(parent_directory)
 
     paths = {
-        Path(f"{version_folder}/Experts/Advisors") : "MQL5Experts",
-        Path(f"{version_folder}/Include/Expert") : "MQL5Include",
-        Path(f"{version_folder}/Scripts") : "MQL5Scripts",
-        Path(f"{version_folder}/Files") : "Screenshots"
+
+        parent_directory / "Experts" / "Advisors"   : "MQL5Experts",
+        parent_directory / "Include" / "Expert"     : "MQL5Include",
+        parent_directory / "Scripts"                : "MQL5Scripts",
+        parent_directory / "Files"                  : "Screenshots"
+
     }
 
     for directory in paths.keys():
-
-        existing_directory = os.path.join(master_directory, directory)
         
-        if not is_valid_directory(existing_directory):
-
-            report_error("Path does not exist", f"Upon checking the paths, the {existing_directory} path does not exist")
+        if not is_valid_directory(directory):
 
             return None
+        
+    print("All paths exist, proceeding with remote repository validation...")
         
     for remote_repo in paths.values():
 
