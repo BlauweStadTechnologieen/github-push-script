@@ -14,7 +14,7 @@ def report_error(subject:str, error_message:str, debug:bool = False) -> None:
         subject(str): Denotes the subject of the error, which will be sent to Freshdesk.
         error_message(str): Denoted the message and description of the error, which will be sent to Freshdesk.
     """
-    logging.debug(f"{subject} - { error_message}")
+    print(f"{subject} - { error_message}")
 
     if debug:
         
@@ -24,6 +24,6 @@ def report_error(subject:str, error_message:str, debug:bool = False) -> None:
     
     send_error_report_by_email(subject, error_message)
     
-    create_freshdesk_ticket(error_message, subject)
+    #create_freshdesk_ticket(error_message, subject)
 
     return
