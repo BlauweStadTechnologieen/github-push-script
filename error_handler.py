@@ -15,6 +15,8 @@ def report_error(subject: str, error_message: str, logging_level=logging.DEBUG) 
     logging.basicConfig(
 
         level=logging_level,
+        filename='error.log',
+        filemode='a',
         format='%(levelname)s: %(message)s: %(funcName)s'
 
     )
