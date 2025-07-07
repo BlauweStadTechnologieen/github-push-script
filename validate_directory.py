@@ -1,6 +1,7 @@
 from error_handler import report_error
 import os
 from instance_validation import instance_validation
+import logging
 
 def is_existing_directory(cwd: str) -> bool:
     """
@@ -15,7 +16,7 @@ def is_existing_directory(cwd: str) -> bool:
 
     if os.path.exists(cwd) and os.path.isdir(cwd):
         
-        return True     
+        return True
     
     return False
 
@@ -44,7 +45,7 @@ def is_valid_directory(cwd:str) -> bool:
         custom_subject = "Invalid Directory Path"
         custom_message = f"{type(e)} - {e}"
         
-        report_error(custom_subject, custom_message)
+        report_error(custom_subject, custom_message, logging_level=logging.CRITICAL)
         
         return False
     
@@ -61,8 +62,6 @@ def parent_directory_validation() -> str | None:
     Raises:
         Reports errors via error_handler if the parent directory is missing or invalid.
     """
-    custom_subject = "Parent Directory Validation Error"
-    
     parent_directory = os.getenv("PARENT_DIRECTORY")
 
     if not instance_validation(parent_directory, str):

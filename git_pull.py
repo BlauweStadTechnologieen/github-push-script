@@ -2,6 +2,7 @@ from run_command import run_command
 import os
 from error_handler import report_error
 from create_git_ignore_file import add_gitignore_entries
+import logging
 
 def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) -> str | None:
     """
@@ -33,13 +34,13 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
             error_subject = "Error on pulling the repos from Git"
             error_message = f"{git_pull_result.stderr}"
 
-            report_error(error_subject, error_message)
+            report_error(error_subject, error_message, logging_level=logging.CRITICAL)
             
             return git_pull_result.stderr
         
         add_gitignore_entries(cwd)
         
-        print(f"Repo {remote_repo_name} has been successully integrated!")
+        report_error("Git Pull Success", f"Successfully pulled {remote_repo_name} into {cwd}", logging_level=logging.INFO)
         
         return git_pull_result.stdout
 
@@ -48,7 +49,7 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         error_subject = "This is not a directory"
         error_message = f"You are attempting to pull into an invalid directory - {e}"
 
-        report_error(error_subject, error_message)
+        report_error(error_subject, error_message, logging_level=logging.WARNING)
 
         return None
 
@@ -57,7 +58,7 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         error_subject = "This is not a file"
         error_message = f"The file you are looking for does not exist = {e}"
         
-        report_error(error_subject, error_message)
+        report_error(error_subject, error_message, logging_level=logging.WARNING)
 
         return None
 
@@ -66,6 +67,6 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         error_subject = "Exception Error"
         error_message = f"There was an unexpected error whilst attemptig to do a pull from the Hub of Git! - {e}"
 
-        report_error(error_subject, error_message)
+        report_error(error_subject, error_message, logging_level=logging.WARNING)
 
         return None

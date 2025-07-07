@@ -2,6 +2,7 @@ import os
 import repositories
 from error_handler import report_error
 import requests
+import logging
 from send_email import send_message
 from dotenv import load_dotenv
 from run_command import run_command
@@ -57,7 +58,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
 
                 custom_subject = f"No commits found - {response.status_code}"
                 
-                report_error(custom_subject, custom_message)
+                report_error(custom_subject, custom_message, logging_level=logging.WARNING)
                 
                 return None
             
@@ -115,7 +116,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
             )
             custom_subject = f"Failed to retrieve commits - {response.status_code}"
 
-            report_error(custom_subject, custom_message)
+            report_error(custom_subject, custom_message, logging_level=logging.CRITICAL)
 
             return None
                 
@@ -123,7 +124,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
         
         custom_subject = "Directory Not Found Error"
         custom_message = f"Please check your configuration: {e}"
-        report_error(custom_subject, custom_message)
+        report_error(custom_subject, custom_message, logging_level=logging.CRITICAL)
 
         return None
     
@@ -131,7 +132,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
 
         custom_subject = "GitHub API Request Error"
         custom_message = f"An error occurred while making a request to the GitHub API: {e}"
-        report_error(custom_subject, custom_message)
+        report_error(custom_subject, custom_message, logging_level=logging.CRITICAL)
 
         return None
     
@@ -139,7 +140,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
         
         custom_subject = "An error occured when checking for changes in a local directory"
         custom_message = f"{{type{e}}} {e}"
-        report_error(custom_subject, custom_message)
+        report_error(custom_subject, custom_message, logging_level=logging.CRITICAL)
 
         return None
         
@@ -162,11 +163,9 @@ def is_git_repo(cwd:str) -> bool:
     git_path        = os.path.join(cwd, '.git')
     
     if is_existing_directory(git_path):
-
-        print(f"{cwd} is a valid git repository.")
-        
+                        
         return True
-    
+        
     return False
     
 def run_me_them_commands(cwd:str, package_name:str) -> bool:
@@ -211,7 +210,7 @@ def run_me_them_commands(cwd:str, package_name:str) -> bool:
     
     except Exception as e:
         
-        report_error("Unexpected Error", str(e))
+        report_error("Unexpected Error", str(e), logging_level=logging.CRITICAL)
 
         return False
 
