@@ -5,7 +5,7 @@ import sys
 # DON'T disable logging unless absolutely necessary
 # logging.disable(logging.CRITICAL)
 
-def report_error(subject: str, error_message: str, logging_level=logging.DEBUG) -> None:
+def report_error(subject: str, error_message: str, logging_level=logging.DEBUG, error_log_file = "error.log") -> None:
 
     # Reset logging handlers
     for handler in logging.root.handlers[:]:
@@ -15,15 +15,18 @@ def report_error(subject: str, error_message: str, logging_level=logging.DEBUG) 
     logging.basicConfig(
 
         level=logging_level,
-        filename='error.log',
-        filemode='a',
+        filename= error_log_file,
+        filemode='w',
         format='%(levelname)s: %(message)s: %(funcName)s'
 
     )
 
-    if logging_level <= logging.WARNING:
+    log_message = f"{subject} - {error_message}"
 
-        print(f"{logging.getLevelName(logging_level)}: {subject} - {error_message}")
+    # Log the message dynamically
+    logging.log(logging_level, log_message)
+
+    if logging_level <= logging.WARNING:
         
         return
 
@@ -31,4 +34,4 @@ def report_error(subject: str, error_message: str, logging_level=logging.DEBUG) 
 
         create_freshdesk_ticket(error_message, subject)
 
-        sys.exit(f"Exiting due to incident: " + subject)
+        sys.exit("The script has encountered a critical error and will now exit. Please check the error log for details.")
