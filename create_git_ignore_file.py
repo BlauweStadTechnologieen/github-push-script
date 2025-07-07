@@ -1,6 +1,7 @@
 import os
 import error_handler
 from validate_directory import is_existing_directory
+import logging
 
 def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
     """
@@ -28,16 +29,14 @@ def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
                 write.write("!*.mqh\n")
                 write.write("!*.py\n")
  
-                print(".gitignore file successfully added!")
+                error_handler.report_error("Gitignore File Creation", f".gitignore file created at {gitignore_path}", logging_level=logging.INFO)
 
                 return gitignore_path
 
         else:
 
-            print(".gitignore file exists already.")
-
             return None
         
     except Exception as e:
         
-        error_handler.report_error("Unexpected error on writing .gitignore file", f"{e}")
+        error_handler.report_error("Unexpected error on writing .gitignore file", f"{e}", logging_level=logging.WARNING)

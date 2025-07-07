@@ -4,6 +4,7 @@ from email.mime.multipart import MIMEMultipart
 import os
 from dotenv import load_dotenv
 import error_handler
+import logging
 
 load_dotenv()
 
@@ -55,22 +56,22 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
             return True
     
     except AttributeError as e:
-        error_handler.report_error("Missing Attribute",f"{e}")
+        error_handler.report_error("Missing Attribute",f"{e}", logging_level=logging.INFO)
     
     except KeyError as e:
-        error_handler.report_error("Missing SMTP Credentials", f"{e}")
+        error_handler.report_error("Missing SMTP Credentials", f"{e}", logging_level=logging.INFO)
     
     except smtplib.SMTPAuthenticationError as e:
-        error_handler.report_error("SMTP Authentication Error", f"{e}")
+        error_handler.report_error("SMTP Authentication Error", f"{e}", logging_level=logging.INFO)
 
     except smtplib.SMTPConnectError as e:
-        error_handler.report_error("SMTP Connection Error",f"{e}")
+        error_handler.report_error("SMTP Connection Error",f"{e}", logging_level=logging.INFO)
 
     except smtplib.SMTPResponseException as e:
-        error_handler.report_error("SMTP Response Exception",f"{e}")
+        error_handler.report_error("SMTP Response Exception",f"{e}", logging_level=logging.INFO)
     
     except Exception as e:
-        error_handler.report_error("SMTP Exception Error", f"{e}")
+        error_handler.report_error("SMTP Exception Error", f"{e}", logging_level=logging.INFO)
         
     return False
     
