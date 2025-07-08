@@ -46,7 +46,7 @@ def git_communication_validation(git_username:str, git_token:str) -> dict | None
 
             return None
         
-    report_error("Git Repository Validation", "All local directories are valid.", logging_level=logging.INFO)
+        report_error("Git Repository Validation Success", f"{directory} is a valid path.", logging_level=logging.INFO)
         
     for remote_repo in paths.values():
 
