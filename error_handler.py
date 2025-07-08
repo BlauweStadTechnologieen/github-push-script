@@ -17,7 +17,7 @@ def report_error(subject: str, error_message: str, logging_level=logging.DEBUG, 
         level=logging_level,
         filename= error_log_file,
         filemode='a',
-        format='%(levelname)s: %(message)s: %(funcName)s'
+        format='%(levelname)s: %(message)s'
 
     )
 
