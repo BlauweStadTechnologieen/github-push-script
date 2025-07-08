@@ -44,24 +44,6 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         
         return git_pull_result.stdout
 
-    except NotADirectoryError as e:
-
-        error_subject = "This is not a directory"
-        error_message = f"You are attempting to pull into an invalid directory - {e}"
-
-        report_error(error_subject, error_message, logging_level=logging.WARNING)
-
-        return None
-
-    except FileNotFoundError as e:
-        
-        error_subject = "This is not a file"
-        error_message = f"The file you are looking for does not exist = {e}"
-        
-        report_error(error_subject, error_message, logging_level=logging.WARNING)
-
-        return None
-
     except Exception as e:
 
         error_subject = "Exception Error"
