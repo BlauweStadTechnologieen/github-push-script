@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from validate_directory import is_valid_directory, parent_directory_validation
 from pathlib import Path
 import requests
+import logging
 
 def git_communication_validation(git_username:str, git_token:str) -> dict | None:
     """
@@ -45,7 +46,7 @@ def git_communication_validation(git_username:str, git_token:str) -> dict | None
 
             return None
         
-    report_error("Git Repository Validation", "All local directories are valid.", logging_level="INFO")
+    report_error("Git Repository Validation", "All local directories are valid.", logging_level=logging.INFO)
         
     for remote_repo in paths.values():
 
