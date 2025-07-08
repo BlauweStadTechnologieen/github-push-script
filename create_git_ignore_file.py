@@ -29,7 +29,7 @@ def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
                 write.write("!*.mqh\n")
                 write.write("!*.py\n")
  
-                error_handler.report_error("Gitignore File Creation", f".gitignore file created at {gitignore_path}", logging_level=logging.INFO)
+                error_handler.report_error("Gitignore File Successfully Created", f".gitignore file created at {gitignore_path}", logging_level=logging.INFO)
 
                 return gitignore_path
 
