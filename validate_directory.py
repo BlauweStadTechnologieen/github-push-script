@@ -3,6 +3,26 @@ import os
 from instance_validation import instance_validation
 import logging
 
+def make_directory(base_directory:str, folder_names:set) -> str | None:
+
+    try:
+    
+        cwd = os.path.join(base_directory, *folder_names)
+
+        os.makedirs(cwd, exist_ok=True)
+                    
+        if is_valid_directory(cwd):
+
+            return cwd
+        
+        return None
+    
+    except OSError as os_error:
+
+        report_error("Error in creating directory", f"{os_error}", logging_level=logging.CRITICAL)
+
+        return None
+
 def is_existing_directory(cwd: str) -> bool:
     """
     Checks if the given directory exists.
@@ -73,3 +93,9 @@ def parent_directory_validation() -> str | None:
         return None
     
     return parent_directory
+
+cwd = parent_directory_validation()
+
+pre_defined_name = "error_logs"
+
+make_directory(cwd,"")
