@@ -242,16 +242,18 @@ def push_to_github() -> None:
     if not instance_validation(git_link_validation, dict):
 
         return None
-    
-    logging.INFO("Now going through the pckages...")
-        
+            
     for directory, remote_repo in git_link_validation.items():
         
         cwd = os.path.join(directory, package)
 
         if not is_existing_directory(cwd):
 
-            make_directory(cwd,"")
+            create_directories = make_directory(cwd,"")
+            
+            if not instance_validation(create_directories, str):
+
+                break
 
         if not is_git_repo(cwd):
             
