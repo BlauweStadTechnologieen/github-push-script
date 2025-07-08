@@ -7,7 +7,7 @@ from send_email import send_message
 from dotenv import load_dotenv
 from run_command import run_command
 from git_pull import init_git_pull_command
-from validate_directory import is_valid_directory, is_existing_directory
+from validate_directory import is_valid_directory, is_existing_directory, make_directory
 from instance_validation import instance_validation, all_env_vars_exist, is_instance_applicable
 
 def check_for_changes(cwd:str, package:str) -> list | None:
@@ -243,19 +243,15 @@ def push_to_github() -> None:
 
         return None
     
-    print("Now going through the packages....")
-    
+    logging.INFO("Now going through the pckages...")
+        
     for directory, remote_repo in git_link_validation.items():
         
         cwd = os.path.join(directory, package)
 
         if not is_existing_directory(cwd):
-        
-            os.makedirs(cwd, exist_ok=True)
 
-        if not is_valid_directory(cwd):
-            
-            continue
+            make_directory(cwd,"")
 
         if not is_git_repo(cwd):
             
