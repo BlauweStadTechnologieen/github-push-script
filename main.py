@@ -248,16 +248,16 @@ def push_to_github() -> None:
         cwd = os.path.join(directory, package)
 
         if not is_existing_directory(cwd):
-
-            create_directories = make_directory(cwd,"")
             
-            if not instance_validation(create_directories, str):
+            if not instance_validation(make_directory(cwd,""), str):
 
                 break
 
         if not is_git_repo(cwd):
+                        
+            if not instance_validation(init_git_pull_command(cwd, remote_repo, github_username), str):
             
-            init_git_pull_command(cwd, remote_repo, github_username)
+                break
             
             continue
                 
