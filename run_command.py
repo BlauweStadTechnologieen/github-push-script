@@ -4,7 +4,7 @@ from subprocess import CompletedProcess
 import error_handler
 from validate_directory import is_valid_directory
 
-def run_command(command: list[str], cwd: str) -> CompletedProcess | None:
+def run_command(command: list[str], cwd: str = None) -> CompletedProcess | None:
     """
     Executes a shell command in the specified working directory.
     Args:
