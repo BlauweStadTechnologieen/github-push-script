@@ -24,25 +24,24 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
     """
 
     try:
-        
-        git_repo_url = f"https://github.com/{github_username}/{remote_repo_name}.git"
-        
-        git_pull_result = run_command(["git", "clone","--quiet", git_repo_url,"."], cwd)
+                
+        clone_url       = f"git@github.com:{github_username}/{remote_repo_name}.git"
+        clone_remote    = run_command(["git", "clone","--quiet", clone_url,"."], cwd)
 
-        if git_pull_result.returncode != 0:
+        if clone_remote.returncode != 0:
             
             error_subject = "Error on pulling the repos from Git"
-            error_message = f"{git_pull_result.stderr}"
+            error_message = f"{clone_remote.stderr}"
 
             report_error(error_subject, error_message, logging_level=logging.CRITICAL)
             
-            return git_pull_result.stderr
+            return clone_remote.stderr
         
         add_gitignore_entries(cwd)
         
         report_error("Git Pull Success", f"Successfully pulled {remote_repo_name} into {cwd}", logging_level=logging.INFO)
         
-        return git_pull_result.stdout
+        return clone_remote.stdout
 
     except Exception as e:
 
