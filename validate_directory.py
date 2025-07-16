@@ -93,9 +93,3 @@ def parent_directory_validation() -> str | None:
         return None
     
     return parent_directory
-
-cwd = parent_directory_validation()
-
-pre_defined_name = "error_logs"
-
-make_directory(cwd,"")
