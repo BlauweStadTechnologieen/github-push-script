@@ -3,6 +3,8 @@ import os
 from error_handler import report_error
 from create_git_ignore_file import add_gitignore_entries
 import logging
+from convert_to_ssh import convert_to_ssh
+from instance_validation import instance_validation
 
 def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) -> str | None:
     """
@@ -25,7 +27,7 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
 
     try:
                 
-        clone_url       = f"git@github.com:{github_username}/{remote_repo_name}.git"
+        clone_url       = f"https://github.com/{github_username}/{remote_repo_name}.git"
         clone_remote    = run_command(["git", "clone","--quiet", clone_url,"."], cwd)
 
         if clone_remote.returncode != 0:
@@ -36,6 +38,8 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
             report_error(error_subject, error_message, logging_level=logging.CRITICAL)
             
             return clone_remote.stderr
+        
+        convert_to_ssh(github_username, remote_repo_name, cwd)
         
         add_gitignore_entries(cwd)
         
