@@ -243,9 +243,15 @@ def push_to_github() -> None:
 
         return None
             
-    for directory, remote_repo in git_link_validation.items():
+    for directory, remote_repo in list(git_link_validation.items()):
         
-        cwd = os.path.join(directory, package)
+        if str(directory).endswith("Files"):
+
+            cwd = directory
+
+        else:
+        
+            cwd = os.path.join(directory, package)
 
         if not is_existing_directory(cwd):
             
