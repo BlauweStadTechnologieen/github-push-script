@@ -302,14 +302,14 @@ def push_to_github() -> None:
 
         changed_dirs.extend(changed_package)
 
+        from message import success_log
+        
+        success_log("GitHub Push Successful", f"Changes successfully pushed to {remote_repo} repository.")
+
     if changed_dirs:
         
         send_message(changed_dirs)
-
-        from message import success_log
-        
-        success_log("Push to GitHub Successful", f"Successfully pushed changes to GitHub for packages: {[item['repo'] for item in changed_dirs]}")
-            
+                    
     return None
         
 if __name__ == "__main__":
