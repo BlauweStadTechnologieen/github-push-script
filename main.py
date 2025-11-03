@@ -180,7 +180,7 @@ def is_git_repo(cwd:str) -> bool:
         Please be aware that this does *NOT* check to ensure that the directory is pointing to the correct remote repository.
     
     """
-    git_path        = os.path.join(cwd, '.git')
+    git_path    = os.path.join(cwd, '.git')
     
     if is_existing_directory(git_path):
 
