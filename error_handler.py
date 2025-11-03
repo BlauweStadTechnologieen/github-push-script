@@ -5,7 +5,7 @@ import logging
 logging.basicConfig(filename="logger.log", filemode='a', format='%(asctime)s - %(funcName)s')
 
 logging.disable(logging.CRITICAL)
-logging.disable()
+
 
 def report_error(subject:str, error_message:str, debug:bool = False) -> None:
     """This method will be called whenever an error or Exception occurs. 
