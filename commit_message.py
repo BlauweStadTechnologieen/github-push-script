@@ -14,7 +14,7 @@ def commit_message_validation(package_name:str) -> str:
 
             try:
 
-                auto_commit_message = ["Screenshots", "Assets", "Docs"]
+                auto_commit_message = ["Screenshots","Assets","Docs"]
                 
                 if package_name in auto_commit_message:
                      
@@ -45,3 +45,10 @@ def commit_message_validation(package_name:str) -> str:
             except ValueError as e:
 
                 print(f"Commit Message Formatting Error : {e}")
+
+## Testing purposes only, not used in production.
+if __name__ == "__main__":
+
+    package_name = input("Enter the package name for commit message validation: ")
+    valid_message = commit_message_validation(package_name)
+    print(f"Valid Commit Message: {valid_message}")
