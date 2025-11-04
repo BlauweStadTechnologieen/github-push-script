@@ -14,9 +14,11 @@ def commit_message_validation(package_name:str) -> str:
 
             try:
 
-                if package_name == "Screenshots":
+                auto_commit_message = ["Screenshots", "Assets", "Docs"]
+                
+                if package_name in auto_commit_message:
                      
-                     commit_message = "Screenshot Update"
+                     commit_message = f"New {package_name} Commit - Automated Commit Message"
 
                      return commit_message
                 
