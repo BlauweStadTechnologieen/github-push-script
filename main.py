@@ -274,7 +274,17 @@ def push_to_github() -> None:
     
     for directory, remote_repo in git_link_validation.items():
         
-        cwd = os.path.join(parent_dir, directory, package)
+        from settings import repositories_to_bypass_commit_messages
+        
+        if remote_repo in repositories_to_bypass_commit_messages():
+
+            cwd = os.path.join(parent_dir, directory)
+        
+        else:
+
+            cwd = os.path.join(parent_dir, directory, package)
+
+        success_log = f"Processing directory: {cwd} for repository: {remote_repo}"
 
         if not is_existing_directory(cwd):
         
