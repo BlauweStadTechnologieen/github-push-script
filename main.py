@@ -269,9 +269,7 @@ def push_to_github() -> None:
     if not instance_validation(git_link_validation, dict):
 
         return None
-    
-    print("Now going through the packages....")
-    
+        
     for directory, remote_repo in git_link_validation.items():
         
         from settings import repositories_to_bypass_commit_messages
