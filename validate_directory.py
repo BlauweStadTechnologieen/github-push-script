@@ -1,5 +1,6 @@
 from error_handler import report_error
 import os
+from message import success_log
 
 def is_existing_directory(cwd: str) -> bool:
     """
@@ -13,6 +14,8 @@ def is_existing_directory(cwd: str) -> bool:
     """
 
     if os.path.exists(cwd) and os.path.isdir(cwd):
+        
+        success_log("Directory Existence Check", f"The directory path: {cwd} exists.")
         
         return True     
     
@@ -46,5 +49,7 @@ def is_valid_directory(cwd:str) -> bool:
         report_error(custom_subject, custom_message)
         
         return False
+    
+    success_log("Directory Validation Success", f"The directory path: {cwd} is valid.")
     
     return True
