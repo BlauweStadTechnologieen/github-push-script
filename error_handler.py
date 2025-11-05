@@ -8,12 +8,6 @@ def report_error(subject: str, error_message: str, debug: bool = False) -> None:
     
     logging.debug(f"{subject} - {error_message}")
 
-    if debug:
-        
-        print("Debug mode is enabled. A support ticket will not be created whilst in debug mode.")
-        
-        return
-
     return
 
 if __name__ == "__main__":
