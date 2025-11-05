@@ -282,8 +282,8 @@ def push_to_github() -> None:
 
             cwd = os.path.join(parent_dir, directory, package)
 
-        success_log = f"Processing directory: {cwd} for repository: {remote_repo}"
-
+        success_log("Processing Directory", f"Processing directory: {cwd} for repository: {remote_repo}")
+        
         if not is_existing_directory(cwd):
         
             os.makedirs(cwd, exist_ok=True)
