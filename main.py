@@ -180,12 +180,23 @@ def is_git_repo(cwd:str) -> bool:
         Please be aware that this does *NOT* check to ensure that the directory is pointing to the correct remote repository.
     
     """
-    git_path    = os.path.join(cwd, '.git')
+    git_path = os.path.join(cwd, '.git')
     
     if is_existing_directory(git_path):
 
-        print(f"{cwd} is a valid git repository.")
+        from message import success_log
         
+        success_log("Valid Git Repository",f"{git_path} is a valid git respository.")
+
+        branch_result   = run_command(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd)
+        current_branch  = branch_result.stdout.strip()
+
+        if current_branch == "HEAD":
+
+            report_error("Git Repository Error", f"The repository at {cwd} is in a detached HEAD state.")
+
+            return False
+                
         return True
     
     return False
