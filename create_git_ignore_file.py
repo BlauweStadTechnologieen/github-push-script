@@ -1,8 +1,10 @@
 import os
 import error_handler
 from validate_directory import is_existing_directory
+from settings import repositories_to_bypass_commit_messages
+from message import success_logging
 
-def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
+def add_gitignore_entries(cwd:str, remote_repo_name:str, name: str = ".gitignore") -> str | None:
     """
     Creates a .gitignore file with default entries if it does not already exist in the specified directory.
     Parameters:
@@ -20,21 +22,34 @@ def add_gitignore_entries(cwd:str, name: str = ".gitignore") -> str | None:
 
         if not is_existing_directory(gitignore_path):
 
-            with open(gitignore_path, "w") as write:
+            if remote_repo_name in repositories_to_bypass_commit_messages():
+                
+                with open(gitignore_path, "w") as write:
 
-                write.write("*\n")
-                write.write("!*.mq5\n")
-                write.write("!*.ex5\n")
-                write.write("!*.mqh\n")
-                write.write("!*.py\n")
- 
-                print(".gitignore file successfully added!")
+                    write.write("*\n")
+                    write.write("!*.png\n")
+    
+                    success_logging("Gitignore Created", f".gitignore file created in {cwd} for repository {remote_repo_name}.")
 
-                return gitignore_path
+                    return gitignore_path
+            
+            else:
+            
+                with open(gitignore_path, "w") as write:
+
+                    write.write("*\n")
+                    write.write("!*.mq5\n")
+                    write.write("!*.ex5\n")
+                    write.write("!*.mqh\n")
+                    write.write("!*.py\n")
+    
+                    success_logging("Gitignore Created", f".gitignore file created in {cwd} for repository {remote_repo_name}.")
+
+                    return gitignore_path
 
         else:
 
-            print(".gitignore file exists already.")
+            success_logging("Gitignore Exists", f".gitignore file already exists in {cwd}, no action taken.")
 
             return None
         
