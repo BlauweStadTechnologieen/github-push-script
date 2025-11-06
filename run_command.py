@@ -27,6 +27,11 @@ def run_command(command: list[str], cwd: str) -> CompletedProcess | None:
 
     try:
         result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
+        if result.returncode != 0:
+            error_handler.report_error(f"Command Failed!: ' '.join(command)", f"Return Code: {result.returncode}\nStderr: {result.stderr}")
+            raise subprocess.CalledProcessError(
+                result.returncode, command, output=result.stdout, stderr=result.stderr
+            )
         return result
     except Exception as e:
         error_handler.report_error("Run Command Exception", str(e))
