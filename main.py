@@ -322,8 +322,6 @@ def push_to_github() -> None:
             continue
 
         changed_dirs.extend(changed_package)
-
-        
         
         success_log("GitHub Push Successful", f"Changes successfully pushed to {remote_repo} repository.")
 
