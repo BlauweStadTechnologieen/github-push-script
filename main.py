@@ -260,6 +260,8 @@ def push_to_github() -> None:
     - Third, it will run the `git add .`, `git commit` and `git push` commands, if changes were detected.
     
     """
+    
+    from message import success_log
 
     if not all_env_vars_exist():
 
@@ -321,7 +323,7 @@ def push_to_github() -> None:
 
         changed_dirs.extend(changed_package)
 
-        from message import success_log
+        
         
         success_log("GitHub Push Successful", f"Changes successfully pushed to {remote_repo} repository.")
 
