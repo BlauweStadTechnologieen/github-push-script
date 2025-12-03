@@ -38,10 +38,6 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
             return git_pull_result.stderr
         
         add_gitignore_entries(cwd,remote_repo_name)
-
-        from message import success_logging
-
-        success_logging(f"Git Pull Successful", f"Repository {remote_repo_name} has been successfully pulled into {cwd}.")
                 
         return git_pull_result.stdout
 

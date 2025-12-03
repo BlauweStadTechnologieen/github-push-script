@@ -2,7 +2,6 @@ import os
 import error_handler
 from validate_directory import is_existing_directory
 from settings import repositories_to_bypass_commit_messages
-from message import success_logging
 
 def add_gitignore_entries(cwd:str, remote_repo_name:str, name: str = ".gitignore") -> str | None:
     """
@@ -29,8 +28,6 @@ def add_gitignore_entries(cwd:str, remote_repo_name:str, name: str = ".gitignore
                     write.write("*\n")
                     write.write("!*.png\n")
     
-                    success_logging("Gitignore Created", f".gitignore file created in {cwd} for repository {remote_repo_name}.")
-
                     return gitignore_path
             
             else:
@@ -43,13 +40,9 @@ def add_gitignore_entries(cwd:str, remote_repo_name:str, name: str = ".gitignore
                     write.write("!*.mqh\n")
                     write.write("!*.py\n")
     
-                    success_logging("Gitignore Created", f".gitignore file created in {cwd} for repository {remote_repo_name}.")
-
                     return gitignore_path
 
         else:
-
-            success_logging("Gitignore Exists", f".gitignore file already exists in {cwd}, no action taken.")
 
             return None
         

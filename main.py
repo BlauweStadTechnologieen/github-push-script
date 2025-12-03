@@ -183,11 +183,7 @@ def is_git_repo(cwd:str) -> bool:
     git_path = os.path.join(cwd, '.git')
     
     if is_existing_directory(git_path):
-
-        from message import success_log
         
-        success_log("Valid Git Repository",f"{git_path} is a valid git respository.")
-
         branch_result   = run_command(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd)
         current_branch  = branch_result.stdout.strip()
 
@@ -261,8 +257,6 @@ def push_to_github() -> None:
     
     """
     
-    from message import success_log
-
     if not all_env_vars_exist():
 
         return None
@@ -294,8 +288,6 @@ def push_to_github() -> None:
         else:
 
             cwd = os.path.join(parent_dir, directory, package)
-
-        success_log("Processing Directory", f"Processing directory: {cwd} for repository: {remote_repo}")
         
         if not is_existing_directory(cwd):
         
@@ -323,8 +315,6 @@ def push_to_github() -> None:
 
         changed_dirs.extend(changed_package)
         
-        success_log("GitHub Push Successful", f"Changes successfully pushed to {remote_repo} repository.")
-
     if changed_dirs:
         
         send_message(changed_dirs)
