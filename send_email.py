@@ -13,7 +13,6 @@ def company_signoff() -> None:
     <b>{organization_name}</b><br>
     The {organization_dept} Team<br>
     {organization_email}<br><br>
-    return
     """
 
 def send_message(latest_commit_data:list[dict]) -> None:
