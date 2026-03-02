@@ -1,7 +1,9 @@
 from run_command import run_command
-import os
-from error_handler import report_error
+from error_handler import status_logger
 from create_git_ignore_file import add_gitignore_entries
+import logging
+
+logger = logging.getLogger(__name__)
 
 def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) -> str | None:
     """
@@ -17,9 +19,8 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         FileNotFoundError: If a required file or directory does not exist.
         Exception: For any other unexpected errors.
     Side Effects:
-        - Calls `report_error` to log or notify about errors.
+        - Calls `status_logger` to log or notify about errors.
         - Calls `add_gitignore_entries` to update .gitignore in the cloned repository.
-        - Prints a success message upon successful integration.
     """
 
     try:
@@ -33,7 +34,7 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
             error_subject = "Error on pulling the repos from Git"
             error_message = f"{git_pull_result.stderr}"
 
-            report_error(error_subject, error_message)
+            status_logger(error_subject, error_message, logging_level=logging.ERROR)
             
             return git_pull_result.stderr
         
@@ -46,7 +47,7 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         error_subject = "This is not a directory"
         error_message = f"You are attempting to pull into an invalid directory - {e}"
 
-        report_error(error_subject, error_message)
+        status_logger(error_subject, error_message, logging_level=logging.ERROR)
 
         return None
 
@@ -55,7 +56,7 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         error_subject = "This is not a file"
         error_message = f"The file you are looking for does not exist = {e}"
         
-        report_error(error_subject, error_message)
+        status_logger(error_subject, error_message, logging_level=logging.ERROR)
 
         return None
 
@@ -64,6 +65,6 @@ def init_git_pull_command(cwd:str, remote_repo_name:str, github_username:str) ->
         error_subject = "Exception Error"
         error_message = f"There was an unexpected error whilst attemptig to do a pull from the Hub of Git! - {e}"
 
-        report_error(error_subject, error_message)
+        status_logger(error_subject, error_message, logging_level=logging.ERROR)
 
         return None

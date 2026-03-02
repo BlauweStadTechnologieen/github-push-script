@@ -1,14 +1,31 @@
 import logging
 
-logging.basicConfig(filename="log.log", filemode='a',
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    level=logging.DEBUG)
 
-def report_error(subject: str, error_message: str, debug: bool = False) -> None:
-    
-    logging.debug(f"{subject} - {error_message}")
+def status_logger(subject:str, message:str, logging_level = logging.INFO) -> None:
+    """
+    Handles and processes the reporting of all error and exceptions via the Freshdesk system.
+    Args:
+        subject(str): Denotes the subject of the support ticket.
+        message(str): Denotes the description of the error or exception. 
+    """
 
-    return
+    for handler in logging.root.handlers[:]:
+        logging.root.removeHandler(handler)
+
+    logging.basicConfig(
+
+        level=logging_level,
+        filename="log.log",
+        filemode='a',
+        format='%(levelname)s: %(message)s'
+
+    )
+
+    log_message = f"Status Subject: {subject} -> Status Message: {message}"
+
+    logging.log(logging_level, log_message)
+
+    return None
 
 if __name__ == "__main__":
-    report_error("Test Error", "This is a test error message.")
+    status_logger("Test Error", "This is a test error message.")

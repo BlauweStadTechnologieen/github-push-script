@@ -1,6 +1,9 @@
-import error_handler
+from error_handler import status_logger
+import logging
 from dotenv import load_dotenv
 import os
+
+logger = logging.getLogger(__name__)
 
 def all_env_vars_exist() -> bool:
     """
@@ -30,7 +33,7 @@ def all_env_vars_exist() -> bool:
     missing_vars = [var for var in required_vars if os.getenv(var) is None]
 
     if missing_vars:
-        error_handler.report_error("Missing Environment Variables", f"The following variables are missing: {', '.join(missing_vars)}")
+        status_logger("Missing Environment Variables", f"The following variables are missing: {', '.join(missing_vars)}", logging_level=logging.ERROR)
         return False
 
     return True
@@ -92,9 +95,9 @@ def instance_validation(variable:any, instance:any) -> bool:
         return True 
 
     except TypeError as te:
-        error_handler.report_error("Type Error", str(te))
+        status_logger("Type Error", str(te), logging_level=logging.ERROR)
         return False
     
     except Exception as e:
-        error_handler.report_error("Unexpected Error", str(e))
+        status_logger("Unexpected Error", str(e), logging_level=logging.ERROR)
         return False

@@ -1,5 +1,8 @@
-from error_handler import report_error
+from error_handler import status_logger
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 def is_existing_directory(cwd: str) -> bool:
     """
@@ -14,6 +17,8 @@ def is_existing_directory(cwd: str) -> bool:
 
     if os.path.exists(cwd) and os.path.isdir(cwd):
                 
+        status_logger("Directory Validation", f"The directory path: {cwd} is valid.")
+        
         return True     
     
     return False
@@ -43,8 +48,10 @@ def is_valid_directory(cwd:str) -> bool:
         custom_subject = "Invalid Directory Path"
         custom_message = f"{type(e)} - {e}"
         
-        report_error(custom_subject, custom_message)
+        status_logger(custom_subject, custom_message, logging_level=logging.ERROR)
         
         return False
         
+    status_logger("Directory Validation", f"The directory path: {cwd} is valid.")
+    
     return True

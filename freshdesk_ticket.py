@@ -1,6 +1,10 @@
 import os
 import requests
 from dotenv import load_dotenv
+from error_handler import status_logger
+import logging
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -76,7 +80,7 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
 
         else:
             custom_message = f"Error code: {response.status_code} Error HTTP response: {response.text} Error response {response.content}"
-            print(custom_message)
+            status_logger("Failed to Create Freshdesk Ticket", custom_message, logging_level = logging.ERROR)
             return response.status_code
 
     except AttributeError as e:
@@ -92,5 +96,5 @@ def create_freshdesk_ticket(exception_or_error_message:str, subject:str, group_i
         custom_message = f"General Exception: {e}"
 
     if custom_message:
-        print(custom_message)
+        status_logger("Failed to Create Freshdesk Ticket", custom_message, logging_level = logging.ERROR)
         return -1

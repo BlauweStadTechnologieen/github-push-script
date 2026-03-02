@@ -1,6 +1,10 @@
 import email_auth
 import uuid
 import os
+import logging
+from error_handler import status_logger
+
+logger = logging.getLogger(__name__)
 
 organization_name   = os.getenv("SENDER_NAME")
 organization_dept   = os.getenv("SENDER_DEPARTMENT")
@@ -91,6 +95,8 @@ def send_error_report_by_email(subject:str, message:str) -> None:
 
     if not email_auth.smtp_auth(message, subject):
         
+        status_logger("Error Report Email Failure", f"Subject: {subject} | Message: {message}", logging_level=logging.ERROR)
+
         return None
     
     return None
@@ -128,7 +134,7 @@ def freshdesk_inop_notification(custom_message:str) -> None:
         {company_signoff()}
     """
 
-    print(freshdesk_inop_text_body)
+    status_logger("Freshdesk Inoperative", f"{custom_message} | Incident Reference Number: {incident_uuid}", logging_level=logging.ERROR)
 
     if not email_auth.smtp_auth(freshdesk_inop_text_body, custom_subject):
         

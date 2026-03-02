@@ -2,6 +2,9 @@ import os
 import error_handler
 from validate_directory import is_existing_directory
 from settings import repositories_to_bypass_commit_messages
+import logging
+
+logging = logging.getLogger(__name__)
 
 def add_gitignore_entries(cwd:str, remote_repo_name:str, name: str = ".gitignore") -> str | None:
     """
@@ -27,6 +30,9 @@ def add_gitignore_entries(cwd:str, remote_repo_name:str, name: str = ".gitignore
 
                     write.write("*\n")
                     write.write("!*.png\n")
+
+                    status_message = f"Created .gitignore file for {remote_repo_name} with entries to ignore all files except .png files."
+                    error_handler.status_logger("Gitignore File Created", status_message)
     
                     return gitignore_path
             
@@ -39,13 +45,18 @@ def add_gitignore_entries(cwd:str, remote_repo_name:str, name: str = ".gitignore
                     write.write("!*.ex5\n")
                     write.write("!*.mqh\n")
                     write.write("!*.py\n")
+
+                    status_message = f"Created .gitignore file for {remote_repo_name} with entries to ignore all files except .mq5, .ex5, .mqh, and .py files."
+                    error_handler.status_logger("Gitignore File Created", status_message)
     
                     return gitignore_path
 
         else:
 
+            error_handler.status_logger("Gitignore File Already Exists", f"A .gitignore file already exists in {cwd}. No new file was created.")
+            
             return None
         
     except Exception as e:
         
-        error_handler.report_error("Unexpected error on writing .gitignore file", f"{e}")
+        error_handler.status_logger("Unexpected error on writing .gitignore file", f"{e}", logging_level=logging.ERROR)

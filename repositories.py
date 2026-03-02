@@ -1,7 +1,15 @@
-from error_handler import report_error
+import logging
+from error_handler import status_logger
 import os
 from dotenv import load_dotenv
 from validate_directory import is_valid_directory
+import requests
+from pathlib import Path
+
+load_dotenv()
+
+logger = logging.getLogger(__name__)
+
 
 def git_communication_validation(master_directory:str, git_username:str, git_token:str) -> dict | None:
     """
@@ -19,11 +27,8 @@ def git_communication_validation(master_directory:str, git_username:str, git_tok
         dict | None: Mapping of local Path objects to remote repository names if all validations pass; otherwise, None.
     """
 
-    import requests
-    from pathlib import Path
-
-    load_dotenv()
-
+    status_logger("Starting Validation", "Beginning validation of local directories and remote GitHub repositories.")
+    
     version_folder  = os.getenv("VERSION_FOLDER")
 
     paths = {
@@ -39,7 +44,7 @@ def git_communication_validation(master_directory:str, git_username:str, git_tok
         
         if not is_valid_directory(existing_directory):
 
-            report_error("Path does not exist", f"Upon checking the paths, the {existing_directory} path does not exist")
+            status_logger("Path does not exist", f"Upon checking the paths, the {existing_directory} path does not exist", logging_level = logging.ERROR)
 
             return None
         
@@ -51,7 +56,7 @@ def git_communication_validation(master_directory:str, git_username:str, git_tok
 
         if response.status_code != 200:
 
-            report_error("Github Repository Valid Failed",f"Unfortunately, the remote repository validation failed with an error code of {response.status_code} {response.text}")
+            status_logger("Github Repository Validation Failed", f"Unfortunately, the remote repository validation failed with an error code of {response.status_code} {response.text}", logging_level = logging.ERROR)
 
             return None
 

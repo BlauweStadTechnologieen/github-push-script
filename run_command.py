@@ -1,8 +1,10 @@
-import os
+import logging
 import subprocess
 from subprocess import CompletedProcess
-import error_handler
+from error_handler import status_logger
 from validate_directory import is_valid_directory
+
+logger = logging.getLogger(__name__)
 
 def run_command(command: list[str], cwd: str) -> CompletedProcess | None:
     """
@@ -27,13 +29,21 @@ def run_command(command: list[str], cwd: str) -> CompletedProcess | None:
 
     try:
         result = subprocess.run(command, cwd=cwd, text=True, capture_output=True)
-        if result.returncode != 0:
-            error_handler.report_error(f"Command Failed!: ' '.join(command)", f"Return Code: {result.returncode}\nStderr: {result.stderr}")
-            raise subprocess.CalledProcessError(
-                result.returncode, command, output=result.stdout, stderr=result.stderr
-            )
-        return result
-    except Exception as e:
-        error_handler.report_error("Run Command Exception", str(e))
-        raise
 
+        if result.returncode != 0:
+
+            status_logger("Command Failed!", f"Command: {' '.join(command)}\nReturn Code: {result.returncode}\nStderr: {result.stderr}", logging_level=logging.ERROR)
+            
+            raise subprocess.CalledProcessError(
+
+                result.returncode, command, output=result.stdout, stderr=result.stderr
+
+            )
+        
+        return result
+    
+    except Exception as e:
+
+        status_logger("Run Command Exception", str(e), logging_level=logging.ERROR)
+
+        raise

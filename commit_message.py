@@ -1,3 +1,8 @@
+import logging
+from error_handler import status_logger
+
+logging = logging.getLogger(__name__)
+
 def commit_message_validation(package_name:str) -> str:
     """
     Prompts the user to enter a commit message and validates it according to specific rules.
@@ -44,11 +49,12 @@ def commit_message_validation(package_name:str) -> str:
 
             except ValueError as e:
 
-                print(f"Commit Message Formatting Error : {e}")
+                status_logger("Commit Message Validation Error", f"{type(e)} - {e}", logging_level=logging.ERROR)
 
 ## Testing purposes only, not used in production.
 if __name__ == "__main__":
 
     package_name    = input("Enter the package name for commit message validation: ")
     valid_message   = commit_message_validation(package_name)
-    print(f"Valid Commit Message: {valid_message}")
+    
+    status_logger("Valid Commit Message", f"The commit message '{valid_message}' is valid for package '{package_name}'.", logging_level=logging.INFO)
