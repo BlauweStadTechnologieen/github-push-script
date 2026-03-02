@@ -1,7 +1,0 @@
-ECHO is on.
-.env
-.venv
-.venv/
-__pycache__/
-log.log
-success.log
