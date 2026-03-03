@@ -15,7 +15,6 @@ def all_env_vars_exist() -> bool:
         "GITHUB_USERNAME",
         "GITHUB_TOKEN",
         "PARENT_DIRECTORY",
-        "VERSION_FOLDER",
         "PACKAGE_NAME",
         "SENDER_EMAIL",
         "SENDER_NAME",
@@ -34,7 +33,7 @@ def all_env_vars_exist() -> bool:
 
     if missing_vars:
         
-        status_logger("Missing Environment Variables", f"The following variables are missing: {', '.join(missing_vars)}", logging_level=logging.ERROR)
+        status_logger("Missing Environment Variables", f"The following variables are missing: {', '.join(missing_vars)}", logging_level=logging.CRITICAL)
         
         return False
 
