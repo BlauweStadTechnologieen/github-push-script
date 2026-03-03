@@ -33,7 +33,9 @@ def all_env_vars_exist() -> bool:
     missing_vars = [var for var in required_vars if os.getenv(var) is None]
 
     if missing_vars:
+        
         status_logger("Missing Environment Variables", f"The following variables are missing: {', '.join(missing_vars)}", logging_level=logging.ERROR)
+        
         return False
 
     return True
@@ -48,7 +50,9 @@ def is_none(variable:any) -> bool:
     """
     
     if variable is None:
-        
+
+        status_logger("None Check", f"The variable is None.", logging_level=logging.WARNING)
+
         return True
     
     return False
@@ -90,7 +94,7 @@ def instance_validation(variable:any, instance:any) -> bool:
         
         if not isinstance(variable, instance):
 
-            raise TypeError(f"Expected {instance.__name__}, got {type(variable).__name__}")  
+            raise TypeError(f"Expected {instance.__name__}, got {type(variable).__name__}", logging_level=logging.ERROR)  
            
         return True 
 

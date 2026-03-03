@@ -21,6 +21,8 @@ def is_existing_directory(cwd: str) -> bool:
         
         return True     
     
+    status_logger("Directory Validation", f"The directory path: {cwd} is not valid.", logging_level=logging.ERROR)
+    
     return False
 
 def is_valid_directory(cwd:str) -> bool:
@@ -31,10 +33,10 @@ def is_valid_directory(cwd:str) -> bool:
         cwd(str): Denotes the Current Working Directory.
 
     Returns:
-        bool: True of the cwd is valid, ensure returns `False`.
+        bool: True if the cwd is valid, else returns `False`.
 
     Raises:
-        ValueError: A `ValueError` will be raised if the directory is not valid. If the exception handing block is exected, the `error_hander` module will catch and processes the error. 
+        ValueError: A `ValueError` will be raised if the directory is not valid. If the exception handling block is executed, the `error_handler` module will catch and process the error. 
     """    
     
     try:

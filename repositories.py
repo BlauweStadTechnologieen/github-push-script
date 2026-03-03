@@ -56,7 +56,7 @@ def git_communication_validation(master_directory:str, git_username:str, git_tok
 
         if response.status_code != 200:
 
-            status_logger("Github Repository Validation Failed", f"Unfortunately, the remote repository validation failed with an error code of {response.status_code} {response.text}", logging_level = logging.ERROR)
+            status_logger("Github Repository Validation Failed", f"Unfortunately, the remote repository validation failed with an error code of {response.status_code} {response.text}", logging_level = logging.CRITICAL)
 
             return None
 
