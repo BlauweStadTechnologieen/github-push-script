@@ -75,6 +75,9 @@ def send_message(latest_commit_data:list[dict]) -> None:
     {company_signoff()}
     """
     if not email_auth.smtp_auth(message_body, custom_subject):
+         
+         status_logger("Commit Report Email Failure", f"Subject: {custom_subject} | Message: {message_body}", logging_level=logging.WARNING)
+         
          return None
 
     return None
@@ -137,6 +140,8 @@ def freshdesk_inop_notification(custom_message:str) -> None:
     status_logger("Freshdesk Inoperative", f"{custom_message} | Incident Reference Number: {incident_uuid}", logging_level=logging.ERROR)
 
     if not email_auth.smtp_auth(freshdesk_inop_text_body, custom_subject):
+        
+        status_logger("Freshdesk Inoperative Email Failure", f"Subject: {custom_subject} | Message: {freshdesk_inop_text_body}", logging_level=logging.WARNING)
         
         return None
 
