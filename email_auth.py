@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from error_handler import status_logger
 import logging
 
-logging = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -39,7 +39,6 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
     """
     try:
 
-        
         msg             = MIMEMultipart()
         msg['Subject']  = subject
         msg['From']     = f'"{organization_sender_name}" <{organization_sender_email}>'
@@ -78,7 +77,8 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
     return False
     
     
-    
-        
+if __name__ == "__main__":
 
-        
+    message_body = "This is a test email to verify SMTP authentication."
+    subject = "SMTP Authentication Test"
+    smtp_auth(message_body, subject)
