@@ -78,7 +78,6 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
         
     return False
     
-    
 if __name__ == "__main__":
 
     message_body = "This is a test email to verify SMTP authentication."
