@@ -70,7 +70,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
             latest_sha_file = "latest_sha.txt"
             sha_dir         = os.path.join(cwd, latest_sha_file)
 
-            if is_existing_directory(sha_dir):
+            if is_valid_directory(sha_dir):
 
                 with open(sha_dir, "r") as file:
 
