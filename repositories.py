@@ -29,13 +29,12 @@ def git_communication_validation(master_directory:str, git_username:str, git_tok
 
     status_logger("Starting Validation", "Beginning validation of local directories and remote GitHub repositories.")
     
-    version_folder  = os.getenv("VERSION_FOLDER")
 
     paths = {
-        Path(f"{version_folder}/Experts/Advisors") : "MQL5Experts",
-        Path(f"{version_folder}/Include/Expert") : "MQL5Include",
-        Path(f"{version_folder}/Scripts") : "MQL5Scripts",
-        Path(f"{version_folder}/Files") : "Screenshots"
+        Path("Experts/Advisors") : "MQL5Experts",
+        Path("Include/Expert") : "MQL5Include",
+        Path("Scripts") : "MQL5Scripts",
+        Path("Files") : "Screenshots"
     }
 
     for directory in paths.keys():
