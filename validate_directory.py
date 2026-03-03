@@ -17,11 +17,11 @@ def is_existing_directory(cwd: str) -> bool:
 
     if os.path.exists(cwd) and os.path.isdir(cwd):
                 
-        status_logger("Directory Validation", f"The directory path: {cwd} is valid.")
+        status_logger("Directory Existence Validation", f"The directory path: {cwd} is valid & is a directory.")
         
         return True     
     
-    status_logger("Directory Validation", f"The directory path: {cwd} is not valid.", logging_level=logging.ERROR)
+    status_logger("Directory Existence Validation", f"The directory path: {cwd} is not valid.", logging_level=logging.ERROR)
     
     return False
 
