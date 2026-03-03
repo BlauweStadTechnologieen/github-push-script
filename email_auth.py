@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 from dotenv import load_dotenv
-import error_handler
+from error_handler import status_logger
 import logging
 
 logging = logging.getLogger(__name__)
@@ -58,22 +58,22 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
             return True
     
     except AttributeError as e:
-        error_handler.report_error("Missing Attribute",f"{e}", logging_level=logging.ERROR)
+        status_logger("Missing Attribute",f"{e}", logging_level=logging.ERROR)
     
     except KeyError as e:
-        error_handler.report_error("Missing SMTP Credentials", f"{e}", logging_level=logging.ERROR)
+        status_logger("Missing SMTP Credentials", f"{e}", logging_level=logging.ERROR)
     
     except smtplib.SMTPAuthenticationError as e:
-        error_handler.report_error("SMTP Authentication Error", f"{e}", logging_level=logging.ERROR)
+        status_logger("SMTP Authentication Error", f"{e}", logging_level=logging.ERROR)
 
     except smtplib.SMTPConnectError as e:
-        error_handler.report_error("SMTP Connection Error",f"{e}", logging_level=logging.ERROR)
+        status_logger("SMTP Connection Error",f"{e}", logging_level=logging.ERROR)
 
     except smtplib.SMTPResponseException as e:
-        error_handler.report_error("SMTP Response Exception",f"{e}", logging_level=logging.ERROR)
+        status_logger("SMTP Response Exception",f"{e}", logging_level=logging.ERROR)
     
     except Exception as e:
-        error_handler.report_error("SMTP Exception Error", f"{e}", logging_level=logging.ERROR)
+        status_logger("SMTP Exception Error", f"{e}", logging_level=logging.ERROR)
         
     return False
     
