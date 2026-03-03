@@ -100,7 +100,7 @@ def check_for_changes(cwd:str, package:str) -> list | None:
 
                 with open(sha_dir, "w") as file:
 
-                    file.write(latest_commit_sha)
+                    file.write(f"Current Release SHA: {latest_commit_sha}")
 
                 return remote_repo_attrs
 
