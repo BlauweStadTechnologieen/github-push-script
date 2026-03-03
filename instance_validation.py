@@ -93,7 +93,7 @@ def instance_validation(variable:any, instance:any) -> bool:
         
         if not isinstance(variable, instance):
 
-            raise TypeError(f"Expected {instance.__name__}, got {type(variable).__name__}", logging_level=logging.ERROR)  
+            raise TypeError(f"Expected {instance.__name__}, got {type(variable).__name__}")  
            
         return True 
 
