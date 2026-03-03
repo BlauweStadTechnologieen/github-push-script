@@ -54,6 +54,8 @@ def smtp_auth(message_body:str, subject:str, mime_text:str = "html") -> bool:
             
             server.sendmail(organization_sender_email,client_email, msg.as_string())
 
+            status_logger("SMTP Authentication Success", f"Successfully authenticated with the SMTP server & notification email sent.")
+
             return True
     
     except AttributeError as e:
