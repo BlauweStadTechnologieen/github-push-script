@@ -76,7 +76,7 @@ def send_message(latest_commit_data:list[dict]) -> None:
     """
     if not email_auth.smtp_auth(message_body, custom_subject):
          
-         status_logger("Commit Report Email Failure", f"Subject: {custom_subject} | Message: {message_body}", logging_level=logging.WARNING)
+         #status_logger("Commit Report Email Failure", f"Subject: {custom_subject} | Message: {message_body}", logging_level=logging.WARNING)
          
          return None
 
